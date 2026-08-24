@@ -1,20 +1,490 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Undangan Pernikahan Raka & Laras — Sabtu, 12 Desember 2026, Jakarta. Akad Nikah & Resepsi." />
-    <meta name="theme-color" content="#081c16" />
-    <title>Undangan Pernikahan — Raka &amp; Laras · 12.12.2026</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Great+Vibes&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Undangan Pernikahan Raka & Laras — Sabtu, 12 Desember 2026, Jakarta. Akad Nikah & Resepsi." />
+  <meta name="theme-color" content="#081c16" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23c9a24b' stroke-width='2'%3E%3Ccircle cx='13' cy='18' r='8'/%3E%3Ccircle cx='19' cy='18' r='8'/%3E%3C/g%3E%3Cpath d='M16 7l-2.6-3.4h5.2L16 7z' fill='%23c9a24b'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+  <title>Undangan Pernikahan — Raka &amp; Laras | 12 . 12 . 2026</title>
+</head>
+<body class="no-scroll">
+
+  <div class="progress" id="progressBar" aria-hidden="true"></div>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════ COVER / SAMBUTAN ══════════════════════════ -->
+  <div class="cover" id="cover">
+    <img class="cover-bg" src="https://image.qwenlm.ai/generated-images/bbb151e9-608d-4e33-bb0f-4828f6f35674/_result.png" alt="" />
+    <div class="cover-shade"></div>
+    <svg class="corner c-tl" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.2" opacity=".9"/><path d="M4 104C4 52 52 4 104 4" stroke="currentColor" stroke-width=".8" opacity=".5"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><path d="M66 9c-6 2-10 6-11 11 6-1 10-5 11-11Z" stroke="currentColor" opacity=".7"/><path d="M9 66c-2 6-6 10-11 11 1-6 5-10 11-11Z" stroke="currentColor" opacity=".7"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/><circle cx="4" cy="136" r="2.4" fill="currentColor" opacity=".85"/></svg>
+    <svg class="corner c-tr" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.2" opacity=".9"/><path d="M4 104C4 52 52 4 104 4" stroke="currentColor" stroke-width=".8" opacity=".5"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/><circle cx="4" cy="136" r="2.4" fill="currentColor" opacity=".85"/></svg>
+    <svg class="corner c-br" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.2" opacity=".9"/><path d="M4 104C4 52 52 4 104 4" stroke="currentColor" stroke-width=".8" opacity=".5"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/><circle cx="4" cy="136" r="2.4" fill="currentColor" opacity=".85"/></svg>
+    <svg class="corner c-bl" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.2" opacity=".9"/><path d="M4 104C4 52 52 4 104 4" stroke="currentColor" stroke-width=".8" opacity=".5"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/><circle cx="4" cy="136" r="2.4" fill="currentColor" opacity=".85"/></svg>
+
+    <div class="cover-inner">
+      <p class="cover-over rise d1">The Wedding Of</p>
+      <h1 class="cover-names rise d2">Raka <span>&amp;</span> Laras</h1>
+      <svg class="divider rise d3" viewBox="0 0 320 40" fill="none" aria-hidden="true"><path d="M10 20h110M200 20h110" stroke="currentColor" stroke-width=".8" opacity=".55"/><path d="M160 20c-9-11-24-13-34-6 8 9 22 12 34 6Z" stroke="currentColor" stroke-width="1.1"/><path d="M160 20c9-11 24-13 34-6-8 9-22 12-34 6Z" stroke="currentColor" stroke-width="1.1"/><path d="M160 20c-3-5-3-9 0-14 3 5 3 9 0 14Z" stroke="currentColor" stroke-width="1.1"/><circle cx="160" cy="20" r="1.8" fill="currentColor"/></svg>
+      <p class="cover-date rise d3">Sabtu, 12 Desember 2026 · Jakarta</p>
+
+      <div class="cover-guest rise d4">
+        <p>Kepada Yth. Bapak/Ibu/Saudara/i</p>
+        <p class="guest-name" id="guestName">Tamu Undangan</p>
+        <p class="cover-note">Mohon maaf apabila terdapat kesalahan penulisan nama maupun gelar.</p>
+      </div>
+
+      <button class="btn btn-gold cover-btn rise d5" id="openBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
+        Buka Undangan
+      </button>
+    </div>
+  </div>
+
+  <main>
+    <!-- ══════════════════════════ HERO ══════════════════════════ -->
+    <section class="hero" id="beranda">
+      <div class="hero-amp" aria-hidden="true">&amp;</div>
+      <svg class="corner h-tl" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.1" opacity=".8"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/></svg>
+      <svg class="corner h-br" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.1" opacity=".8"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/></svg>
+
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="overline reveal"><span class="rule"></span>Undangan Pernikahan</p>
+          <h1 class="hero-names reveal" style="--rd:120ms">Raka <span class="amp">&amp;</span> Laras</h1>
+          <p class="hero-tag reveal" style="--rd:220ms">Raka Aditya Pratama &nbsp;<em>&amp;</em>&nbsp; Larasati Maheswari</p>
+
+          <div class="hero-date reveal" style="--rd:320ms">
+            <span class="hd-chip">Sabtu</span>
+            <span class="hd-big">12</span>
+            <span class="hd-side"><span>Desember</span><strong>2026</strong></span>
+            <span class="hd-chip">Jakarta</span>
+          </div>
+
+          <div class="hero-cta reveal" style="--rd:430ms">
+            <a class="btn btn-gold" href="#acara">Lihat Rangkaian Acara</a>
+            <a class="btn btn-ghost" target="_blank" rel="noreferrer"
+               href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pernikahan%20Raka%20%26%20Laras&amp;dates=20261212T010000Z/20261212T070000Z&amp;details=Akad%20Nikah%20%26%20Resepsi%20Pernikahan%20Raka%20%26%20Laras&amp;location=The%20Kasablanka%2C%20Kota%20Kasablanka%2C%20Jakarta">Simpan Tanggal</a>
+          </div>
+
+          <a class="scroll-cue reveal" style="--rd:540ms" href="#mempelai">
+            Gulir untuk membuka kisah
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg>
+          </a>
+        </div>
+
+        <div class="hero-visual reveal-scale" style="--rd:250ms">
+          <div class="arch-echo" aria-hidden="true"></div>
+          <figure class="arch-img">
+            <img src="https://image.qwenlm.ai/generated-images/bbb151e9-608d-4e33-bb0f-4828f6f35674/_result.png" alt="Raka dan Laras" />
+          </figure>
+          <svg class="hero-float f1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="14" r="5.5"/><circle cx="15" cy="14" r="5.5"/><path d="M12 5.5 10.2 3.2h3.6L12 5.5Z"/><path d="M12 5.5v1.2"/></svg>
+          <svg class="hero-float f2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21C12 13 12 7 12 3"/><path d="M12 7c-2.8 0-4.6-1.6-5-4 2.8 0 4.6 1.4 5 4Z"/><path d="M12 7c2.8 0 4.6-1.6 5-4-2.8 0-4.6 1.4-5 4Z"/><path d="M12 13c-2.8 0-4.6-1.6-5-4 2.8 0 4.6 1.4 5 4Z"/><path d="M12 13c2.8 0 4.6-1.6 5-4-2.8 0-4.6 1.4-5 4Z"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ MARQUEE ══════════════════════════ -->
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>Raka &amp; Laras <i>✦</i> 12 . 12 . 2026 <i>✦</i> Akad Nikah &amp; Resepsi <i>✦</i> The Kasablanka, Jakarta <i>✦</i> #RakaLarasMenikah <i>✦</i>&nbsp;</span>
+          <span>Raka &amp; Laras <i>✦</i> 12 . 12 . 2026 <i>✦</i> Akad Nikah &amp; Resepsi <i>✦</i> The Kasablanka, Jakarta <i>✦</i> #RakaLarasMenikah <i>✦</i>&nbsp;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ AYAT ══════════════════════════ -->
+    <section class="quote-sec">
+      <div class="wrap quote-inner">
+        <svg class="divider reveal" viewBox="0 0 320 40" fill="none" aria-hidden="true"><path d="M10 20h110M200 20h110" stroke="currentColor" stroke-width=".8" opacity=".55"/><path d="M160 20c-9-11-24-13-34-6 8 9 22 12 34 6Z" stroke="currentColor" stroke-width="1.1"/><path d="M160 20c9-11 24-13 34-6-8 9-22 12-34 6Z" stroke="currentColor" stroke-width="1.1"/><path d="M160 20c-3-5-3-9 0-14 3 5 3 9 0 14Z" stroke="currentColor" stroke-width="1.1"/><circle cx="160" cy="20" r="1.8" fill="currentColor"/></svg>
+        <p class="arabic reveal" dir="rtl" lang="ar" style="--rd:140ms">وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً</p>
+        <p class="quote-text reveal" style="--rd:280ms">“Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.”</p>
+        <p class="quote-src reveal" style="--rd:380ms">QS. Ar-Rūm : 21</p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ MEMPELAI ══════════════════════════ -->
+    <section class="couple-sec" id="mempelai">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="sec-over"><span class="rule"></span>Mempelai<span class="rule"></span></p>
+          <p class="sec-script">Bismillahirrahmanirrahim</p>
+          <h2 class="sec-title">Assalamu&rsquo;alaikum <em>Warahmatullahi Wabarakatuh</em></h2>
+        </header>
+        <p class="sec-intro reveal" style="--rd:150ms">Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan pernikahan putra–putri kami, yang insyaAllah akan dilaksanakan pada <strong>Sabtu, 12 Desember 2026</strong>.</p>
+
+        <div class="couple-grid">
+          <article class="couple-card reveal-left">
+            <div class="monogram"><span>R</span>
+              <svg class="sprig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M12 21C12 13 12 7 12 3"/><path d="M12 7c-2.8 0-4.6-1.6-5-4 2.8 0 4.6 1.4 5 4Z"/><path d="M12 7c2.8 0 4.6-1.6 5-4-2.8 0-4.6 1.4-5 4Z"/><path d="M12 13c-2.8 0-4.6-1.6-5-4 2.8 0 4.6 1.4 5 4Z"/><path d="M12 13c2.8 0 4.6-1.6 5-4-2.8 0-4.6 1.4-5 4Z"/></svg>
+            </div>
+            <p class="couple-nick">Raka</p>
+            <h3 class="couple-name">Raka Aditya Pratama</h3>
+            <p class="couple-parents">Putra pertama dari<br /><span>Bapak Hendra Pratama &amp; Ibu Sari Wulandari</span></p>
+            <a class="ig-link" href="https://instagram.com/raka.aditya" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17" cy="7" r=".6" fill="currentColor" stroke="none"/></svg>
+              @raka.aditya
+            </a>
+          </article>
+
+          <div class="amp-mark reveal-scale" style="--rd:200ms" aria-hidden="true">&amp;</div>
+
+          <article class="couple-card reveal-right" style="--rd:120ms">
+            <div class="monogram"><span>L</span>
+              <svg class="sprig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M12 21C12 13 12 7 12 3"/><path d="M12 7c-2.8 0-4.6-1.6-5-4 2.8 0 4.6 1.4 5 4Z"/><path d="M12 7c2.8 0 4.6-1.6 5-4-2.8 0-4.6 1.4-5 4Z"/><path d="M12 13c-2.8 0-4.6-1.6-5-4 2.8 0 4.6 1.4 5 4Z"/><path d="M12 13c2.8 0 4.6-1.6 5-4-2.8 0-4.6 1.4-5 4Z"/></svg>
+            </div>
+            <p class="couple-nick">Laras</p>
+            <h3 class="couple-name">Larasati Maheswari</h3>
+            <p class="couple-parents">Putri kedua dari<br /><span>Bapak Bagas Mahendra &amp; Ibu Dewi Anjani</span></p>
+            <a class="ig-link" href="https://instagram.com/larasmaheswari" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17" cy="7" r=".6" fill="currentColor" stroke="none"/></svg>
+              @larasmaheswari
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ ACARA ══════════════════════════ -->
+    <section class="events-sec" id="acara">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="sec-over"><span class="rule"></span>Rangkaian Acara<span class="rule"></span></p>
+          <p class="sec-script">Save the Date</p>
+          <h2 class="sec-title">Dua Acara, Satu Bahagia</h2>
+        </header>
+
+        <div class="events-grid">
+          <div class="date-block reveal-left">
+            <svg class="corner c-tl" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.1" opacity=".8"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/></svg>
+            <svg class="corner c-br" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.1" opacity=".8"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/></svg>
+            <p class="db-month">Desember</p>
+            <p class="db-day">12</p>
+            <div class="db-year"><span class="rule"></span><em>2026</em><span class="rule"></span></div>
+            <p class="db-full">Sabtu, 12 Desember 2026 · Jakarta</p>
+            <a class="btn btn-ghost" target="_blank" rel="noreferrer"
+               href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pernikahan%20Raka%20%26%20Laras&amp;dates=20261212T010000Z/20261212T070000Z&amp;details=Akad%20Nikah%20%26%20Resepsi%20Pernikahan%20Raka%20%26%20Laras&amp;location=The%20Kasablanka%2C%20Kota%20Kasablanka%2C%20Jakarta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M12 13.2c.8-1.4 2.9-1 2.9.5 0 1.2-1.9 2.4-2.9 3-1-.6-2.9-1.8-2.9-3 0-1.5 2.1-1.9 2.9-.5Z"/></svg>
+              Simpan Tanggal
+            </a>
+            <p class="db-tag">#RakaLarasMenikah</p>
+          </div>
+
+          <div class="events-list">
+            <article class="event-card reveal-right">
+              <div class="ev-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="14" r="5.5"/><circle cx="15" cy="14" r="5.5"/><path d="M12 5.5 10.2 3.2h3.6L12 5.5Z"/><path d="M12 5.5v1.2"/></svg>
+              </div>
+              <div class="ev-body">
+                <h3>Akad Nikah</h3>
+                <p class="ev-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>08.00 – 10.00 WIB</p>
+                <p class="ev-venue">Masjid Agung Al-Azhar</p>
+                <p class="ev-addr">Jl. Sisingamangaraja No. 1, Kebayoran Baru, Jakarta Selatan</p>
+                <p class="ev-dress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3.5c0 1.5.8 2.4 3 2.4s3-.9 3-2.4"/><path d="M9.8 6 8 10.5c2.5 1 5.5 1 8 0L14.2 6"/><path d="M8 10.5 5.5 20c4 1.4 9 1.4 13 0L16 10.5"/></svg>Busana muslim bernuansa hijau sage &amp; krem</p>
+                <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=Masjid%20Agung%20Al-Azhar%2C%20Jakarta%20Selatan">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s6.5-5.4 6.5-10.5A6.5 6.5 0 0 0 5.5 10.5C5.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+                  Lihat Lokasi<span class="line"></span>
+                </a>
+              </div>
+            </article>
+
+            <article class="event-card reveal-right" style="--rd:160ms">
+              <div class="ev-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3.5h9l-.9 6.4a3.7 3.7 0 0 1-7.2 0L7.5 3.5Z"/><path d="M8 6.5h8"/><path d="M12 13.8V18"/><path d="M8.5 20.5h7"/><path d="M12 18c-1.4 0-2.6.9-3.2 2.5h6.4c-.6-1.6-1.8-2.5-3.2-2.5Z"/></svg>
+              </div>
+              <div class="ev-body">
+                <h3>Resepsi</h3>
+                <p class="ev-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>11.00 – 14.00 WIB</p>
+                <p class="ev-venue">The Kasablanka — Grand Ballroom</p>
+                <p class="ev-addr">Kota Kasablanka Lt. 2, Jl. Casablanca Raya Kav. 88, Jakarta Selatan</p>
+                <p class="ev-dress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3.5c0 1.5.8 2.4 3 2.4s3-.9 3-2.4"/><path d="M9.8 6 8 10.5c2.5 1 5.5 1 8 0L14.2 6"/><path d="M8 10.5 5.5 20c4 1.4 9 1.4 13 0L16 10.5"/></svg>Formal — sentuhan emerald &amp; gold</p>
+                <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Kasablanka%2C%20Kota%20Kasablanka%2C%20Jakarta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s6.5-5.4 6.5-10.5A6.5 6.5 0 0 0 5.5 10.5C5.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+                  Lihat Lokasi<span class="line"></span>
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ COUNTDOWN ══════════════════════════ -->
+    <section class="count-sec" id="countdown">
+      <div class="wrap count-inner">
+        <p class="count-over reveal">Menuju Hari Bahagia</p>
+        <div class="count-cells reveal" style="--rd:150ms">
+          <div class="cell"><span class="num" id="cdD">00</span><span class="lbl">Hari</span></div>
+          <span class="sep">:</span>
+          <div class="cell"><span class="num" id="cdH">00</span><span class="lbl">Jam</span></div>
+          <span class="sep">:</span>
+          <div class="cell"><span class="num" id="cdM">00</span><span class="lbl">Menit</span></div>
+          <span class="sep">:</span>
+          <div class="cell"><span class="num" id="cdS">00</span><span class="lbl">Detik</span></div>
+        </div>
+        <p class="count-passed" id="cdPassed" hidden>Alhamdulillah, hari yang dinanti telah tiba.</p>
+        <p class="count-note reveal" style="--rd:300ms">Sabtu, 12 Desember 2026 — Jakarta</p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ LOVE STORY ══════════════════════════ -->
+    <section class="story-sec" id="cerita">
+      <div class="wrap story-wrap">
+        <header class="sec-head reveal">
+          <p class="sec-over"><span class="rule"></span>Love Story<span class="rule"></span></p>
+          <p class="sec-script">Perjalanan Kami</p>
+          <h2 class="sec-title">Tiga Babak Menuju Selamanya</h2>
+        </header>
+
+        <div class="timeline">
+          <span class="tl-line" aria-hidden="true"></span>
+
+          <div class="tl-item reveal-left">
+            <span class="tl-node">&rsquo;19</span>
+            <article class="tl-card">
+              <div class="tl-thumb"><img src="https://image.qwenlm.ai/generated-images/457f578d-48c2-499a-8583-f416989e6ea9/_result.png" alt="Pertama bertemu" loading="lazy" /></div>
+              <div>
+                <p class="tl-year">2019</p>
+                <h3>Pertama Bertemu</h3>
+                <p class="tl-text">Berawal dari satu kelompok KKN di lereng Merapi — obrolan panjang di pos ronda yang tak pernah benar-benar selesai hingga hari ini.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="tl-item reveal-left" style="--rd:120ms">
+            <span class="tl-node">&rsquo;25</span>
+            <article class="tl-card">
+              <div class="tl-thumb"><img src="https://image.qwenlm.ai/generated-images/9cead132-7520-4505-93e1-2280ca7ed40d/_result.png" alt="Lamaran" loading="lazy" /></div>
+              <div>
+                <p class="tl-year">2025</p>
+                <h3>Lamaran</h3>
+                <p class="tl-text">Dengan restu kedua keluarga, Raka menyematkan cincin dan mengikat janji — disaksikan hangatnya doa di sebuah sore bulan Juni.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="tl-item reveal-left" style="--rd:240ms">
+            <span class="tl-node">&rsquo;26</span>
+            <article class="tl-card">
+              <div class="tl-thumb"><img src="https://image.qwenlm.ai/generated-images/7cabbb4c-fd41-48b7-b4dd-87701c319e69/_result.png" alt="Menikah" loading="lazy" /></div>
+              <div>
+                <p class="tl-year">2026</p>
+                <h3>Menikah</h3>
+                <p class="tl-text">InsyaAllah, dua keluarga menjadi satu. Kami memohon doa restu untuk memulai babak baru kehidupan kami bersama.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ GALERI ══════════════════════════ -->
+    <section class="gallery-sec" id="galeri">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="sec-over"><span class="rule"></span>Galeri<span class="rule"></span></p>
+          <p class="sec-script">Momen Kami</p>
+          <h2 class="sec-title">Bingkai Menuju Hari Bahagia</h2>
+        </header>
+
+        <div class="gallery-grid reveal" style="--rd:150ms">
+          <figure class="ga ga-a" data-cap="Menuju hari bahagia">
+            <img src="https://image.qwenlm.ai/generated-images/bbb151e9-608d-4e33-bb0f-4828f6f35674/_result.png" alt="Menuju hari bahagia" loading="lazy" />
+            <figcaption>Menuju hari bahagia</figcaption>
+          </figure>
+          <figure class="ga ga-b" data-cap="Tawa yang sama sejak 2019">
+            <img src="https://image.qwenlm.ai/generated-images/457f578d-48c2-499a-8583-f416989e6ea9/_result.png" alt="Tawa yang sama sejak 2019" loading="lazy" />
+            <figcaption>Tawa yang sama sejak 2019</figcaption>
+          </figure>
+          <figure class="ga ga-c" data-cap="Janji yang tersemat">
+            <img src="https://image.qwenlm.ai/generated-images/7cabbb4c-fd41-48b7-b4dd-87701c319e69/_result.png" alt="Janji yang tersemat" loading="lazy" />
+            <figcaption>Janji yang tersemat</figcaption>
+          </figure>
+          <figure class="ga ga-d" data-cap="Lamaran, Juni 2025">
+            <img src="https://image.qwenlm.ai/generated-images/9cead132-7520-4505-93e1-2280ca7ed40d/_result.png" alt="Lamaran, Juni 2025" loading="lazy" />
+            <figcaption>Lamaran, Juni 2025</figcaption>
+          </figure>
+          <figure class="ga ga-e" data-cap="Menanti kedatangan Anda">
+            <img src="https://image.qwenlm.ai/generated-images/62d6e25b-4e9e-41bf-a0ca-ed39f9c721ad/_result.png" alt="Menanti kedatangan Anda" loading="lazy" />
+            <figcaption>Menanti kedatangan Anda</figcaption>
+          </figure>
+          <div class="ga ga-f ga-tile" aria-hidden="true">
+            <svg class="tile-corner t-tl" viewBox="0 0 90 90" fill="none"><path d="M6 84C6 44 44 6 84 6" stroke="currentColor" opacity=".8"/><path d="M26 14c-5 1-8 4-9 9 5-1 8-4 9-9Z" stroke="currentColor"/><path d="M14 26c-1 5-4 8-9 9 1-5 4-8 9-9Z" stroke="currentColor"/><circle cx="84" cy="6" r="2" fill="currentColor" opacity=".8"/></svg>
+            <svg class="tile-corner t-br" viewBox="0 0 90 90" fill="none"><path d="M6 84C6 44 44 6 84 6" stroke="currentColor" opacity=".8"/><path d="M26 14c-5 1-8 4-9 9 5-1 8-4 9-9Z" stroke="currentColor"/><path d="M14 26c-1 5-4 8-9 9 1-5 4-8 9-9Z" stroke="currentColor"/><circle cx="84" cy="6" r="2" fill="currentColor" opacity=".8"/></svg>
+            <span class="tile-script">R &amp; L</span>
+            <span class="tile-date">12 . 12 . 2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ HADIAH ══════════════════════════ -->
+    <section class="gift-sec" id="hadiah">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="sec-over"><span class="rule"></span>Tanda Kasih<span class="rule"></span></p>
+          <p class="sec-script">Wedding Gift</p>
+          <h2 class="sec-title">Doa Restu &amp; Tanda Kasih</h2>
+        </header>
+        <p class="sec-intro reveal" style="--rd:140ms">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika memberi adalah ungkapan tanda kasih, Anda dapat berbagi kebahagiaan melalui:</p>
+
+        <div class="gift-grid">
+          <article class="gift-card reveal" >
+            <div class="gift-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M6.5 14.5h4"/></svg></div>
+            <p class="gift-bank">BCA</p>
+            <p class="gift-num">2841 0394 75</p>
+            <p class="gift-name">a.n. Raka Aditya Pratama</p>
+            <button class="copy-btn" type="button" data-copy="2841039475">
+              <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 5.5v-1a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1"/></svg>
+              <svg class="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+              <span class="copy-label">Salin Nomor</span>
+            </button>
+          </article>
+
+          <article class="gift-card reveal" style="--rd:140ms">
+            <div class="gift-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M6.5 14.5h4"/></svg></div>
+            <p class="gift-bank">Mandiri</p>
+            <p class="gift-num">1270 0099 8821</p>
+            <p class="gift-name">a.n. Larasati Maheswari</p>
+            <button class="copy-btn" type="button" data-copy="127000998821">
+              <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 5.5v-1a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1"/></svg>
+              <svg class="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+              <span class="copy-label">Salin Nomor</span>
+            </button>
+          </article>
+
+          <article class="gift-card reveal" style="--rd:280ms">
+            <div class="gift-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6.5v7L12 21l8-7.5v-7L12 3Z"/><path d="M4 6.5 12 10l8-3.5"/><path d="M12 10v11"/><path d="M8 4.8l8 3.4"/></svg></div>
+            <p class="gift-bank">Kirim Kado</p>
+            <p class="gift-num gift-addr">Jl. Kemang Timur No. 27, Jakarta Selatan 12730</p>
+            <p class="gift-name">(Raka &amp; Laras)</p>
+            <button class="copy-btn" type="button" data-copy="Raka &amp; Laras — Jl. Kemang Timur No. 27, RT 04/RW 02, Bangka, Mampang Prapatan, Jakarta Selatan 12730">
+              <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 5.5v-1a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1"/></svg>
+              <svg class="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+              <span class="copy-label">Salin Alamat</span>
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ RSVP & UCAPAN ══════════════════════════ -->
+    <section class="rsvp-sec" id="ucapan">
+      <div class="wrap">
+        <header class="sec-head reveal">
+          <p class="sec-over"><span class="rule"></span>RSVP &amp; Ucapan<span class="rule"></span></p>
+          <p class="sec-script">Kirim Doa</p>
+          <h2 class="sec-title">Konfirmasi &amp; Doa Terbaik</h2>
+        </header>
+        <p class="sec-intro dark reveal" style="--rd:140ms">Konfirmasikan kehadiran Anda dan tinggalkan doa terbaik untuk kami — setiap kata adalah pelita bagi langkah baru kami.</p>
+
+        <div class="rsvp-grid">
+          <form class="rsvp-form reveal-left" id="wishForm" novalidate>
+            <label class="field">
+              <span class="field-label">Nama Anda</span>
+              <input class="input" id="wishName" type="text" maxlength="60" placeholder="Nama lengkap" autocomplete="name" />
+            </label>
+
+            <fieldset class="field">
+              <legend class="field-label">Konfirmasi Kehadiran</legend>
+              <div class="chips">
+                <button type="button" class="chip active" data-att="hadir">InsyaAllah Hadir</button>
+                <button type="button" class="chip" data-att="berhalangan">Berhalangan</button>
+                <button type="button" class="chip" data-att="ragu">Masih Ragu</button>
+              </div>
+            </fieldset>
+
+            <label class="field">
+              <span class="field-label">Doa &amp; Ucapan</span>
+              <textarea class="input input-area" id="wishMsg" rows="5" maxlength="400" placeholder="Tuliskan doa dan ucapan terbaik Anda…"></textarea>
+              <span class="char-count" id="charCount">0/400</span>
+            </label>
+
+            <p class="form-error" id="formError" hidden>Mohon isi nama dan ucapan terlebih dahulu.</p>
+
+            <button class="btn btn-gold btn-block" id="wishSubmit" type="submit">
+              <svg class="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3 10.5 13.5"/><path d="M21 3 14 21l-3.5-7.5L3 10 21 3Z"/></svg>
+              <svg class="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+              <span class="submit-label">Kirim Ucapan</span>
+            </button>
+          </form>
+
+          <div class="wishes reveal-right" style="--rd:140ms">
+            <div class="wishes-head">
+              <h3>Doa &amp; Ucapan</h3>
+              <span class="wishes-count" id="wishCount">0 ucapan</span>
+            </div>
+            <ul class="wish-list" id="wishList"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+    <footer class="footer">
+      <svg class="corner f-tl" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.1" opacity=".7"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/></svg>
+      <svg class="corner f-tr" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M4 136C4 70 70 4 136 4" stroke="currentColor" stroke-width="1.1" opacity=".7"/><path d="M36 18c-8 2-13 7-15 14 8-1 13-6 15-14Z" stroke="currentColor"/><path d="M18 36c-2 8-7 13-14 15 1-8 6-13 14-15Z" stroke="currentColor"/><circle cx="136" cy="4" r="2.4" fill="currentColor" opacity=".85"/></svg>
+      <div class="wrap footer-inner">
+        <p class="footer-names reveal">Raka &amp; Laras</p>
+        <svg class="divider reveal" style="--rd:100ms" viewBox="0 0 320 40" fill="none" aria-hidden="true"><path d="M10 20h110M200 20h110" stroke="currentColor" stroke-width=".8" opacity=".55"/><path d="M160 20c-9-11-24-13-34-6 8 9 22 12 34 6Z" stroke="currentColor" stroke-width="1.1"/><path d="M160 20c9-11 24-13 34-6-8 9-22 12-34 6Z" stroke="currentColor" stroke-width="1.1"/><path d="M160 20c-3-5-3-9 0-14 3 5 3 9 0 14Z" stroke="currentColor" stroke-width="1.1"/><circle cx="160" cy="20" r="1.8" fill="currentColor"/></svg>
+        <p class="footer-thanks reveal" style="--rd:200ms">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.</p>
+        <p class="footer-salam reveal" style="--rd:280ms">Wassalamu&rsquo;alaikum Warahmatullahi Wabarakatuh</p>
+        <p class="footer-sign reveal" style="--rd:360ms">Kami yang berbahagia,</p>
+        <p class="footer-fam reveal" style="--rd:400ms">Keluarga Besar Pratama <span>&amp;</span> Keluarga Besar Mahendra</p>
+        <p class="footer-tag reveal" style="--rd:480ms">#RakaLarasMenikah</p>
+        <p class="footer-credit reveal" style="--rd:560ms">12 . 12 . 2026 · Jakarta · Dibuat dengan penuh sukacita</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ══════════════════════════ NAV BAWAH ══════════════════════════ -->
+  <nav class="navbar" id="navbar" aria-label="Navigasi undangan">
+    <a href="#beranda" class="nav-link is-active" data-sec="beranda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5M6 10v10h12V10"/></svg><span>Beranda</span>
+    </a>
+    <a href="#mempelai" class="nav-link" data-sec="mempelai">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="13.5" r="5"/><circle cx="14.5" cy="13.5" r="5"/><path d="M12 5.5 10.4 3.4h3.2L12 5.5Z"/></svg><span>Mempelai</span>
+    </a>
+    <a href="#acara" class="nav-link" data-sec="acara">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6.5h14v13H5zM5 10h14M9 4v4M15 4v4"/></svg><span>Acara</span>
+    </a>
+    <a href="#galeri" class="nav-link" data-sec="galeri">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v13H4zM4 16l4.5-4.5 3.5 3.5 3-3 5 4"/><circle cx="9.5" cy="10" r="1.2"/></svg><span>Galeri</span>
+    </a>
+    <a href="#ucapan" class="nav-link" data-sec="ucapan">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v12H9l-5 4V5z"/></svg><span>Ucapan</span>
+    </a>
+  </nav>
+
+  <!-- ══════════════════════════ TOMBOL MUSIK ══════════════════════════ -->
+  <button class="music-btn" id="musicBtn" type="button" aria-label="Putar musik" hidden>
+    <svg class="mb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18.5V6l11-2.5V16"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>
+    <span class="mb-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
+  <!-- ══════════════════════════ LIGHTBOX ══════════════════════════ -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Pratinjau foto">
+    <figure class="lb-fig">
+      <img id="lbImg" src="" alt="" />
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+    <p class="lb-count" id="lbCount"></p>
+    <button class="lb-btn lb-prev" id="lbPrev" type="button" aria-label="Foto sebelumnya">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 6-6 6 6 6"/></svg>
+    </button>
+    <button class="lb-btn lb-next" id="lbNext" type="button" aria-label="Foto berikutnya">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9.5 6 6 6-6 6"/></svg>
+    </button>
+    <button class="lb-btn lb-close" id="lbClose" type="button" aria-label="Tutup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
