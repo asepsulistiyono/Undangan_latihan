@@ -1,8 +1,15 @@
 import { useMemo, type CSSProperties, type ReactNode } from "react";
+import { WEDDING } from "../lib/wedding";
 import { IconSparkle } from "./Icons";
 
-/* ---------------- Monogram R·S ---------------- */
-export function Monogram({ className = "size-14" }: { className?: string }) {
+/* ---------------- Monogram inisial ---------------- */
+export function Monogram({
+  className = "size-14",
+  text,
+}: {
+  className?: string;
+  text?: string;
+}) {
   return (
     <svg viewBox="0 0 120 120" className={className} aria-hidden="true">
       <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" strokeWidth="1.4" opacity="0.9" />
@@ -16,7 +23,7 @@ export function Monogram({ className = "size-14" }: { className?: string }) {
         fontSize="40"
         fill="currentColor"
       >
-        R·S
+        {text ?? WEDDING.initials}
       </text>
       <path d="M60 8l3 6-3 6-3-6z" fill="currentColor" opacity="0.8" />
       <path d="M60 100l3 6-3 6-3-6z" fill="currentColor" opacity="0.8" transform="translate(0 -4)" />
@@ -156,7 +163,12 @@ export function Petals({ count = 16 }: { count?: number }) {
 
 /* ---------------- Marquee nama & tanggal ---------------- */
 export function Marquee() {
-  const items = ["Raka & Sekar", "12 Juni 2027", "Plataran Cilandak", "Save the Date"];
+  const items = [
+    `${WEDDING.groom.short} & ${WEDDING.bride.short}`,
+    WEDDING.dateLabel,
+    WEDDING.venueMain,
+    "Save the Date",
+  ];
   const row = (hidden: boolean) => (
     <div className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
       {items.map((t, i) => (

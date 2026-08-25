@@ -1,5 +1,23 @@
+# Bahan bangunan — tidak perlu masuk repository
 node_modules/
-.next/
 dist/
-build/
+
+# File sistem & editor
+.DS_Store
+Thumbs.db
+*.local
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *.log
+
+# Variabel lingkungan
+.env
+.env.*
+.next/
+build/

@@ -92,12 +92,12 @@ export default function Hero({ open }: { open: boolean }) {
               </p>
               <h1 className="mt-4 font-display font-light italic leading-[0.95] text-ivory">
                 <span className="mask-line ml-d1 text-[21vw] sm:text-8xl lg:text-[7rem]">
-                  <span>Raka</span>
+                  <span>{WEDDING.groom.short}</span>
                 </span>
                 <span className="mask-line ml-d2 text-[21vw] sm:text-8xl lg:text-[7rem]">
                   <span className="flex items-baseline gap-3 sm:gap-5">
                     <span className="text-[0.52em] text-gold-400">&</span>
-                    <span>Sekar</span>
+                    <span>{WEDDING.bride.short}</span>
                   </span>
                 </span>
               </h1>

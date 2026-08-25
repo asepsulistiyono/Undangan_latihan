@@ -9,6 +9,7 @@ export const IMG = {
 };
 
 export const WEDDING = {
+  initials: "R·S", // inisial di logo bulat & navigasi
   dateLabel: "Sabtu, 12 Juni 2027",
   dateShort: "12 · 06 · 2027",
   dateISO: "2027-06-12T08:00:00+07:00",
@@ -112,7 +113,8 @@ export const WEDDING = {
 
 export const CALENDAR_URL =
   "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-  "&text=" + encodeURIComponent("Pernikahan Raka & Sekar") +
+  "&text=" +
+  encodeURIComponent(`Pernikahan ${WEDDING.groom.short} & ${WEDDING.bride.short}`) +
   "&dates=20270612T010000Z/20270612T070000Z" +
   "&details=" +
   encodeURIComponent(
@@ -123,7 +125,7 @@ export const CALENDAR_URL =
 export function getGuestName(): string {
   if (typeof window === "undefined") return "Tamu Undangan";
   const q = new URLSearchParams(window.location.search);
-  return q.get("to") || q.get("kepada") || "Tamu Undangan";
+  return (q.get("to") || q.get("kepada") || "").trim() || "Tamu Undangan";
 }
 
 export function timeAgo(ts: number): string {
