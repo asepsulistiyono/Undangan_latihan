@@ -10,15 +10,30 @@ import Gallery from "./components/sections/Gallery";
 import Gift from "./components/sections/Gift";
 import Wishes from "./components/sections/Wishes";
 import Closing from "./components/sections/Closing";
+import GuestManager from "./components/GuestManager";
 
 type Stage = "closed" | "opening" | "open";
 
 export default function App() {
   const [stage, setStage] = useState<Stage>("closed");
+  const [route, setRoute] = useState(() => window.location.hash);
+
+  // Rute berbasis hash: "#/tamu" = panel kelola tamu, selainnya = undangan.
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  const isAdmin = route.startsWith("#/tamu");
 
   useEffect(() => {
-    document.body.style.overflow = stage === "open" ? "" : "hidden";
-  }, [stage]);
+    document.body.style.overflow = stage === "open" || isAdmin ? "" : "hidden";
+  }, [stage, isAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin) document.title = "Undangan Pernikahan Raka & Sekar";
+  }, [isAdmin]);
 
   const open = () => {
     if (stage !== "closed") return;
@@ -27,6 +42,8 @@ export default function App() {
     // agar transisi sampul → konten selalu selesai.
     window.setTimeout(() => setStage("open"), 1250);
   };
+
+  if (isAdmin) return <GuestManager />;
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-pine-950 font-sans text-ivory">

@@ -2,6 +2,21 @@ import { getGuestName, WEDDING } from "../lib/wedding";
 import { IconEnvelope } from "./Icons";
 import { CornerFlourish, Monogram } from "./Decor";
 
+/** Pecah "Bapak H. Ahmad beserta keluarga" → nama utama + keterangan. */
+function splitGuest(name: string): { main: string; suffix: string } {
+  const m = name.match(/\s+(beserta|serta|sekeluarga|dan|&)\b/i);
+  if (!m || m.index === undefined || m.index === 0) return { main: name, suffix: "" };
+  return { main: name.slice(0, m.index).trim(), suffix: name.slice(m.index).trim() };
+}
+
+/** Ukuran huruf menyesuaikan panjang nama agar tidak terpotong. */
+function sizeFor(len: number): string {
+  if (len <= 14) return "text-2xl sm:text-3xl";
+  if (len <= 24) return "text-xl sm:text-2xl";
+  if (len <= 38) return "text-lg sm:text-xl";
+  return "text-base sm:text-lg";
+}
+
 export default function Cover({
   opening,
   onOpen,
@@ -10,6 +25,7 @@ export default function Cover({
   onOpen: () => void;
 }) {
   const guest = getGuestName();
+  const parts = splitGuest(guest);
 
   return (
     <div
@@ -76,9 +92,17 @@ export default function Cover({
           <p className="text-[10px] uppercase tracking-[0.3em] text-sage-300/80">
             Kepada Yth. Bapak/Ibu/Saudara/i
           </p>
-          <p className="mt-2 font-display text-2xl italic text-gold-200" title={guest}>
-            {guest.length > 26 ? guest.slice(0, 24) + "…" : guest}
+          <p
+            className={`mt-2 break-words font-display italic leading-snug text-gold-200 ${sizeFor(guest.length)}`}
+            title={guest}
+          >
+            {parts.main}
           </p>
+          {parts.suffix && (
+            <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-gold-400/85">
+              {parts.suffix}
+            </p>
+          )}
           <p className="mt-1.5 text-[11px] leading-relaxed text-sage-300/70">
             Mohon maaf apabila terdapat kesalahan penulisan nama & gelar.
           </p>

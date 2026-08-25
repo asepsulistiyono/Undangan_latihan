@@ -125,7 +125,7 @@ export const CALENDAR_URL =
 export function getGuestName(): string {
   if (typeof window === "undefined") return "Tamu Undangan";
   const q = new URLSearchParams(window.location.search);
-  return q.get("to") || q.get("kepada") || "Tamu Undangan";
+  return (q.get("to") || q.get("kepada") || "").trim() || "Tamu Undangan";
 }
 
 export function timeAgo(ts: number): string {
