@@ -1,0 +1,271 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pine-950: #071510;
+  --color-pine-900: #0b1f17;
+  --color-pine-800: #112a1f;
+  --color-pine-700: #183829;
+  --color-pine-600: #204734;
+  --color-sage-500: #8fae97;
+  --color-sage-400: #a9c3ad;
+  --color-sage-300: #c4d8c7;
+  --color-gold-200: #f2e5c2;
+  --color-gold-300: #e9d5a4;
+  --color-gold-400: #d9bd7f;
+  --color-gold-500: #c8a961;
+  --color-gold-600: #a6863d;
+  --color-ivory: #f4edda;
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-sans: "Manrope", "Trebuchet MS", sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-pine-950);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(200, 169, 97, 0.9);
+  color: #0b1f17;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #071510;
+}
+::-webkit-scrollbar-thumb {
+  background: #204734;
+  border-radius: 9px;
+  border: 2px solid #071510;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c8a961;
+}
+
+/* ---------- lapisan grain film di atas segalanya ---------- */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ---------- scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.from-left {
+  transform: translateX(-44px);
+}
+.reveal.from-right {
+  transform: translateX(44px);
+}
+.reveal.from-scale {
+  transform: scale(0.92) translateY(18px);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+.rd-1 { transition-delay: 0.08s; }
+.rd-2 { transition-delay: 0.16s; }
+.rd-3 { transition-delay: 0.24s; }
+.rd-4 { transition-delay: 0.32s; }
+.rd-5 { transition-delay: 0.42s; }
+.rd-6 { transition-delay: 0.52s; }
+
+/* ---------- line-mask reveal untuk judul ---------- */
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+.mask-line > span {
+  display: block;
+  transform: translateY(118%);
+  transition: transform 1.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ml-d1 > span { transition-delay: 0.12s; }
+.ml-d2 > span { transition-delay: 0.26s; }
+.ml-d3 > span { transition-delay: 0.4s; }
+.is-open .mask-line > span,
+.is-in .mask-line > span {
+  transform: translateY(0);
+}
+
+/* ---------- kelopak bunga melayang ---------- */
+.petal {
+  position: fixed;
+  top: -8vh;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  animation: petal-fall var(--dur, 16s) linear var(--delay, 0s) infinite;
+}
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: var(--op, 0.45);
+  }
+  85% {
+    opacity: var(--op, 0.45);
+  }
+  100% {
+    transform: translate3d(var(--dx, 60px), 112vh, 0) rotate(var(--rot, 320deg));
+    opacity: 0;
+  }
+}
+
+/* ---------- Ken Burns ---------- */
+.anim-kenburns {
+  animation: kenburns 30s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1.06) translate(0, 0);
+  }
+  to {
+    transform: scale(1.2) translate(-2.2%, -3%);
+  }
+}
+
+/* ---------- putaran lambat (badge melingkar) ---------- */
+.anim-spin-slow {
+  animation: spin-slow 26s linear infinite;
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- marquee ---------- */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- mengapung ---------- */
+.anim-float {
+  animation: floaty 5.5s ease-in-out infinite;
+}
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ---------- penanda gulir ---------- */
+.anim-cue {
+  animation: scroll-cue 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes scroll-cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* ---------- detak angka countdown ---------- */
+.tick {
+  animation: tick-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes tick-pop {
+  from {
+    transform: translateY(38%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- kilau emas ---------- */
+.anim-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ---------- aksesibilitas: kurangi gerakan ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .petal {
+    display: none;
+  }
+  .anim-kenburns,
+  .anim-spin-slow,
+  .marquee-track,
+  .anim-float,
+  .anim-cue,
+  .anim-shimmer {
+    animation: none !important;
+  }
+  .reveal,
+  .mask-line > span {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .tick {
+    animation: none !important;
+  }
+}
