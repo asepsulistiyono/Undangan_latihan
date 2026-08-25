@@ -1,4 +1,4 @@
-import { getGuestName } from "../lib/wedding";
+import { getGuestName, WEDDING } from "../lib/wedding";
 import { IconEnvelope } from "./Icons";
 import { CornerFlourish, Monogram } from "./Decor";
 
@@ -54,17 +54,21 @@ export default function Cover({
         </p>
 
         <h1 className="mt-4 font-display font-light leading-none text-ivory">
-          <span className="block text-6xl italic sm:text-7xl md:text-8xl">Raka</span>
+          <span className="block text-6xl italic sm:text-7xl md:text-8xl">
+            {WEDDING.groom.short}
+          </span>
           <span className="my-1 flex items-center justify-center gap-4">
             <span className="h-px w-10 bg-gold-500/60" aria-hidden="true" />
             <span className="font-display text-3xl italic text-gold-400">&</span>
             <span className="h-px w-10 bg-gold-500/60" aria-hidden="true" />
           </span>
-          <span className="block text-6xl italic sm:text-7xl md:text-8xl">Sekar</span>
+          <span className="block text-6xl italic sm:text-7xl md:text-8xl">
+            {WEDDING.bride.short}
+          </span>
         </h1>
 
         <p className="mt-5 text-xs font-medium uppercase tracking-[0.42em] text-gold-300/90">
-          Sabtu · 12 Juni 2027
+          {WEDDING.dateLabel}
         </p>
 
         {/* nama tamu */}
@@ -88,7 +92,7 @@ export default function Cover({
             </defs>
             <text fontSize="10.5" letterSpacing="2.6" fill="currentColor" fontWeight="600">
               <textPath href="#coverCircle">
-                RAKA ♥ SEKAR · 12 JUNI 2027 · JAKARTA ·
+                {`${WEDDING.groom.short} ♥ ${WEDDING.bride.short} · ${WEDDING.dateLabel.toUpperCase()} · ${WEDDING.city.toUpperCase()} ·`}
               </textPath>
             </text>
           </svg>

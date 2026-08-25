@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IconArrowUp, IconCalendar, IconChat, IconHeart, IconCamera, IconRings } from "./Icons";
+import { WEDDING } from "../lib/wedding";
 
 const items = [
   { id: "beranda", label: "Beranda", Icon: IconHeart },
@@ -40,7 +41,7 @@ export default function Nav() {
     >
       <div className="flex items-center gap-1 rounded-full border border-gold-500/25 bg-pine-900/90 px-2 py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-md">
         <span className="mx-1 hidden select-none font-display text-lg italic text-gold-400 sm:inline">
-          R·S
+          {WEDDING.initials}
         </span>
         {items.map(({ id, label, Icon }) => {
           const isActive = active === id;
