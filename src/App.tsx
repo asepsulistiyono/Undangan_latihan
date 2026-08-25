@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Cover from "./components/Cover";
 import Nav from "./components/Nav";
 import { Petals } from "./components/Decor";
@@ -15,17 +15,17 @@ type Stage = "closed" | "opening" | "open";
 
 export default function App() {
   const [stage, setStage] = useState<Stage>("closed");
-  const timer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     document.body.style.overflow = stage === "open" ? "" : "hidden";
-    return () => window.clearTimeout(timer.current);
   }, [stage]);
 
   const open = () => {
     if (stage !== "closed") return;
     setStage("opening");
-    timer.current = window.setTimeout(() => setStage("open"), 1250);
+    // Timer sengaja tidak dibersihkan oleh effect scroll-lock di atas,
+    // agar transisi sampul → konten selalu selesai.
+    window.setTimeout(() => setStage("open"), 1250);
   };
 
   return (
