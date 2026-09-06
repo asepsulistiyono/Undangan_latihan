@@ -25,7 +25,7 @@ export const WEDDING = {
   venueMain: "Plataran Cilandak",
 
   groom: {
-    short: "Raka",
+    short: "Andi",
     full: "Raka Adyatma Prasetya",
     parents:
       "Putra pertama dari Bapak Hendra Prasetya & Ibu Wulan Kusuma — Jakarta",
