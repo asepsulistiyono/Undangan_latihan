@@ -1,3 +1,11 @@
+// ============================================================
+// AUTO-GENERATED — Jangan edit manual
+// Pasangan : Andi & Pengantin Wanita
+// Tanggal  : Sabtu, 12 Juni 2026
+// Sumber   : Form baris 2
+// Dibuat   : 2026-09-05T16:17:25.419Z
+// ============================================================
+
 export const IMG = {
   hero: "https://image.qwenlm.ai/generated-images/c7a005ab-60cd-4af6-a501-56b105912776/_result.png",
   bride: "https://image.qwenlm.ai/generated-images/3f8bf4b6-0973-4e3f-96f2-492a34e99cc4/_result.png",
@@ -115,7 +123,7 @@ export const CALENDAR_URL =
   "https://calendar.google.com/calendar/render?action=TEMPLATE" +
   "&text=" +
   encodeURIComponent(`Pernikahan ${WEDDING.groom.short} & ${WEDDING.bride.short}`) +
-  "&dates=20270612T010000Z/20270612T070000Z" +
+  "&dates=20260612T010000Z/20260612T070000Z" +
   "&details=" +
   encodeURIComponent(
     "Akad Nikah 08.00 WIB — Resepsi 11.00–14.00 WIB di Plataran Cilandak, Jakarta Selatan. Dress code: sage, emerald & gold."
