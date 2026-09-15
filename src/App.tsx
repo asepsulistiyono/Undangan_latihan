@@ -17,6 +17,7 @@ import SuperAdminPanel from "./components/admin/SuperAdminPanel";
 import { onAuthStateChange, getAdminProfile, type AdminProfile } from "./lib/auth";
 import { SUPABASE_ENABLED } from "./lib/supabase";
 import { WeddingProvider } from "./lib/WeddingContext";
+import { parseInvitationSlug, getUserIdFromSlug } from "./lib/slug";
 
 type Stage = "closed" | "opening" | "open";
 
@@ -54,8 +55,15 @@ export default function App() {
     };
   }, []);
 
-  // Tentukan userId untuk undangan publik berdasarkan session
-  const publicUserId = user?.id || null;
+  // Parse slug dari URL untuk undangan personal
+  const invitationSlug = parseInvitationSlug(route);
+  const slugUserId = invitationSlug ? getUserIdFromSlug(invitationSlug) : null;
+
+  // Tentukan userId untuk undangan publik:
+  // 1. Jika ada slug di URL → gunakan userId dari slug mapping
+  // 2. Jika tidak ada slug tapi user login → gunakan userId user
+  // 3. Jika tidak ada keduanya → null (data default)
+  const publicUserId = slugUserId || user?.id || null;
 
   // Redirect ke admin setelah login jika diperlukan
   useEffect(() => {
