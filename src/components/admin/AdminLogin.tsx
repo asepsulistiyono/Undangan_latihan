@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { signIn } from "../../lib/auth";
+import { SUPABASE_ENABLED } from "../../lib/supabase";
 import { Monogram } from "../Decor";
 import { IconArrowLeft, IconCheck } from "../Icons";
 
@@ -101,6 +102,29 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
           <IconArrowLeft className="size-4" />
           Kembali ke undangan
         </a>
+
+        {!SUPABASE_ENABLED && (
+          <div className="mt-8 w-full border border-gold-500/30 bg-pine-800/50 p-5">
+            <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-gold-400">
+              Mode Demo
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-sage-300/80">
+              Supabase belum dikonfigurasi. Gunakan kredensial demo berikut:
+            </p>
+            <div className="mt-3 space-y-1.5 font-mono text-xs">
+              <p className="text-gold-200">
+                <span className="text-sage-300/60">Email:</span> superadmin@demo.com
+              </p>
+              <p className="text-gold-200">
+                <span className="text-sage-300/60">Password:</span> demo123
+              </p>
+            </div>
+            <p className="mt-3 text-[10px] leading-relaxed text-sage-300/60">
+              Data tersimpan di localStorage browser. Untuk produksi, konfigurasi Supabase di file{" "}
+              <code className="text-gold-300">.env</code>.
+            </p>
+          </div>
+        )}
 
         <p className="mt-6 max-w-xs text-center text-xs leading-relaxed text-sage-300/60">
           Belum punya akun? Minta super admin membuatkan akun untuk Anda.

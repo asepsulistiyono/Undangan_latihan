@@ -36,10 +36,6 @@ export default function App() {
 
   // Subscribe auth state
   useEffect(() => {
-    if (!SUPABASE_ENABLED) {
-      setAuthLoading(false);
-      return;
-    }
     const unsub = onAuthStateChange(async (u) => {
       setUser(u);
       if (u) {
