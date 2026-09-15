@@ -17,6 +17,7 @@ export interface AdminProfile {
 const LS_USERS = "demo-users-v1";
 const LS_PROFILES = "demo-profiles-v1";
 const LS_SESSION = "demo-session-v1";
+const LS_CONFIG = "demo-config-v1";
 
 /** Dispatch event untuk notify perubahan auth state di mode demo */
 function dispatchAuthEvent() {
@@ -27,8 +28,13 @@ function dispatchAuthEvent() {
 
 interface DemoUser {
   id: string;
-  email: string;
+  username: string;
   password: string;
+  name: string | null;
+}
+
+interface DemoConfig {
+  adminWA: string; // Nomor WhatsApp admin untuk minta akun
 }
 
 function loadDemoUsers(): DemoUser[] {
@@ -57,6 +63,19 @@ function saveDemoProfiles(profiles: AdminProfile[]) {
   localStorage.setItem(LS_PROFILES, JSON.stringify(profiles));
 }
 
+function loadDemoConfig(): DemoConfig {
+  try {
+    const raw = localStorage.getItem(LS_CONFIG);
+    return raw ? JSON.parse(raw) : { adminWA: "6281234567890" };
+  } catch {
+    return { adminWA: "6281234567890" };
+  }
+}
+
+function saveDemoConfig(config: DemoConfig) {
+  localStorage.setItem(LS_CONFIG, JSON.stringify(config));
+}
+
 /** Pastikan super admin demo selalu ada di mode demo. */
 function ensureDemoSuperAdmin(): void {
   if (SUPABASE_ENABLED) return;
@@ -65,13 +84,14 @@ function ensureDemoSuperAdmin(): void {
   if (hasSuper) return;
 
   const users = loadDemoUsers();
-  const demoEmail = "superadmin@demo.com";
-  let demoUser = users.find((u) => u.email === demoEmail);
+  const demoUsername = "superadmin";
+  let demoUser = users.find((u) => u.username === demoUsername);
   if (!demoUser) {
     demoUser = {
       id: "demo-super-" + Date.now(),
-      email: demoEmail,
+      username: demoUsername,
       password: "demo123",
+      name: "Super Admin (Demo)",
     };
     users.push(demoUser);
     saveDemoUsers(users);
@@ -90,9 +110,12 @@ function ensureDemoSuperAdmin(): void {
  * AUTH FUNCTIONS — bekerja baik dengan Supabase maupun mode demo
  * ============================================================ */
 
-export async function signIn(email: string, password: string) {
+export async function signIn(username: string, password: string) {
   if (SUPABASE_ENABLED) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ 
+      email: username + "@demo.local", // Hack: gunakan username sebagai email
+      password 
+    });
     if (error) throw error;
     return data;
   }
@@ -100,12 +123,12 @@ export async function signIn(email: string, password: string) {
   // Mode demo
   ensureDemoSuperAdmin();
   const users = loadDemoUsers();
-  const user = users.find((u) => u.email === email && u.password === password);
-  if (!user) throw new Error("Email atau password salah");
-  const session = { user_id: user.id, email: user.email };
+  const user = users.find((u) => u.username === username && u.password === password);
+  if (!user) throw new Error("Username atau password salah");
+  const session = { user_id: user.id, username: user.username };
   localStorage.setItem(LS_SESSION, JSON.stringify(session));
   dispatchAuthEvent(); // Notify App.tsx bahwa user sudah login
-  return { user: { id: user.id, email: user.email }, session };
+  return { user: { id: user.id, username: user.username }, session };
 }
 
 export async function signOut() {
@@ -118,11 +141,11 @@ export async function signOut() {
   dispatchAuthEvent(); // Notify App.tsx bahwa user sudah logout
 }
 
-export async function getSession(): Promise<{ user_id: string; email: string } | null> {
+export async function getSession(): Promise<{ user_id: string; username: string } | null> {
   if (SUPABASE_ENABLED) {
     const { data } = await supabase.auth.getSession();
     return data.session?.user
-      ? { user_id: data.session.user.id, email: data.session.user.email || "" }
+      ? { user_id: data.session.user.id, username: data.session.user.email?.split("@")[0] || "" }
       : null;
   }
   try {
@@ -177,13 +200,16 @@ export async function listAdmins(): Promise<AdminProfile[]> {
 }
 
 export async function createAdmin(
-  email: string,
+  username: string,
   password: string,
   role: AdminRole,
   name: string | null
 ) {
   if (SUPABASE_ENABLED) {
-    const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+    const { data: authData, error: authError } = await supabase.auth.signUp({ 
+      email: username + "@demo.local",
+      password 
+    });
     if (authError) throw authError;
     if (!authData.user) throw new Error("Gagal membuat user");
     const { error: profileError } = await supabase.from("admin_profiles").insert({
@@ -197,13 +223,14 @@ export async function createAdmin(
 
   // Mode demo
   const users = loadDemoUsers();
-  if (users.find((u) => u.email === email)) {
-    throw new Error("Email sudah terdaftar");
+  if (users.find((u) => u.username === username)) {
+    throw new Error("Username sudah terdaftar");
   }
   const newUser: DemoUser = {
     id: "demo-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6),
-    email,
+    username,
     password,
+    name,
   };
   users.push(newUser);
   saveDemoUsers(users);
@@ -212,7 +239,7 @@ export async function createAdmin(
   profiles.push({ user_id: newUser.id, role, name });
   saveDemoProfiles(profiles);
 
-  return { id: newUser.id, email: newUser.email };
+  return { id: newUser.id, username: newUser.username };
 }
 
 export async function deleteAdmin(userId: string) {
@@ -225,6 +252,44 @@ export async function deleteAdmin(userId: string) {
   saveDemoProfiles(profiles.filter((p) => p.user_id !== userId));
   const users = loadDemoUsers();
   saveDemoUsers(users.filter((u) => u.id !== userId));
+}
+
+export async function resetAdminPassword(userId: string, newPassword: string) {
+  if (SUPABASE_ENABLED) {
+    // Supabase tidak bisa reset password user lain tanpa service role key
+    throw new Error("Reset password hanya tersedia di mode demo");
+  }
+  const users = loadDemoUsers();
+  const idx = users.findIndex((u) => u.id === userId);
+  if (idx === -1) throw new Error("User tidak ditemukan");
+  users[idx].password = newPassword;
+  saveDemoUsers(users);
+}
+
+export async function getAdminPassword(userId: string): Promise<string | null> {
+  if (SUPABASE_ENABLED) {
+    throw new Error("Lihat password hanya tersedia di mode demo");
+  }
+  const users = loadDemoUsers();
+  const user = users.find((u) => u.id === userId);
+  return user?.password || null;
+}
+
+export async function getAdminWA(): Promise<string> {
+  if (SUPABASE_ENABLED) {
+    return "6281234567890"; // Default
+  }
+  const config = loadDemoConfig();
+  return config.adminWA;
+}
+
+export async function setAdminWA(wa: string) {
+  if (SUPABASE_ENABLED) {
+    throw new Error("Setting WA hanya tersedia di mode demo");
+  }
+  const config = loadDemoConfig();
+  config.adminWA = wa;
+  saveDemoConfig(config);
 }
 
 export function onAuthStateChange(callback: (user: any) => void): () => void {
@@ -240,7 +305,7 @@ export function onAuthStateChange(callback: (user: any) => void): () => void {
     try {
       const raw = localStorage.getItem(LS_SESSION);
       const session = raw ? JSON.parse(raw) : null;
-      callback(session ? { id: session.user_id, email: session.email } : null);
+      callback(session ? { id: session.user_id, username: session.username } : null);
     } catch {
       callback(null);
     }
