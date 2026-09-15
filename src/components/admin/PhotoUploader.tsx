@@ -39,12 +39,12 @@ export default function PhotoUploader({
         onProgress: (p) => setProgress(Math.round(p)),
       });
 
-      // 2. Preview lokal
-      const localUrl = URL.createObjectURL(compressed);
-      setPreview(localUrl);
-
-      // 3. Upload ke Supabase Storage (jika aktif)
+      // 2. Upload ke Supabase Storage (jika aktif)
       if (SUPABASE_ENABLED) {
+        // Preview lokal dulu
+        const localUrl = URL.createObjectURL(compressed);
+        setPreview(localUrl);
+
         const fileName = `${Date.now()}-${compressed.name}`;
         const { error: uploadError } = await supabase.storage
           .from(BUCKET)
@@ -55,12 +55,21 @@ export default function PhotoUploader({
           });
         if (uploadError) throw uploadError;
 
-        // 4. Dapatkan URL publik
+        // 3. Dapatkan URL publik
         const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
         onUpload(data.publicUrl);
       } else {
-        // Fallback: pakai URL lokal (demo mode)
-        onUpload(localUrl);
+        // Fallback: konversi ke base64 untuk demo mode
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result as string;
+          setPreview(base64);
+          onUpload(base64);
+        };
+        reader.onerror = () => {
+          setError("Gagal membaca file");
+        };
+        reader.readAsDataURL(compressed);
       }
     } catch (err: any) {
       setError(err.message || "Gagal mengunggah foto");
