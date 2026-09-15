@@ -1,4 +1,5 @@
 import { CALENDAR_URL, WEDDING } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconCalendar, IconClock, IconGlass, IconPin, IconRings } from "../Icons";
 import { SectionHead } from "../Decor";
@@ -9,6 +10,7 @@ function Corner({ className }: { className: string }) {
 
 export default function Events() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
 
   return (
     <section
@@ -44,7 +46,7 @@ export default function Events() {
               Dress Code
             </p>
             <div className="mt-4 flex items-center gap-6">
-              {WEDDING.dresscode.map((d) => (
+              {mergedData.dresscode.map((d) => (
                 <span key={d.name} className="group flex flex-col items-center gap-2">
                   <span
                     className="size-9 rounded-full border-2 border-pine-950 ring-1 ring-gold-500/40 transition-transform duration-300 group-hover:scale-110"
@@ -64,7 +66,7 @@ export default function Events() {
 
         {/* kolom kanan — kartu acara */}
         <div className="space-y-8">
-          {WEDDING.events.map((ev, i) => {
+          {mergedData.events.map((ev, i) => {
             const Icon = ev.id === "akad" ? IconRings : IconGlass;
             return (
               <article

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { IMG, WEDDING } from "../../lib/wedding";
+import { WEDDING } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconCalendar, IconPin } from "../Icons";
 import { DividerOrnament, Marquee, Monogram } from "../Decor";
@@ -54,6 +55,9 @@ function Countdown() {
 /* ---------- pembuka: hero + marquee + ayat ---------- */
 export default function Hero({ open }: { open: boolean }) {
   const quoteRef = useReveal();
+  const { mergedData } = useWedding();
+  const weddingData = mergedData;
+  const photos = weddingData.photos;
 
   return (
     <>
@@ -64,7 +68,7 @@ export default function Hero({ open }: { open: boolean }) {
       >
         <div className="absolute inset-0" aria-hidden="true">
           <img
-            src={IMG.hero}
+            src={photos.hero}
             alt=""
             className="anim-kenburns h-full w-full object-cover"
             draggable={false}

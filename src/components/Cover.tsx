@@ -1,4 +1,5 @@
 import { getGuestName, WEDDING } from "../lib/wedding";
+import { useWedding } from "../lib/WeddingContext";
 import { IconEnvelope } from "./Icons";
 import { CornerFlourish, Monogram } from "./Decor";
 
@@ -26,6 +27,7 @@ export default function Cover({
 }) {
   const guest = getGuestName();
   const parts = splitGuest(guest);
+  const { mergedData } = useWedding();
 
   return (
     <div
@@ -71,7 +73,7 @@ export default function Cover({
 
         <h1 className="mt-4 font-display font-light leading-none text-ivory">
           <span className="block text-6xl italic sm:text-7xl md:text-8xl">
-            {WEDDING.groom.short}
+            {mergedData.groom.short}
           </span>
           <span className="my-1 flex items-center justify-center gap-4">
             <span className="h-px w-10 bg-gold-500/60" aria-hidden="true" />
@@ -79,12 +81,12 @@ export default function Cover({
             <span className="h-px w-10 bg-gold-500/60" aria-hidden="true" />
           </span>
           <span className="block text-6xl italic sm:text-7xl md:text-8xl">
-            {WEDDING.bride.short}
+            {mergedData.bride.short}
           </span>
         </h1>
 
         <p className="mt-5 text-xs font-medium uppercase tracking-[0.42em] text-gold-300/90">
-          {WEDDING.dateLabel}
+          {mergedData.dateLabel}
         </p>
 
         {/* nama tamu */}
@@ -116,7 +118,7 @@ export default function Cover({
             </defs>
             <text fontSize="10.5" letterSpacing="2.6" fill="currentColor" fontWeight="600">
               <textPath href="#coverCircle">
-                {`${WEDDING.groom.short} ♥ ${WEDDING.bride.short} · ${WEDDING.dateLabel.toUpperCase()} · ${WEDDING.city.toUpperCase()} ·`}
+                {`${mergedData.groom.short} ♥ ${mergedData.bride.short} · ${mergedData.dateLabel.toUpperCase()} · ${mergedData.city.toUpperCase()} ·`}
               </textPath>
             </text>
           </svg>

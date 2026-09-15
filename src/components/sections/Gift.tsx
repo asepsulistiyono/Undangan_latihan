@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { WEDDING } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconCheck, IconCopy, IconGift, IconPin } from "../Icons";
 import { SectionHead } from "../Decor";
@@ -47,6 +48,7 @@ function CopyButton({ value, label = "Salin Nomor" }: { value: string; label?: s
 
 export default function Gift() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
 
   return (
     <section id="kado" className="relative z-10 py-24 sm:py-32">
@@ -62,7 +64,7 @@ export default function Gift() {
         />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {WEDDING.gifts.map((g, i) => (
+          {mergedData.gifts.map((g, i) => (
             <div
               key={g.bank}
               className={`reveal ${i ? "from-right" : "from-left"} rd-1 group relative overflow-hidden border border-gold-500/20 bg-pine-800/70 p-7 transition-all duration-500 hover:-translate-y-1.5 hover:border-gold-500/60 hover:shadow-[0_24px_60px_rgba(0,0,0,0.4)] sm:p-8`}
@@ -104,11 +106,11 @@ export default function Gift() {
               Kirim Hadiah
             </p>
             <p className="mt-2 text-sm leading-relaxed text-sage-300/90">
-              {WEDDING.giftAddress}
+              {mergedData.giftAddress}
             </p>
           </div>
           <div className="w-full sm:w-auto">
-            <CopyButton value={WEDDING.giftAddress} label="Salin Alamat" />
+            <CopyButton value={mergedData.giftAddress} label="Salin Alamat" />
           </div>
         </div>
       </div>
