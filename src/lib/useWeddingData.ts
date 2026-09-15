@@ -25,33 +25,34 @@ export interface WeddingData {
   photos?: Partial<typeof DEFAULT_IMG>;
 }
 
-const LS_KEY = "wedding-data-v1";
-
 /**
- * Hook untuk fetch & update data undangan.
- * - Jika Supabase aktif: fetch dari tabel `settings`, subscribe real-time.
- * - Jika tidak: pakai localStorage sebagai fallback (demo mode).
+ * Hook untuk fetch & update data undangan PER USER (multi-tenant).
+ * - Jika Supabase aktif: fetch dari tabel `settings` dengan filter user_id.
+ * - Jika tidak: pakai localStorage dengan key per-user.
+ * - Setiap admin punya data undangan sendiri, tidak saling mempengaruhi.
  */
-export function useWeddingData() {
+export function useWeddingData(userId?: string | null) {
   const [data, setData] = useState<WeddingData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const storageKey = userId ? `wedding-data-${userId}` : "wedding-data-default";
 
   // Fetch initial data
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      if (SUPABASE_ENABLED) {
-        const { data: rows, error: err } = await supabase
+      if (SUPABASE_ENABLED && userId) {
+        const { data: row, error: err } = await supabase
           .from("settings")
           .select("data")
-          .limit(1)
+          .eq("user_id", userId)
           .single();
-        if (err && err.code !== "PGRST116") throw err; // PGRST116 = not found
-        setData((rows?.data as WeddingData) || {});
+        if (err && err.code !== "PGRST116") throw err;
+        setData((row?.data as WeddingData) || {});
       } else {
-        const raw = localStorage.getItem(LS_KEY);
+        const raw = localStorage.getItem(storageKey);
         setData(raw ? JSON.parse(raw) : {});
       }
     } catch (e: any) {
@@ -59,7 +60,7 @@ export function useWeddingData() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [userId, storageKey]);
 
   useEffect(() => {
     fetchData();
@@ -67,12 +68,12 @@ export function useWeddingData() {
 
   // Subscribe real-time (jika Supabase aktif)
   useEffect(() => {
-    if (!SUPABASE_ENABLED) return;
+    if (!SUPABASE_ENABLED || !userId) return;
     const channel = supabase
-      .channel("settings-changes")
+      .channel(`settings-changes-${userId}`)
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "settings" },
+        { event: "UPDATE", schema: "public", table: "settings", filter: `user_id=eq.${userId}` },
         (payload) => {
           setData((payload.new as any).data || {});
         }
@@ -81,7 +82,7 @@ export function useWeddingData() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [userId]);
 
   // Update data
   const updateData = useCallback(
@@ -89,9 +90,12 @@ export function useWeddingData() {
       const merged = { ...data, ...patch };
       setData(merged);
       try {
-        if (SUPABASE_ENABLED) {
-          // Cek apakah ada row
-          const { data: existing } = await supabase.from("settings").select("id").limit(1);
+        if (SUPABASE_ENABLED && userId) {
+          const { data: existing } = await supabase
+            .from("settings")
+            .select("id")
+            .eq("user_id", userId)
+            .limit(1);
           if (existing && existing.length > 0) {
             const { error } = await supabase
               .from("settings")
@@ -99,18 +103,21 @@ export function useWeddingData() {
               .eq("id", existing[0].id);
             if (error) throw error;
           } else {
-            const { error } = await supabase.from("settings").insert({ data: merged });
+            const { error } = await supabase.from("settings").insert({
+              user_id: userId,
+              data: merged,
+            });
             if (error) throw error;
           }
         } else {
-          localStorage.setItem(LS_KEY, JSON.stringify(merged));
+          localStorage.setItem(storageKey, JSON.stringify(merged));
         }
       } catch (e: any) {
         setError(e.message || "Gagal menyimpan");
         throw e;
       }
     },
-    [data]
+    [data, userId, storageKey]
   );
 
   // Merge dengan default
@@ -133,12 +140,22 @@ function mergeWithDefaults(data: WeddingData): typeof DEFAULT_WEDDING & { photos
     groom: { ...DEFAULT_WEDDING.groom, ...data.groom },
     bride: { ...DEFAULT_WEDDING.bride, ...data.bride },
     quote: { ...DEFAULT_WEDDING.quote, ...data.quote },
-    events: data.events?.length ? data.events.map((e) => ({ ...DEFAULT_WEDDING.events[0], ...e })) : DEFAULT_WEDDING.events,
-    story: data.story?.length ? data.story.map((s) => ({ ...DEFAULT_WEDDING.story[0], ...s })) : DEFAULT_WEDDING.story,
-    gallery: data.gallery?.length ? data.gallery.map((g) => ({ ...DEFAULT_WEDDING.gallery[0], ...g })) : DEFAULT_WEDDING.gallery,
-    gifts: data.gifts?.length ? data.gifts.map((g) => ({ ...DEFAULT_WEDDING.gifts[0], ...g })) : DEFAULT_WEDDING.gifts,
+    events: data.events?.length
+      ? data.events.map((e, i) => ({ ...DEFAULT_WEDDING.events[i] || DEFAULT_WEDDING.events[0], ...e }))
+      : DEFAULT_WEDDING.events,
+    story: data.story?.length
+      ? data.story.map((s, i) => ({ ...DEFAULT_WEDDING.story[i] || DEFAULT_WEDDING.story[0], ...s }))
+      : DEFAULT_WEDDING.story,
+    gallery: data.gallery?.length
+      ? data.gallery.map((g, i) => ({ ...DEFAULT_WEDDING.gallery[i] || DEFAULT_WEDDING.gallery[0], ...g }))
+      : DEFAULT_WEDDING.gallery,
+    gifts: data.gifts?.length
+      ? data.gifts.map((g, i) => ({ ...DEFAULT_WEDDING.gifts[i] || DEFAULT_WEDDING.gifts[0], ...g }))
+      : DEFAULT_WEDDING.gifts,
     giftAddress: data.giftAddress ?? DEFAULT_WEDDING.giftAddress,
-    dresscode: data.dresscode?.length ? data.dresscode.map((d) => ({ ...DEFAULT_WEDDING.dresscode[0], ...d })) : DEFAULT_WEDDING.dresscode,
+    dresscode: data.dresscode?.length
+      ? data.dresscode.map((d, i) => ({ ...DEFAULT_WEDDING.dresscode[i] || DEFAULT_WEDDING.dresscode[0], ...d }))
+      : DEFAULT_WEDDING.dresscode,
     photos: { ...DEFAULT_IMG, ...data.photos },
   };
 }

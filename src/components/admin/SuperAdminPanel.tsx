@@ -14,7 +14,7 @@ import {
 import { Monogram } from "../Decor";
 import { IconArrowLeft, IconCheck, IconEye, IconEyeOff, IconPencil, IconTrash, IconUsers } from "../Icons";
 
-export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) {
+export default function SuperAdminPanel({ profile, userName }: { profile: AdminProfile; userName: string | null }) {
   const [admins, setAdmins] = useState<AdminProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
@@ -23,9 +23,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
   const [newRole, setNewRole] = useState<"admin" | "super_admin">("admin");
   const [newName, setNewName] = useState("");
   const [creating, setCreating] = useState(false);
-  const [changingPwd, setChangingPwd] = useState(false);
-  const [newPwd, setNewPwd] = useState("");
-  const [confirmPwd, setConfirmPwd] = useState("");
+  const [showPwdModal, setShowPwdModal] = useState(false);
   const [adminWA, setAdminWAState] = useState("6281234567890");
   const [editingWA, setEditingWA] = useState(false);
   const [tempWA, setTempWA] = useState("");
@@ -33,6 +31,9 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
   const [resetModal, setResetModal] = useState<{ userId: string; name: string } | null>(null);
   const [resetPwd, setResetPwd] = useState("");
   const [resetConfirmPwd, setResetConfirmPwd] = useState("");
+  const [changePwdModal, setChangePwdModal] = useState(false);
+  const [newPwd, setNewPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -93,8 +94,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
     }
   };
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleChangePassword = async () => {
     if (newPwd !== confirmPwd) {
       showToast("Password baru tidak cocok");
       return;
@@ -103,16 +103,14 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
       showToast("Password minimal 6 karakter");
       return;
     }
-    setChangingPwd(true);
     try {
       await changePassword(newPwd);
       showToast("Password berhasil diubah");
       setNewPwd("");
       setConfirmPwd("");
+      setChangePwdModal(false);
     } catch (err: any) {
       showToast("Gagal mengubah password: " + err.message);
-    } finally {
-      setChangingPwd(false);
     }
   };
 
@@ -179,15 +177,17 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
         className="pointer-events-none fixed inset-0"
         style={{
           background:
-            "radial-gradient(55% 40% at 85% -5%, rgba(200,169,97,0.09), transparent 65%), radial-gradient(60% 45% at -10% 35%, rgba(32,71,52,0.5), transparent 60%)",
+            "radial-gradient(55% 40% at 85% -5%, rgba(244,63,94,0.08), transparent 65%), radial-gradient(60% 45% at -10% 35%, rgba(190,18,60,0.15), transparent 60%)",
         }}
       />
 
       <div className="relative mx-auto max-w-5xl px-5 py-8 sm:px-8">
         {/* Header */}
-        <header className="flex flex-wrap items-center justify-between gap-5 border-b border-gold-500/15 pb-6">
+        <header className="flex flex-wrap items-center justify-between gap-5 border-b border-rose-500/20 pb-6">
           <div className="flex items-center gap-4">
-            <Monogram className="size-12 text-gold-400 sm:size-14" />
+            <div className="flex size-12 items-center justify-center rounded-full border border-rose-400/50 bg-rose-500/10 sm:size-14">
+              <span className="font-display text-xl italic text-rose-300 sm:text-2xl">SA</span>
+            </div>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.38em] text-rose-400">
                 Super Admin
@@ -195,19 +195,24 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
               <h1 className="mt-1 font-display text-2xl font-light italic text-ivory sm:text-3xl">
                 Kelola Admin
               </h1>
+              {userName && (
+                <p className="mt-1 text-xs text-sage-300/70">
+                  Halo, <span className="font-semibold text-rose-300">{userName}</span>
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-3">
             <a
               href="#/admin"
-              className="inline-flex items-center gap-2 border border-gold-500/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300 transition-all hover:bg-gold-500 hover:text-pine-950"
+              className="inline-flex items-center gap-2 border border-rose-400/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-300 transition-all hover:bg-rose-400 hover:text-white"
             >
               <IconArrowLeft className="size-4" />
               Panel Admin
             </a>
             <a
               href="#/"
-              className="inline-flex items-center gap-2 border border-gold-500/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300 transition-all hover:bg-gold-500 hover:text-pine-950"
+              className="inline-flex items-center gap-2 border border-rose-400/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-300 transition-all hover:bg-rose-400 hover:text-white"
             >
               Lihat Undangan
             </a>
@@ -220,47 +225,23 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
           </div>
         </header>
 
-        {/* Ganti Password Saya */}
+        {/* Ganti Password Saya - Tombol */}
         <section className="mt-8">
           <h2 className="font-display text-2xl font-light italic text-ivory">
-            Ganti Password Saya
+            Keamanan Akun
           </h2>
-          <form onSubmit={handleChangePassword} className="mt-5 space-y-5 border border-gold-500/15 bg-pine-800/40 p-6">
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-                Password Baru
-              </label>
-              <input
-                type="password"
-                value={newPwd}
-                onChange={(e) => setNewPwd(e.target.value)}
-                required
-                minLength={6}
-                className="mt-2.5 w-full rounded-[3px] border border-gold-500/25 bg-pine-900/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-gold-400 focus:outline-none"
-                placeholder="Minimal 6 karakter"
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-                Konfirmasi Password Baru
-              </label>
-              <input
-                type="password"
-                value={confirmPwd}
-                onChange={(e) => setConfirmPwd(e.target.value)}
-                required
-                className="mt-2.5 w-full rounded-[3px] border border-gold-500/25 bg-pine-900/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-gold-400 focus:outline-none"
-                placeholder="Ulangi password baru"
-              />
-            </div>
+          <div className="mt-5 border border-rose-500/20 bg-pine-800/40 p-6">
+            <p className="text-sm text-sage-300/80">
+              Ubah password akun Anda secara berkala untuk menjaga keamanan.
+            </p>
             <button
-              type="submit"
-              disabled={changingPwd}
-              className="inline-flex items-center gap-2.5 bg-gold-500 px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-pine-950 shadow-[0_8px_24px_rgba(200,169,97,0.25)] transition-all hover:-translate-y-0.5 hover:bg-gold-400 disabled:opacity-50"
+              onClick={() => setChangePwdModal(true)}
+              className="mt-4 inline-flex items-center gap-2.5 bg-rose-500 px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white shadow-[0_8px_24px_rgba(244,63,94,0.25)] transition-all hover:-translate-y-0.5 hover:bg-rose-400"
             >
-              {changingPwd ? "Menyimpan..." : "Ubah Password"}
+              <IconPencil className="size-4" />
+              Ubah Password
             </button>
-          </form>
+          </div>
         </section>
 
         {/* Setting WhatsApp Admin */}
@@ -271,7 +252,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
           <p className="mt-2 text-sm text-sage-300/70">
             Nomor ini akan ditampilkan di halaman login untuk tamu yang ingin minta dibuatkan akun.
           </p>
-          <div className="mt-5 border border-gold-500/15 bg-pine-800/40 p-6">
+          <div className="mt-5 border border-rose-500/20 bg-pine-800/40 p-6">
             {editingWA ? (
               <div className="space-y-4">
                 <div>
@@ -292,7 +273,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                 <div className="flex gap-2">
                   <button
                     onClick={handleSaveWA}
-                    className="inline-flex items-center gap-2 bg-gold-500 px-5 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-pine-950 transition-all hover:bg-gold-400"
+                    className="inline-flex items-center gap-2 bg-rose-500 px-5 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-white transition-all hover:bg-rose-400"
                   >
                     <IconCheck className="size-4" />
                     Simpan
@@ -302,7 +283,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                       setEditingWA(false);
                       setTempWA("");
                     }}
-                    className="border border-gold-500/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-sage-300 transition-colors hover:text-ivory"
+                    className="border border-rose-500/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-sage-300 transition-colors hover:text-ivory"
                   >
                     Batal
                   </button>
@@ -321,7 +302,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                     setEditingWA(true);
                     setTempWA(adminWA);
                   }}
-                  className="inline-flex items-center gap-2 border border-gold-500/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300 transition-colors hover:bg-gold-500 hover:text-pine-950"
+                  className="inline-flex items-center gap-2 border border-rose-400/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-300 transition-colors hover:bg-rose-400 hover:text-white"
                 >
                   <IconPencil className="size-4" />
                   Ubah
@@ -336,7 +317,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
           <h2 className="font-display text-2xl font-light italic text-ivory">
             Tambah Admin Baru
           </h2>
-          <form onSubmit={handleCreate} className="mt-5 space-y-5 border border-gold-500/15 bg-pine-800/40 p-6">
+          <form onSubmit={handleCreate} className="mt-5 space-y-5 border border-rose-500/20 bg-pine-800/40 p-6">
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
                 Nama Lengkap (opsional)
@@ -406,7 +387,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
             <button
               type="submit"
               disabled={creating}
-              className="inline-flex items-center gap-2.5 bg-gold-500 px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-pine-950 shadow-[0_8px_24px_rgba(200,169,97,0.25)] transition-all hover:-translate-y-0.5 hover:bg-gold-400 disabled:opacity-50"
+              className="inline-flex items-center gap-2.5 bg-rose-500 px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white shadow-[0_8px_24px_rgba(244,63,94,0.25)] transition-all hover:-translate-y-0.5 hover:bg-rose-400 disabled:opacity-50"
             >
               {creating ? "Membuat..." : "Buat Admin"}
             </button>
@@ -432,7 +413,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
               {admins.map((a) => (
                 <li
                   key={a.user_id}
-                  className="border border-gold-500/15 bg-pine-800/40 p-4"
+                  className="border border-rose-500/20 bg-pine-800/40 p-4"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0 flex-1">
@@ -455,7 +436,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleTogglePassword(a.user_id)}
-                        className="inline-flex items-center gap-2 border border-gold-500/30 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300 transition-colors hover:bg-gold-500 hover:text-pine-950"
+                        className="inline-flex items-center gap-2 border border-rose-400/30 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-300 transition-colors hover:bg-rose-400 hover:text-white"
                         title="Lihat password"
                       >
                         {showPwd[a.user_id] ? (
@@ -471,8 +452,8 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                         )}
                       </button>
                       {showPwd[a.user_id] && (
-                        <div className="flex items-center gap-2 rounded-[3px] border border-gold-500/30 bg-pine-900/80 px-3 py-2">
-                          <span className="font-mono text-xs text-gold-200">
+                        <div className="flex items-center gap-2 rounded-[3px] border border-rose-400/30 bg-pine-900/80 px-3 py-2">
+                          <span className="font-mono text-xs text-rose-200">
                             {showPwd[a.user_id]}
                           </span>
                         </div>
@@ -503,19 +484,81 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
         </section>
       </div>
 
-      {/* Modal Reset Password */}
-      {resetModal && (
+      {/* Modal Ubah Password */}
+      {changePwdModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pine-950/90 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md border border-gold-500/30 bg-pine-900 p-6">
+          <div className="w-full max-w-md border border-rose-500/30 bg-pine-900 p-6">
             <h3 className="font-display text-xl font-light italic text-ivory">
-              Reset Password
+              Ubah Password
             </h3>
             <p className="mt-2 text-sm text-sage-300/80">
-              Reset password untuk: <span className="font-semibold text-gold-200">{resetModal.name}</span>
+              Ubah password untuk akun <span className="font-semibold text-rose-300">{userName}</span>
             </p>
             <div className="mt-5 space-y-4">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
+                <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-rose-400">
+                  Password Baru
+                </label>
+                <input
+                  type="password"
+                  value={newPwd}
+                  onChange={(e) => setNewPwd(e.target.value)}
+                  required
+                  minLength={6}
+                  className="mt-2.5 w-full rounded-[3px] border border-rose-500/25 bg-pine-800/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-rose-400 focus:outline-none"
+                  placeholder="Minimal 6 karakter"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-rose-400">
+                  Konfirmasi Password Baru
+                </label>
+                <input
+                  type="password"
+                  value={confirmPwd}
+                  onChange={(e) => setConfirmPwd(e.target.value)}
+                  required
+                  className="mt-2.5 w-full rounded-[3px] border border-rose-500/25 bg-pine-800/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-rose-400 focus:outline-none"
+                  placeholder="Ulangi password baru"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={handleChangePassword}
+                  className="inline-flex items-center gap-2 bg-rose-500 px-5 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-white transition-all hover:bg-rose-400"
+                >
+                  <IconCheck className="size-4" />
+                  Simpan Password
+                </button>
+                <button
+                  onClick={() => {
+                    setChangePwdModal(false);
+                    setNewPwd("");
+                    setConfirmPwd("");
+                  }}
+                  className="border border-rose-500/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-sage-300 transition-colors hover:text-ivory"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Reset Password */}
+      {resetModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-pine-950/90 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md border border-rose-500/30 bg-pine-900 p-6">
+            <h3 className="font-display text-xl font-light italic text-ivory">
+              Reset Password Admin
+            </h3>
+            <p className="mt-2 text-sm text-sage-300/80">
+              Reset password untuk: <span className="font-semibold text-rose-300">{resetModal.name}</span>
+            </p>
+            <div className="mt-5 space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-rose-400">
                   Password Baru
                 </label>
                 <input
@@ -524,12 +567,12 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                   onChange={(e) => setResetPwd(e.target.value)}
                   required
                   minLength={6}
-                  className="mt-2.5 w-full rounded-[3px] border border-gold-500/25 bg-pine-800/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-gold-400 focus:outline-none"
+                  className="mt-2.5 w-full rounded-[3px] border border-rose-500/25 bg-pine-800/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-rose-400 focus:outline-none"
                   placeholder="Minimal 6 karakter"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
+                <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-rose-400">
                   Konfirmasi Password Baru
                 </label>
                 <input
@@ -537,14 +580,14 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                   value={resetConfirmPwd}
                   onChange={(e) => setResetConfirmPwd(e.target.value)}
                   required
-                  className="mt-2.5 w-full rounded-[3px] border border-gold-500/25 bg-pine-800/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-gold-400 focus:outline-none"
+                  className="mt-2.5 w-full rounded-[3px] border border-rose-500/25 bg-pine-800/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-rose-400 focus:outline-none"
                   placeholder="Ulangi password baru"
                 />
               </div>
               <div className="flex gap-2 pt-2">
                 <button
                   onClick={handleResetPassword}
-                  className="inline-flex items-center gap-2 bg-gold-500 px-5 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-pine-950 transition-all hover:bg-gold-400"
+                  className="inline-flex items-center gap-2 bg-rose-500 px-5 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-white transition-all hover:bg-rose-400"
                 >
                   <IconCheck className="size-4" />
                   Reset Password
@@ -555,7 +598,7 @@ export default function SuperAdminPanel({ profile }: { profile: AdminProfile }) 
                     setResetPwd("");
                     setResetConfirmPwd("");
                   }}
-                  className="border border-gold-500/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-sage-300 transition-colors hover:text-ivory"
+                  className="border border-rose-500/30 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-sage-300 transition-colors hover:text-ivory"
                 >
                   Batal
                 </button>
