@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { timeAgo } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconChat, IconCheck, IconUsers } from "../Icons";
 import { SectionHead } from "../Decor";
@@ -14,14 +15,17 @@ type Wish = {
 };
 
 const DAY = 86_400_000;
-const SEEDS: Wish[] = [
-  { id: "s1", name: "Nadia & Bagas", attend: "hadir", guests: 2, ts: Date.now() - DAY * 2 - 3_600_000, message: "Barakallahu laka wa baraka 'alaika wa jama'a bainakuma fii khair. Tak sabar menunggu hari bahagianya! 🤍" },
-  { id: "s2", name: "Tante Mira", attend: "hadir", guests: 2, ts: Date.now() - DAY * 3, message: "Alhamdulillah, akhirnya sampai di titik ini. Semoga menjadi keluarga sakinah, mawaddah, warahmah. Peluk jauh dari Bandung!" },
-  { id: "s3", name: "Dimas Prasetyo", attend: "hadir", guests: 1, ts: Date.now() - DAY * 4 - 7_200_000, message: "Selamat menempuh hidup baru, Bro Raka! Dari teman sebangku sampai jadi saksi bahagiamu. Sampai jumpa di Cilandak!" },
-  { id: "s4", name: "Kania Larasati", attend: "berhalangan", guests: 0, ts: Date.now() - DAY * 5, message: "Mohon maaf belum bisa hadir karena sedang di luar kota. Doa terbaik untuk Sekar & Raka, semoga lancar sampai hari H!" },
-  { id: "s5", name: "Pak Bimo & Ibu Ratna", attend: "hadir", guests: 2, ts: Date.now() - DAY * 6, message: "Doa restu kami menyertai setiap langkah kalian. Selamat membangun rumah tangga yang penuh cinta dan keberkahan." },
-  { id: "s6", name: "Rania Puspita", attend: "hadir", guests: 1, ts: Date.now() - DAY * 7 - 1_800_000, message: "MasyaAllah, pasangan paling serasi tahun ini! Semoga pernikahan kalian dipenuhi tawa setiap hari. Congrats, Sekar!" },
-];
+
+function getSeeds(groomName: string, brideName: string): Wish[] {
+  return [
+    { id: "s1", name: "Nadia & Bagas", attend: "hadir", guests: 2, ts: Date.now() - DAY * 2 - 3_600_000, message: "Barakallahu laka wa baraka 'alaika wa jama'a bainakuma fii khair. Tak sabar menunggu hari bahagianya! 🤍" },
+    { id: "s2", name: "Tante Mira", attend: "hadir", guests: 2, ts: Date.now() - DAY * 3, message: "Alhamdulillah, akhirnya sampai di titik ini. Semoga menjadi keluarga sakinah, mawaddah, warahmah. Peluk jauh dari Bandung!" },
+    { id: "s3", name: "Dimas Prasetyo", attend: "hadir", guests: 1, ts: Date.now() - DAY * 4 - 7_200_000, message: `Selamat menempuh hidup baru, Bro ${groomName}! Dari teman sebangku sampai jadi saksi bahagiamu. Sampai jumpa di acara!` },
+    { id: "s4", name: "Kania Larasati", attend: "berhalangan", guests: 0, ts: Date.now() - DAY * 5, message: `Mohon maaf belum bisa hadir karena sedang di luar kota. Doa terbaik untuk ${brideName} & ${groomName}, semoga lancar sampai hari H!` },
+    { id: "s5", name: "Pak Bimo & Ibu Ratna", attend: "hadir", guests: 2, ts: Date.now() - DAY * 6, message: "Doa restu kami menyertai setiap langkah kalian. Selamat membangun rumah tangga yang penuh cinta dan keberkahan." },
+    { id: "s6", name: "Rania Puspita", attend: "hadir", guests: 1, ts: Date.now() - DAY * 7 - 1_800_000, message: `MasyaAllah, pasangan paling serasi tahun ini! Semoga pernikahan kalian dipenuhi tawa setiap hari. Congrats, ${brideName}!` },
+  ];
+}
 
 const LS_KEY = "raka-sekar-wishes-v1";
 
@@ -41,6 +45,7 @@ const inputCls =
 
 export default function Wishes() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
   const [stored, setStored] = useState<Wish[]>(loadStored);
   const [name, setName] = useState("");
   const [attend, setAttend] = useState<"hadir" | "berhalangan">("hadir");
@@ -53,7 +58,7 @@ export default function Wishes() {
 
   useEffect(() => () => window.clearTimeout(toastTimer.current), []);
 
-  const all = useMemo(() => [...stored, ...SEEDS], [stored]);
+  const all = useMemo(() => [...stored, ...getSeeds(mergedData.groom.short, mergedData.bride.short)], [stored, mergedData.groom.short, mergedData.bride.short]);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
