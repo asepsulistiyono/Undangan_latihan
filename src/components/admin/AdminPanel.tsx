@@ -10,7 +10,7 @@ import PhotoUploader from "./PhotoUploader";
 type Tab = "pengantin" | "acara" | "kutipan" | "kisah" | "galeri" | "kado" | "dresscode";
 
 export default function AdminPanel({ profile, userName }: { profile: AdminProfile; userName: string | null }) {
-  const { mergedData, updateData } = useWedding();
+  const { mergedData, updateData, refetch } = useWedding();
   const [tab, setTab] = useState<Tab>("pengantin");
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState("");
@@ -25,11 +25,29 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
     try {
       await updateData(patch);
       
-      // Auto-generate slug jika groom atau bride diupdate
-      if (patch.groom || patch.bride) {
-        const groomName = patch.groom?.short || mergedData.groom.short;
-        const brideName = patch.bride?.short || mergedData.bride.short;
-        const slug = generateSlug(groomName, brideName);
+      // Baca data terkini langsung dari localStorage
+      // Karena mergedData belum ter-update (React belum re-render)
+      let groomName = mergedData.groom.short;
+      let brideName = mergedData.bride.short;
+      
+      if (profile?.user_id) {
+        try {
+          const storageKey = `wedding-data-${profile.user_id}`;
+          const rawData = localStorage.getItem(storageKey);
+          if (rawData) {
+            const savedData = JSON.parse(rawData);
+            groomName = savedData.groom?.short || groomName;
+            brideName = savedData.bride?.short || brideName;
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+      
+      const slug = generateSlug(groomName, brideName);
+      
+      // Pastikan user_id ada sebelum save slug
+      if (profile?.user_id) {
         saveSlugMapping(slug, profile.user_id);
       }
       
