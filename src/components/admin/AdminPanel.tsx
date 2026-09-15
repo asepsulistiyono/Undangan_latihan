@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useWedding } from "../../lib/WeddingContext";
 import { signOut, type AdminProfile } from "../../lib/auth";
+import { generateSlug, saveSlugMapping } from "../../lib/slug";
 import { Monogram } from "../Decor";
 import { IconArrowLeft, IconCheck, IconClose, IconPencil, IconTrash } from "../Icons";
 import FieldEditor from "./FieldEditor";
@@ -23,6 +24,15 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
     setSaving(true);
     try {
       await updateData(patch);
+      
+      // Auto-generate slug jika groom atau bride diupdate
+      if (patch.groom || patch.bride) {
+        const groomName = patch.groom?.short || mergedData.groom.short;
+        const brideName = patch.bride?.short || mergedData.bride.short;
+        const slug = generateSlug(groomName, brideName);
+        saveSlugMapping(slug, profile.user_id);
+      }
+      
       showToast("Perubahan tersimpan");
     } catch (err: any) {
       showToast("Gagal menyimpan: " + err.message);
@@ -73,7 +83,7 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
           </div>
           <div className="flex items-center gap-3">
             <a
-              href="#/"
+              href={`#/${generateSlug(mergedData.groom.short, mergedData.bride.short)}`}
               className="inline-flex items-center gap-2 border border-gold-500/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300 transition-all hover:bg-gold-500 hover:text-pine-950"
             >
               <IconArrowLeft className="size-4" />
@@ -87,6 +97,31 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
             </button>
           </div>
         </header>
+
+        {/* Info URL Undangan Personal */}
+        <div className="mt-6 border border-gold-500/25 bg-pine-800/50 p-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-gold-400">
+            URL Undangan Personal Anda
+          </p>
+          <div className="mt-2 flex items-center gap-2">
+            <code className="flex-1 truncate rounded-[3px] bg-pine-900/80 px-3 py-2 font-mono text-xs text-gold-200">
+              {window.location.origin}/#/{generateSlug(mergedData.groom.short, mergedData.bride.short)}
+            </code>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/#/${generateSlug(mergedData.groom.short, mergedData.bride.short)}`;
+                navigator.clipboard.writeText(url);
+                showToast("URL undangan disalin!");
+              }}
+              className="shrink-0 rounded-[3px] bg-gold-500 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-pine-950 transition-all hover:bg-gold-400"
+            >
+              Salin
+            </button>
+          </div>
+          <p className="mt-2 text-[10px] text-sage-300/60">
+            Bagikan URL ini kepada tamu undangan Anda. URL akan otomatis berubah saat Anda mengubah nama mempelai.
+          </p>
+        </div>
 
         {/* Tabs */}
         <div className="mt-6 flex flex-wrap gap-2 border-b border-gold-500/15 pb-4">

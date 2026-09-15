@@ -1,4 +1,5 @@
 import { supabase, SUPABASE_ENABLED } from "./supabase";
+import { removeSlugByUserId } from "./slug";
 
 export type AdminRole = "admin" | "super_admin";
 
@@ -259,6 +260,9 @@ export async function deleteAdmin(userId: string) {
   saveDemoProfiles(profiles.filter((p) => p.user_id !== userId));
   const users = loadDemoUsers();
   saveDemoUsers(users.filter((u) => u.id !== userId));
+  
+  // Hapus juga slug mapping
+  removeSlugByUserId(userId);
 }
 
 export async function resetAdminPassword(userId: string, newPassword: string) {
