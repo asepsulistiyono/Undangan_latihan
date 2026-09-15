@@ -6,9 +6,8 @@ import { IconCalendar, IconPin } from "../Icons";
 import { DividerOrnament, Marquee, Monogram } from "../Decor";
 
 /* ---------- hitung mundur ---------- */
-const TARGET = new Date(WEDDING.dateISO).getTime();
-
-function diff() {
+function diff(dateISO: string) {
+  const TARGET = new Date(dateISO).getTime();
   const d = Math.max(0, TARGET - Date.now());
   return {
     hari: Math.floor(d / 86_400_000),
@@ -31,12 +30,12 @@ function Cell({ v, label }: { v: number; label: string }) {
   );
 }
 
-function Countdown() {
-  const [t, setT] = useState(diff);
+function Countdown({ dateISO }: { dateISO: string }) {
+  const [t, setT] = useState(() => diff(dateISO));
   useEffect(() => {
-    const id = window.setInterval(() => setT(diff()), 1000);
+    const id = window.setInterval(() => setT(diff(dateISO)), 1000);
     return () => window.clearInterval(id);
-  }, []);
+  }, [dateISO]);
   return (
     <div>
       <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-gold-400">
@@ -82,7 +81,7 @@ export default function Hero({ open }: { open: boolean }) {
           <div className="flex items-center justify-between">
             <Monogram className="size-12 text-gold-300 sm:size-14" />
             <span className="font-display text-sm italic tracking-[0.3em] text-gold-300/90 sm:text-base">
-              {WEDDING.dateShort}
+              {mergedData.dateShort}
             </span>
           </div>
 
@@ -96,12 +95,12 @@ export default function Hero({ open }: { open: boolean }) {
               </p>
               <h1 className="mt-4 font-display font-light italic leading-[0.95] text-ivory">
                 <span className="mask-line ml-d1 text-[21vw] sm:text-8xl lg:text-[7rem]">
-                  <span>{WEDDING.groom.short}</span>
+                  <span>{mergedData.groom.short}</span>
                 </span>
                 <span className="mask-line ml-d2 text-[21vw] sm:text-8xl lg:text-[7rem]">
                   <span className="flex items-baseline gap-3 sm:gap-5">
                     <span className="text-[0.52em] text-gold-400">&</span>
-                    <span>{WEDDING.bride.short}</span>
+                    <span>{mergedData.bride.short}</span>
                   </span>
                 </span>
               </h1>
@@ -109,18 +108,18 @@ export default function Hero({ open }: { open: boolean }) {
                 <span className="flex flex-wrap gap-3">
                   <span className="flex items-center gap-2.5 border border-gold-500/30 bg-pine-900/60 px-4 py-2 text-xs font-semibold tracking-[0.14em] text-gold-200 backdrop-blur-sm">
                     <IconCalendar className="size-4 text-gold-400" />
-                    {WEDDING.dateLabel.toUpperCase()}
+                    {mergedData.dateLabel.toUpperCase()}
                   </span>
                   <span className="flex items-center gap-2.5 border border-gold-500/30 bg-pine-900/60 px-4 py-2 text-xs font-semibold tracking-[0.14em] text-gold-200 backdrop-blur-sm">
                     <IconPin className="size-4 text-gold-400" />
-                    {WEDDING.venueMain.toUpperCase()} · {WEDDING.city.toUpperCase()}
+                    {mergedData.venueMain.toUpperCase()} · {mergedData.city.toUpperCase()}
                   </span>
                 </span>
               </div>
             </div>
             <div className="mask-line">
               <span>
-                <Countdown />
+                <Countdown dateISO={mergedData.dateISO} />
               </span>
             </div>
           </div>
@@ -150,13 +149,13 @@ export default function Hero({ open }: { open: boolean }) {
             className="reveal rd-1 mt-9 text-2xl leading-[2.2] text-gold-200/95 sm:text-[1.7rem]"
             style={{ fontFamily: "'Fraunces', 'Amiri', serif" }}
           >
-            {WEDDING.quote.arabic}
+            {mergedData.quote.arabic}
           </p>
           <blockquote className="reveal rd-2 mt-8 font-display text-lg font-light italic leading-relaxed text-sage-300/95 sm:text-xl">
-            &ldquo;{WEDDING.quote.text}&rdquo;
+            &ldquo;{mergedData.quote.text}&rdquo;
           </blockquote>
           <p className="reveal rd-3 mt-7 text-[11px] font-bold uppercase tracking-[0.42em] text-gold-400">
-            {WEDDING.quote.source}
+            {mergedData.quote.source}
           </p>
         </div>
       </section>
