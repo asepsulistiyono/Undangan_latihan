@@ -63,11 +63,10 @@ export default function App() {
   const invitationSlug = parseInvitationSlug(route);
   const slugUserId = invitationSlug ? getUserIdFromSlug(invitationSlug) : null;
 
-  // Tentukan userId untuk undangan publik:
-  // 1. Jika ada slug di URL → gunakan userId dari slug mapping
-  // 2. Jika tidak ada slug tapi user login → gunakan userId user
-  // 3. Jika tidak ada keduanya → null (data default)
-  const publicUserId = slugUserId || user?.id || null;
+  // Undangan publik hanya menggunakan data dari slug URL
+  // Status login admin TIDAK mempengaruhi undangan publik
+  // Jika tidak ada slug → tampilkan data default (Raka & Sekar)
+  const publicUserId = slugUserId || null;
 
   // Redirect ke admin setelah login jika diperlukan
   useEffect(() => {
