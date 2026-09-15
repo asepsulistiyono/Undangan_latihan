@@ -1,9 +1,11 @@
 import { useReveal } from "../../hooks/useReveal";
+import { useWedding } from "../../lib/WeddingContext";
 import { IconHeart } from "../Icons";
 import { DividerOrnament, Monogram } from "../Decor";
 
 export default function Closing() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
 
   return (
     <footer className="relative z-10 overflow-hidden pb-32 pt-28 sm:pb-36">
@@ -29,15 +31,15 @@ export default function Closing() {
         </p>
         <DividerOrnament className="reveal rd-4 mt-9" />
         <p className="reveal rd-5 mt-9 font-display text-3xl italic text-gold-200 sm:text-4xl">
-          Raka <span className="text-gold-400">&</span> Sekar
+          {mergedData.groom.short} <span className="text-gold-400">&</span> {mergedData.bride.short}
         </p>
         <p className="reveal rd-6 mt-3 text-[11px] uppercase tracking-[0.3em] text-sage-300/70">
-          Beserta keluarga besar Prasetya & Laras
+          Beserta keluarga besar
         </p>
       </div>
 
       <div className="relative mx-auto mt-20 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-gold-500/10 px-5 pt-6 text-[10px] font-semibold uppercase tracking-[0.28em] text-sage-300/60 sm:flex-row sm:px-8">
-        <span>Raka ♥ Sekar — 12 · 06 · 2027</span>
+        <span>{mergedData.groom.short} ♥ {mergedData.bride.short} — {mergedData.dateShort}</span>
         <span className="flex items-center gap-1.5">
           Dibuat dengan <IconHeart className="size-3.5 text-gold-400" /> di Jakarta
         </span>
