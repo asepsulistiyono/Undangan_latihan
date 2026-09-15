@@ -13,8 +13,8 @@ interface WeddingContextType {
 
 const WeddingContext = createContext<WeddingContextType | null>(null);
 
-export function WeddingProvider({ children }: { children: ReactNode }) {
-  const value = useWeddingData();
+export function WeddingProvider({ children, userId }: { children: ReactNode; userId?: string | null }) {
+  const value = useWeddingData(userId);
   return <WeddingContext.Provider value={value}>{children}</WeddingContext.Provider>;
 }
 

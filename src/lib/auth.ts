@@ -132,10 +132,10 @@ export async function signIn(username: string, password: string) {
   const users = loadDemoUsers();
   const user = users.find((u) => u.username === username && u.password === password);
   if (!user) throw new Error("Username atau password salah");
-  const session = { user_id: user.id, username: user.username };
+  const session = { user_id: user.id, username: user.username, name: user.name };
   localStorage.setItem(LS_SESSION, JSON.stringify(session));
   dispatchAuthEvent(); // Notify App.tsx bahwa user sudah login
-  return { user: { id: user.id, username: user.username }, session };
+  return { user: { id: user.id, username: user.username, name: user.name }, session };
 }
 
 export async function signOut() {
@@ -148,11 +148,11 @@ export async function signOut() {
   dispatchAuthEvent(); // Notify App.tsx bahwa user sudah logout
 }
 
-export async function getSession(): Promise<{ user_id: string; username: string } | null> {
+export async function getSession(): Promise<{ user_id: string; username: string; name: string | null } | null> {
   if (SUPABASE_ENABLED) {
     const { data } = await supabase.auth.getSession();
     return data.session?.user
-      ? { user_id: data.session.user.id, username: data.session.user.email?.split("@")[0] || "" }
+      ? { user_id: data.session.user.id, username: data.session.user.email?.split("@")[0] || "", name: null }
       : null;
   }
   try {
@@ -312,7 +312,7 @@ export function onAuthStateChange(callback: (user: any) => void): () => void {
     try {
       const raw = localStorage.getItem(LS_SESSION);
       const session = raw ? JSON.parse(raw) : null;
-      callback(session ? { id: session.user_id, username: session.username } : null);
+      callback(session ? { id: session.user_id, username: session.username, name: session.name } : null);
     } catch {
       callback(null);
     }

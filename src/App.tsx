@@ -26,6 +26,7 @@ export default function App() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<AdminProfile | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [userName, setUserName] = useState<string | null>(null);
 
   // Rute berbasis hash
   useEffect(() => {
@@ -41,8 +42,10 @@ export default function App() {
       if (u) {
         const p = await getAdminProfile(u.id);
         setProfile(p);
+        setUserName(u.name || u.username);
       } else {
         setProfile(null);
+        setUserName(null);
       }
       setAuthLoading(false);
     });
@@ -127,22 +130,22 @@ export default function App() {
 
     if (isSuperRoute) {
       return (
-        <WeddingProvider>
-          <SuperAdminPanel profile={profile} />
+        <WeddingProvider userId={user?.id}>
+          <SuperAdminPanel profile={profile} userName={userName} />
         </WeddingProvider>
       );
     }
 
     return (
-      <WeddingProvider>
-        <AdminPanel profile={profile} />
+      <WeddingProvider userId={user?.id}>
+        <AdminPanel profile={profile} userName={userName} />
       </WeddingProvider>
     );
   }
 
   // Route: Undangan publik
   return (
-    <WeddingProvider>
+    <WeddingProvider userId={null}>
       <div className="relative min-h-screen overflow-x-clip bg-pine-950 font-sans text-ivory">
         <div
           aria-hidden="true"

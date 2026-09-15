@@ -8,7 +8,7 @@ import PhotoUploader from "./PhotoUploader";
 
 type Tab = "pengantin" | "acara" | "kutipan" | "kisah" | "galeri" | "kado" | "dresscode";
 
-export default function AdminPanel({ profile }: { profile: AdminProfile }) {
+export default function AdminPanel({ profile, userName }: { profile: AdminProfile; userName: string | null }) {
   const { mergedData, updateData } = useWedding();
   const [tab, setTab] = useState<Tab>("pengantin");
   const [saving, setSaving] = useState(false);
@@ -64,6 +64,11 @@ export default function AdminPanel({ profile }: { profile: AdminProfile }) {
               <h1 className="mt-1 font-display text-2xl font-light italic text-ivory sm:text-3xl">
                 Kelola Undangan
               </h1>
+              {userName && (
+                <p className="mt-1 text-xs text-sage-300/70">
+                  Halo, <span className="font-semibold text-gold-300">{userName}</span>
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-3">
