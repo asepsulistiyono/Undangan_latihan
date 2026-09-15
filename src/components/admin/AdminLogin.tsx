@@ -22,8 +22,9 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
     setError("");
     try {
       await signIn(username, password);
+      // Simpan flag untuk redirect ke admin setelah reload
+      sessionStorage.setItem("redirect-to-admin", "true");
       // Reload halaman untuk memastikan state ter-update
-      window.location.hash = "#/admin";
       window.location.reload();
     } catch (err: any) {
       setError(err.message || "Login gagal");

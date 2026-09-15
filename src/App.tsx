@@ -54,6 +54,17 @@ export default function App() {
     };
   }, []);
 
+  // Tentukan userId untuk undangan publik berdasarkan session
+  const publicUserId = user?.id || null;
+
+  // Redirect ke admin setelah login jika diperlukan
+  useEffect(() => {
+    if (user && sessionStorage.getItem("redirect-to-admin") === "true") {
+      sessionStorage.removeItem("redirect-to-admin");
+      window.location.hash = "#/admin";
+    }
+  }, [user]);
+
   const isAdminRoute = route.startsWith("#/admin");
   const isSuperRoute = route.startsWith("#/admin/super");
   const isGuestRoute = route.startsWith("#/tamu");
@@ -145,7 +156,7 @@ export default function App() {
 
   // Route: Undangan publik
   return (
-    <WeddingProvider userId={null}>
+    <WeddingProvider userId={publicUserId}>
       <div className="relative min-h-screen overflow-x-clip bg-pine-950 font-sans text-ivory">
         <div
           aria-hidden="true"
