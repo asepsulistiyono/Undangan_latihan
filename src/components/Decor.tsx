@@ -1,5 +1,6 @@
 import { useMemo, type CSSProperties, type ReactNode } from "react";
 import { WEDDING } from "../lib/wedding";
+import { useWedding } from "../lib/WeddingContext";
 import { IconSparkle } from "./Icons";
 
 /* ---------------- Monogram inisial ---------------- */
@@ -163,10 +164,11 @@ export function Petals({ count = 16 }: { count?: number }) {
 
 /* ---------------- Marquee nama & tanggal ---------------- */
 export function Marquee() {
+  const { mergedData } = useWedding();
   const items = [
-    `${WEDDING.groom.short} & ${WEDDING.bride.short}`,
-    WEDDING.dateLabel,
-    WEDDING.venueMain,
+    `${mergedData.groom.short} & ${mergedData.bride.short}`,
+    mergedData.dateLabel,
+    mergedData.venueMain,
     "Save the Date",
   ];
   const row = (hidden: boolean) => (

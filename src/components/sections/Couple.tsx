@@ -1,4 +1,5 @@
 import { WEDDING } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconInstagram } from "../Icons";
 import { SectionHead } from "../Decor";
@@ -51,6 +52,12 @@ function PersonCard({
 
 export default function Couple() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
+  
+  // Gabungkan data mempelai dengan foto dari context
+  const groom = { ...mergedData.groom, photo: mergedData.photos.groom };
+  const bride = { ...mergedData.bride, photo: mergedData.photos.bride };
+  
   return (
     <section id="mempelai" className="relative z-10 py-24 sm:py-32">
       <div ref={ref} className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -73,8 +80,8 @@ export default function Couple() {
             &
           </span>
 
-          <PersonCard person={WEDDING.groom} side="left" delay="rd-1" />
-          <PersonCard person={WEDDING.bride} side="right" delay="rd-2" />
+          <PersonCard person={groom} side="left" delay="rd-1" />
+          <PersonCard person={bride} side="right" delay="rd-2" />
         </div>
       </div>
     </section>

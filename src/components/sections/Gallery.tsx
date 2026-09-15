@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { WEDDING } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconChevronL, IconChevronR, IconClose, IconSparkle } from "../Icons";
 import { SectionHead } from "../Decor";
 
 export default function Gallery() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
   const [idx, setIdx] = useState<number | null>(null);
-  const items = WEDDING.gallery;
+  const items = mergedData.gallery;
 
   const close = useCallback(() => setIdx(null), []);
   const step = useCallback(

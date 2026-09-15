@@ -1,4 +1,5 @@
 import { WEDDING } from "../../lib/wedding";
+import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconHeart, IconRings, IconSparkle, IconLeaf } from "../Icons";
 import { SectionHead } from "../Decor";
@@ -7,6 +8,7 @@ const icons = [IconLeaf, IconHeart, IconRings, IconSparkle];
 
 export default function Story() {
   const ref = useReveal();
+  const { mergedData } = useWedding();
 
   return (
     <section id="kisah" className="relative z-10 py-24 sm:py-32">
@@ -28,7 +30,7 @@ export default function Story() {
             className="absolute bottom-2 left-[26px] top-2 w-px bg-gradient-to-b from-gold-500/0 via-gold-500/45 to-gold-500/0 md:left-1/2"
           />
 
-          {WEDDING.story.map((s, i) => {
+          {mergedData.story.map((s, i) => {
             const Icon = icons[i % icons.length];
             const leftSide = i % 2 === 0;
             return (
