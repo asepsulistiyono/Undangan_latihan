@@ -18,6 +18,13 @@ const LS_USERS = "demo-users-v1";
 const LS_PROFILES = "demo-profiles-v1";
 const LS_SESSION = "demo-session-v1";
 
+/** Dispatch event untuk notify perubahan auth state di mode demo */
+function dispatchAuthEvent() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("demo-auth-change"));
+  }
+}
+
 interface DemoUser {
   id: string;
   email: string;
@@ -97,6 +104,7 @@ export async function signIn(email: string, password: string) {
   if (!user) throw new Error("Email atau password salah");
   const session = { user_id: user.id, email: user.email };
   localStorage.setItem(LS_SESSION, JSON.stringify(session));
+  dispatchAuthEvent(); // Notify App.tsx bahwa user sudah login
   return { user: { id: user.id, email: user.email }, session };
 }
 
@@ -107,6 +115,7 @@ export async function signOut() {
     return;
   }
   localStorage.removeItem(LS_SESSION);
+  dispatchAuthEvent(); // Notify App.tsx bahwa user sudah logout
 }
 
 export async function getSession(): Promise<{ user_id: string; email: string } | null> {
@@ -226,15 +235,25 @@ export function onAuthStateChange(callback: (user: any) => void): () => void {
     return () => data.subscription.unsubscribe();
   }
 
-  // Mode demo — cek session saat ini
-  const session = (() => {
+  // Mode demo — cek session saat ini dan subscribe ke event
+  const checkSession = () => {
     try {
       const raw = localStorage.getItem(LS_SESSION);
-      return raw ? JSON.parse(raw) : null;
+      const session = raw ? JSON.parse(raw) : null;
+      callback(session ? { id: session.user_id, email: session.email } : null);
     } catch {
-      return null;
+      callback(null);
     }
-  })();
-  callback(session ? { id: session.user_id, email: session.email } : null);
-  return () => {};
+  };
+
+  // Panggil sekali untuk initial state
+  checkSession();
+
+  // Subscribe ke event demo-auth-change
+  const handler = () => checkSession();
+  window.addEventListener("demo-auth-change", handler);
+
+  return () => {
+    window.removeEventListener("demo-auth-change", handler);
+  };
 }
