@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { signIn, getAdminWA } from "../../lib/auth";
+import { signIn, getAdminWA, resetDemoData } from "../../lib/auth";
 import { SUPABASE_ENABLED } from "../../lib/supabase";
 import { Monogram } from "../Decor";
 import { IconArrowLeft, IconCheck, IconEye, IconEyeOff } from "../Icons";
@@ -22,10 +22,11 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
     setError("");
     try {
       await signIn(username, password);
-      onLogin();
+      // Reload halaman untuk memastikan state ter-update
+      window.location.hash = "#/admin";
+      window.location.reload();
     } catch (err: any) {
       setError(err.message || "Login gagal");
-    } finally {
       setLoading(false);
     }
   };
@@ -165,6 +166,16 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
                 <span className="text-sage-300/60">Password:</span> demo123
               </p>
             </div>
+            <button
+              onClick={() => {
+                if (confirm("Reset semua data demo? Ini akan menghapus semua akun admin dan data undangan yang tersimpan di browser.")) {
+                  resetDemoData();
+                }
+              }}
+              className="mt-3 w-full border border-rose-400/30 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-rose-300 transition-colors hover:bg-rose-400 hover:text-pine-950"
+            >
+              Reset Data Demo
+            </button>
           </div>
         )}
       </div>
