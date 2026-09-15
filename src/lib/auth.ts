@@ -79,23 +79,30 @@ function saveDemoConfig(config: DemoConfig) {
 /** Pastikan super admin demo selalu ada di mode demo. */
 function ensureDemoSuperAdmin(): void {
   if (SUPABASE_ENABLED) return;
-  const profiles = loadDemoProfiles();
-  const hasSuper = profiles.some((p) => p.role === "super_admin");
-  if (hasSuper) return;
-
+  
   const users = loadDemoUsers();
+  const profiles = loadDemoProfiles();
   const demoUsername = "superadmin";
+  const demoPassword = "demo123";
+  
+  // Cari atau buat user superadmin
   let demoUser = users.find((u) => u.username === demoUsername);
   if (!demoUser) {
     demoUser = {
       id: "demo-super-" + Date.now(),
       username: demoUsername,
-      password: "demo123",
+      password: demoPassword,
       name: "Super Admin (Demo)",
     };
     users.push(demoUser);
     saveDemoUsers(users);
+  } else if (demoUser.password !== demoPassword) {
+    // Update password jika berbeda (untuk reset ke default)
+    demoUser.password = demoPassword;
+    saveDemoUsers(users);
   }
+  
+  // Pastikan profile super_admin ada
   if (!profiles.find((p) => p.user_id === demoUser.id)) {
     profiles.push({
       user_id: demoUser.id,
@@ -321,4 +328,15 @@ export function onAuthStateChange(callback: (user: any) => void): () => void {
   return () => {
     window.removeEventListener("demo-auth-change", handler);
   };
+}
+
+/** Reset semua data demo (untuk debugging) */
+export function resetDemoData() {
+  if (SUPABASE_ENABLED) return;
+  localStorage.removeItem(LS_USERS);
+  localStorage.removeItem(LS_PROFILES);
+  localStorage.removeItem(LS_SESSION);
+  localStorage.removeItem(LS_CONFIG);
+  // Reload halaman untuk apply perubahan
+  window.location.reload();
 }
