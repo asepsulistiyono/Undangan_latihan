@@ -6,8 +6,9 @@ import { Monogram } from "../Decor";
 import { IconArrowLeft, IconCheck, IconClose, IconPencil, IconTrash } from "../Icons";
 import FieldEditor from "./FieldEditor";
 import PhotoUploader from "./PhotoUploader";
+import ThemeSelector from "./ThemeSelector";
 
-type Tab = "pengantin" | "acara" | "kutipan" | "kisah" | "galeri" | "kado" | "dresscode";
+type Tab = "pengantin" | "acara" | "kutipan" | "kisah" | "galeri" | "kado" | "dresscode" | "tema";
 
 export default function AdminPanel({ profile, userName }: { profile: AdminProfile; userName: string | null }) {
   const { mergedData, updateData, refetch } = useWedding();
@@ -60,6 +61,7 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
   };
 
   const tabs: { id: Tab; label: string }[] = [
+    { id: "tema", label: "Tema" },
     { id: "pengantin", label: "Pengantin" },
     { id: "acara", label: "Acara" },
     { id: "kutipan", label: "Kutipan" },
@@ -160,6 +162,7 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
 
         {/* Konten tab */}
         <div className="mt-8 space-y-6">
+          {tab === "tema" && <ThemeSelector />}
           {tab === "pengantin" && (
             <PengantinTab mergedData={mergedData} onSave={handleSave} />
           )}

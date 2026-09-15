@@ -14,6 +14,7 @@ import GuestManager from "./components/GuestManager";
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminPanel from "./components/admin/AdminPanel";
 import SuperAdminPanel from "./components/admin/SuperAdminPanel";
+import ThemeWrapper from "./components/ThemeWrapper";
 import { onAuthStateChange, getAdminProfile, type AdminProfile } from "./lib/auth";
 import { SUPABASE_ENABLED } from "./lib/supabase";
 import { WeddingProvider } from "./lib/WeddingContext";
@@ -168,7 +169,7 @@ export default function App() {
   // Route: Undangan publik
   return (
     <WeddingProvider key={publicUserId || "default"} userId={publicUserId}>
-      <div className="relative min-h-screen overflow-x-clip bg-pine-950 font-sans text-ivory">
+      <ThemeWrapper>
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 z-0"
@@ -199,7 +200,7 @@ export default function App() {
         </main>
 
         {stage === "open" && <Nav />}
-      </div>
+      </ThemeWrapper>
     </WeddingProvider>
   );
 }

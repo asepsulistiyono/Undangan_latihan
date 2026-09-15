@@ -23,6 +23,7 @@ export interface WeddingData {
   giftAddress?: string;
   dresscode?: Array<Partial<(typeof DEFAULT_WEDDING.dresscode)[number]>>;
   photos?: Partial<typeof DEFAULT_IMG>;
+  themeId?: string;
 }
 
 /**
