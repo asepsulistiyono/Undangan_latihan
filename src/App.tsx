@@ -44,6 +44,9 @@ export default function App() {
         const p = await getAdminProfile(u.id);
         setProfile(p);
         setUserName(u.name || u.username);
+        
+        // Ensure slug exists for this user
+        // Import will be added below
       } else {
         setProfile(null);
         setUserName(null);
@@ -164,7 +167,7 @@ export default function App() {
 
   // Route: Undangan publik
   return (
-    <WeddingProvider userId={publicUserId}>
+    <WeddingProvider key={publicUserId || "default"} userId={publicUserId}>
       <div className="relative min-h-screen overflow-x-clip bg-pine-950 font-sans text-ivory">
         <div
           aria-hidden="true"
