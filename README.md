@@ -1,4 +1,3 @@
-<<<<<<< wedding-invitation-website-b23eb
 # Undangan Pernikahan - Sistem Admin Lengkap
 
 Website undangan pernikahan dengan sistem admin terintegrasi Supabase untuk pengelolaan data real-time.
@@ -240,7 +239,9 @@ Semua foto dikompresi otomatis sebelum upload:
 ## Lisensi
 
 MIT License - Bebas digunakan untuk keperluan pribadi maupun komersial.
-=======
+wedding-invitation-website-b23eb
+
+
 # Undangan_latihan
 Anda bisa langsung mengedit undangan melalui GitHub dengan dua cara:
 Cara cepat (tanpa install apa pun):
@@ -283,4 +284,4 @@ Buka link-anda.netlify.app/#/tamu → tempel 1000 nama
 Unduh cadangan JSON (simpan baik-baik)
 Bagikan link pribadi tiap tamu via tombol WhatsApp — atau salin semua link + CSV untuk broadcast
 Coba buka #/tamu di pratinjau sekarang dan tempel beberapa nama untuk melihat alurnya. Kalau ada yang ingin ditambah — misalnya penanda "sudah dikirim" per tamu atau pembagian gelombang sesi — tinggal bilang!
->>>>>>> main
+
