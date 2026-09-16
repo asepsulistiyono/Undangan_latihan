@@ -77,11 +77,26 @@ export function removeSlugByUserId(userId: string): void {
 /**
  * Cek apakah hash route adalah slug undangan (bukan admin/tamu).
  * Return slug jika ya, null jika bukan.
+ * Mendukung format: /#/{slug} atau /#/{slug}/?to=NamaTamu
  */
 export function parseInvitationSlug(hash: string): string | null {
-  const path = hash.replace(/^#\/?/, "").trim();
+  // Hapus # dan / di awal
+  let path = hash.replace(/^#\/?/, "").trim();
+  
   if (!path) return null;
+  
+  // Pisahkan path dan query parameter
+  const queryIndex = path.indexOf("?");
+  if (queryIndex !== -1) {
+    path = path.substring(0, queryIndex);
+  }
+  
+  // Hapus trailing slash
+  path = path.replace(/\/$/, "");
+  
+  // Cek apakah ini route khusus
   if (path === "admin" || path.startsWith("admin/") || path === "tamu") return null;
+  
   // Valid slug: hanya huruf kecil, angka, dan underscore
   if (/^[a-z0-9_]+$/.test(path) && path.includes("_dan_")) {
     return path;

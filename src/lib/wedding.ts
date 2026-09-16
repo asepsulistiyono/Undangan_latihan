@@ -124,6 +124,18 @@ export const CALENDAR_URL =
 
 export function getGuestName(): string {
   if (typeof window === "undefined") return "Tamu Undangan";
+  
+  // Coba baca dari query parameter di hash (format: /#/{slug}/?to=NamaTamu)
+  const hash = window.location.hash;
+  const queryIndex = hash.indexOf("?");
+  if (queryIndex !== -1) {
+    const hashQuery = hash.substring(queryIndex + 1);
+    const q = new URLSearchParams(hashQuery);
+    const guestName = (q.get("to") || q.get("kepada") || "").trim();
+    if (guestName) return guestName;
+  }
+  
+  // Fallback: baca dari query parameter URL utama
   const q = new URLSearchParams(window.location.search);
   return (q.get("to") || q.get("kepada") || "").trim() || "Tamu Undangan";
 }
