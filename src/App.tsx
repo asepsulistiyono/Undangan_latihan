@@ -45,9 +45,6 @@ export default function App() {
         const p = await getAdminProfile(u.id);
         setProfile(p);
         setUserName(u.name || u.username);
-        
-        // Ensure slug exists for this user
-        // Import will be added below
       } else {
         setProfile(null);
         setUserName(null);

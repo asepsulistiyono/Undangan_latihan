@@ -134,7 +134,7 @@ export async function signIn(username: string, password: string) {
   const user = users.find((u) => u.username === username && u.password === password);
   if (!user) throw new Error("Username atau password salah");
   const session = { user_id: user.id, username: user.username, name: user.name };
-  localStorage.setItem(LS_SESSION, JSON.stringify(session));
+  sessionStorage.setItem(LS_SESSION, JSON.stringify(session));
   dispatchAuthEvent(); // Notify App.tsx bahwa user sudah login
   return { user: { id: user.id, username: user.username, name: user.name }, session };
 }
@@ -145,7 +145,7 @@ export async function signOut() {
     if (error) throw error;
     return;
   }
-  localStorage.removeItem(LS_SESSION);
+  sessionStorage.removeItem(LS_SESSION);
   dispatchAuthEvent(); // Notify App.tsx bahwa user sudah logout
 }
 
@@ -157,7 +157,7 @@ export async function getSession(): Promise<{ user_id: string; username: string;
       : null;
   }
   try {
-    const raw = localStorage.getItem(LS_SESSION);
+    const raw = sessionStorage.getItem(LS_SESSION);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -314,7 +314,7 @@ export function onAuthStateChange(callback: (user: any) => void): () => void {
   // Mode demo — cek session saat ini dan subscribe ke event
   const checkSession = () => {
     try {
-      const raw = localStorage.getItem(LS_SESSION);
+      const raw = sessionStorage.getItem(LS_SESSION);
       const session = raw ? JSON.parse(raw) : null;
       callback(session ? { id: session.user_id, username: session.username, name: session.name } : null);
     } catch {
@@ -339,7 +339,7 @@ export function resetDemoData() {
   if (SUPABASE_ENABLED) return;
   localStorage.removeItem(LS_USERS);
   localStorage.removeItem(LS_PROFILES);
-  localStorage.removeItem(LS_SESSION);
+  sessionStorage.removeItem(LS_SESSION);
   localStorage.removeItem(LS_CONFIG);
   // Reload halaman untuk apply perubahan
   window.location.reload();
