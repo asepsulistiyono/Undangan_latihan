@@ -18,7 +18,7 @@ import ThemeWrapper from "./components/ThemeWrapper";
 import { onAuthStateChange, getAdminProfile, type AdminProfile } from "./lib/auth";
 import { SUPABASE_ENABLED } from "./lib/supabase";
 import { WeddingProvider } from "./lib/WeddingContext";
-import { parseInvitationSlug, getUserIdFromSlug } from "./lib/slug";
+import { parseInvitationSlug, getUserIdFromSlug, generateSlug } from "./lib/slug";
 
 type Stage = "closed" | "opening" | "open";
 
@@ -94,7 +94,44 @@ export default function App() {
   };
 
   // Route: Tamu manager
-  if (isGuestRoute) return <GuestManager />;
+  if (isGuestRoute) {
+    // Halaman tamu hanya bisa diakses oleh admin yang login
+    if (authLoading) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-pine-950">
+          <div className="size-12 animate-spin rounded-full border-2 border-gold-400 border-t-transparent" />
+        </div>
+      );
+    }
+    
+    if (!user) {
+      // Redirect ke halaman login
+      return <AdminLogin onLogin={() => {}} />;
+    }
+    
+    // Generate slug dari data admin yang login
+    let invitationSlug = "";
+    if (profile?.user_id) {
+      try {
+        const storageKey = `wedding-data-${profile.user_id}`;
+        const rawData = localStorage.getItem(storageKey);
+        if (rawData) {
+          const savedData = JSON.parse(rawData);
+          const groomName = savedData.groom?.short || "Mempelai";
+          const brideName = savedData.bride?.short || "Mempelai";
+          invitationSlug = generateSlug(groomName, brideName);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+    
+    return (
+      <WeddingProvider userId={user.id}>
+        <GuestManager invitationSlug={invitationSlug} />
+      </WeddingProvider>
+    );
+  }
 
   // Route: Admin
   if (isAdminRoute) {

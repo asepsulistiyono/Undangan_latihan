@@ -30,8 +30,11 @@ export function baseUrl(): string {
 }
 
 /** Tautan undangan pribadi — nama tamu tersandi langsung di URL. */
-export function guestLink(name: string): string {
-  return `${baseUrl()}?to=${encodeURIComponent(name)}`;
+export function guestLink(name: string, invitationSlug?: string): string {
+  if (invitationSlug) {
+    return `${baseUrl()}/#/${invitationSlug}/?to=${encodeURIComponent(name)}`;
+  }
+  return `${baseUrl()}/#/?to=${encodeURIComponent(name)}`;
 }
 
 /* ---------- nomor WhatsApp ---------- */
@@ -133,14 +136,14 @@ export function downloadFile(filename: string, content: string, mime: string): v
 
 const escCsv = (s: string) => `"${s.split('"').join('""')}"`;
 
-export function toCsv(guests: Guest[]): string {
+export function toCsv(guests: Guest[], invitationSlug?: string): string {
   const head = "Nama,No HP,Link Undangan";
   const rows = guests.map((g) =>
-    [escCsv(g.name), escCsv(g.phone), escCsv(guestLink(g.name))].join(",")
+    [escCsv(g.name), escCsv(g.phone), escCsv(guestLink(g.name, invitationSlug))].join(",")
   );
   return "\uFEFF" + [head, ...rows].join("\n");
 }
 
-export function toLinksTxt(guests: Guest[]): string {
-  return guests.map((g) => `${g.name}\n${guestLink(g.name)}`).join("\n\n");
+export function toLinksTxt(guests: Guest[], invitationSlug?: string): string {
+  return guests.map((g) => `${g.name}\n${guestLink(g.name, invitationSlug)}`).join("\n\n");
 }

@@ -61,7 +61,7 @@ function RowBtn({
   );
 }
 
-export default function GuestManager() {
+export default function GuestManager({ invitationSlug }: { invitationSlug?: string }) {
   const [guests, setGuests] = useState<Guest[]>(loadGuests);
   const [query, setQuery] = useState("");
   const [template, setTemplate] = useState(loadTemplate);
@@ -74,6 +74,10 @@ export default function GuestManager() {
   const [visible, setVisible] = useState(PAGE);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
+  
+  const invitationUrl = invitationSlug 
+    ? `${baseUrl()}/#/${invitationSlug}`
+    : `${baseUrl()}/#/`;
 
   useEffect(() => {
     saveGuests(guests);
@@ -153,18 +157,18 @@ export default function GuestManager() {
   };
 
   const copyLink = async (g: Guest) => {
-    await copyText(guestLink(g.name));
+    await copyText(guestLink(g.name, invitationSlug));
     say(`Link untuk ${g.name} tersalin`);
   };
 
   const shareWa = (g: Guest) => {
-    const msg = fillTemplate(template, g.name, guestLink(g.name));
+    const msg = fillTemplate(template, g.name, guestLink(g.name, invitationSlug));
     window.open(waShareLink(g.phone, msg), "_blank", "noopener");
   };
 
   const copyAllLinks = async () => {
     if (filtered.length === 0) return;
-    await copyText(filtered.map((g) => guestLink(g.name)).join("\n"));
+    await copyText(filtered.map((g) => guestLink(g.name, invitationSlug)).join("\n"));
     say(`${filtered.length} link tersalin ke clipboard`);
   };
 
@@ -195,8 +199,8 @@ export default function GuestManager() {
 
   const previewGuest = filtered[0] ?? guests[0];
   const previewMsg = previewGuest
-    ? fillTemplate(template, previewGuest.name, guestLink(previewGuest.name))
-    : fillTemplate(template, "Bapak/Ibu Contoh", `${baseUrl()}?to=Contoh`);
+    ? fillTemplate(template, previewGuest.name, guestLink(previewGuest.name, invitationSlug))
+    : fillTemplate(template, "Bapak/Ibu Contoh", guestLink("Contoh", invitationSlug));
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-pine-950 font-sans text-ivory">
@@ -260,11 +264,42 @@ export default function GuestManager() {
           <div className="min-w-0 flex-1">
             <p className="flex items-center gap-2 truncate text-[13px] text-sage-300/80">
               <IconLink className="size-4 shrink-0 text-gold-400" />
-              <span className="truncate">{baseUrl()}?to=NamaTamu</span>
+              <span className="truncate">{invitationUrl}/?to=NamaTamu</span>
             </p>
             <p className="mt-1 text-[10px] uppercase tracking-[0.28em] text-sage-300/70">
               Pola Link Pribadi
             </p>
+          </div>
+        </div>
+
+        {/* ===== URL Undangan Personal ===== */}
+        <div className="mt-6 border-2 border-gold-500/40 bg-gradient-to-r from-pine-800/80 to-pine-900/80 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-gold-500/20">
+              <IconLink className="size-6 text-gold-400" />
+            </div>
+            <div className="flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-gold-400">
+                URL Undangan Personal Anda
+              </p>
+              <p className="mt-1 text-sm text-sage-300/80">
+                Link ini akan otomatis ditambahkan ke setiap undangan tamu
+              </p>
+              <div className="mt-3 flex items-center gap-2">
+                <code className="flex-1 truncate rounded-[3px] bg-pine-950/80 px-4 py-2.5 font-mono text-sm text-gold-200">
+                  {invitationUrl}
+                </code>
+                <button
+                  onClick={() => {
+                    copyText(invitationUrl);
+                    say("URL undangan personal disalin!");
+                  }}
+                  className="shrink-0 rounded-[3px] bg-gold-500 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-pine-950 transition-all hover:bg-gold-400"
+                >
+                  Salin
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -411,7 +446,7 @@ export default function GuestManager() {
               </button>
               <button
                 onClick={() => {
-                  downloadFile("daftar-tamu.csv", toCsv(filtered), "text/csv");
+                  downloadFile("daftar-tamu.csv", toCsv(filtered, invitationSlug), "text/csv");
                   say("CSV diunduh");
                 }}
                 disabled={filtered.length === 0}
@@ -421,7 +456,7 @@ export default function GuestManager() {
               </button>
               <button
                 onClick={() => {
-                  downloadFile("link-undangan.txt", toLinksTxt(filtered), "text/plain");
+                  downloadFile("link-undangan.txt", toLinksTxt(filtered, invitationSlug), "text/plain");
                   say("TXT diunduh");
                 }}
                 disabled={filtered.length === 0}
