@@ -2,6 +2,7 @@ import { getGuestName, WEDDING } from "../lib/wedding";
 import { useWedding } from "../lib/WeddingContext";
 import { IconEnvelope } from "./Icons";
 import { CornerFlourish, Monogram } from "./Decor";
+import { ORNAMENTS, type OrnamentId } from "./Ornaments";
 
 /** Pecah "Bapak H. Ahmad beserta keluarga" → nama utama + keterangan. */
 function splitGuest(name: string): { main: string; suffix: string } {
@@ -27,7 +28,11 @@ export default function Cover({
 }) {
   const guest = getGuestName();
   const parts = splitGuest(guest);
-  const { mergedData } = useWedding();
+  const { mergedData, data } = useWedding();
+  
+  // Dapatkan ornamen yang dipilih
+  const ornamentId = (data.ornamentId || "modern") as OrnamentId;
+  const SelectedOrnament = ORNAMENTS[ornamentId]?.component || ORNAMENTS.modern.component;
 
   return (
     <div
@@ -53,10 +58,22 @@ export default function Cover({
           opening ? "scale-110 opacity-0" : ""
         }`}
       >
-        <CornerFlourish className="absolute left-2 top-2 size-14 text-gold-500/70 sm:size-20" />
-        <CornerFlourish className="absolute right-2 top-2 size-14 rotate-90 text-gold-500/70 sm:size-20" />
-        <CornerFlourish className="absolute bottom-2 right-2 size-14 rotate-180 text-gold-500/70 sm:size-20" />
-        <CornerFlourish className="absolute bottom-2 left-2 size-14 -rotate-90 text-gold-500/70 sm:size-20" />
+        <SelectedOrnament
+          className="absolute left-2 top-2 size-16 text-gold-500/70 sm:size-24"
+          position="top-left"
+        />
+        <SelectedOrnament
+          className="absolute right-2 top-2 size-16 text-gold-500/70 sm:size-24"
+          position="top-right"
+        />
+        <SelectedOrnament
+          className="absolute bottom-2 right-2 size-16 text-gold-500/70 sm:size-24"
+          position="bottom-right"
+        />
+        <SelectedOrnament
+          className="absolute bottom-2 left-2 size-16 text-gold-500/70 sm:size-24"
+          position="bottom-left"
+        />
       </div>
 
       {/* isi sampul */}
