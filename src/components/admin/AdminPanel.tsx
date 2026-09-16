@@ -3,7 +3,7 @@ import { useWedding } from "../../lib/WeddingContext";
 import { signOut, type AdminProfile } from "../../lib/auth";
 import { generateSlug, saveSlugMapping } from "../../lib/slug";
 import { Monogram } from "../Decor";
-import { IconArrowLeft, IconCheck, IconClose, IconPencil, IconTrash } from "../Icons";
+import { IconArrowLeft, IconCheck, IconClose, IconPencil, IconTrash, IconUsers } from "../Icons";
 import FieldEditor from "./FieldEditor";
 import PhotoUploader from "./PhotoUploader";
 import ThemeSelector from "./ThemeSelector";
