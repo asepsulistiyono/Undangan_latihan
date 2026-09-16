@@ -103,6 +103,13 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
           </div>
           <div className="flex items-center gap-3">
             <a
+              href="#/tamu"
+              className="inline-flex items-center gap-2 border border-emerald-400/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300 transition-all hover:bg-emerald-400 hover:text-pine-950"
+            >
+              <IconUsers className="size-4" />
+              Kelola Tamu
+            </a>
+            <a
               href={`#/${generateSlug(mergedData.groom.short, mergedData.bride.short)}`}
               className="inline-flex items-center gap-2 border border-gold-500/40 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gold-300 transition-all hover:bg-gold-500 hover:text-pine-950"
             >
