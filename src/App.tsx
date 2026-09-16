@@ -39,17 +39,29 @@ export default function App() {
 
   // Subscribe auth state
   useEffect(() => {
-    const unsub = onAuthStateChange(async (u) => {
+    const unsub = onAuthStateChange((u) => {
       setUser(u);
-      if (u) {
-        const p = await getAdminProfile(u.id);
-        setProfile(p);
-        setUserName(u.name || u.username);
-      } else {
-        setProfile(null);
-        setUserName(null);
-      }
-      setAuthLoading(false);
+      
+      // Handle async operations
+      const loadProfile = async () => {
+        if (u) {
+          try {
+            const p = await getAdminProfile(u.id);
+            setProfile(p);
+            setUserName(u.name || u.username);
+          } catch (error) {
+            console.error("Error loading profile:", error);
+            setProfile(null);
+            setUserName(null);
+          }
+        } else {
+          setProfile(null);
+          setUserName(null);
+        }
+        setAuthLoading(false);
+      };
+      
+      loadProfile();
     });
     return () => {
       if (typeof unsub === "function") unsub();
