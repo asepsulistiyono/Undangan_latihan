@@ -6,6 +6,8 @@ export default function ReligiousFormatSelector() {
   const { data, updateData, religiousFormat } = useWedding();
 
   const handleSelect = async (formatId: ReligiousFormat) => {
+    console.log("🔄 Memilih format agama:", formatId);
+    
     // Reset quote ke kosong agar menggunakan religiousFormat.defaultScripture
     await updateData({ 
       religiousFormat: formatId,
@@ -16,6 +18,8 @@ export default function ReligiousFormatSelector() {
         source: "",
       }
     });
+    
+    console.log("✅ Format agama tersimpan, quote di-reset");
   };
 
   const formats = Object.values(religiousFormats);
