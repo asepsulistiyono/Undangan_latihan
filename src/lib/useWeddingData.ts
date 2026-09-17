@@ -6,6 +6,8 @@ import { WEDDING as DEFAULT_WEDDING, IMG as DEFAULT_IMG } from "./wedding";
  * Tipe data undangan yang bisa disimpan di DB.
  * Semua field opsional — field yang tidak ada akan diisi dari DEFAULT.
  */
+import type { ReligiousFormat } from "./religiousFormats";
+
 export interface WeddingData {
   initials?: string;
   dateLabel?: string;
@@ -27,6 +29,7 @@ export interface WeddingData {
   ornamentId?: string;
   customOrnament?: string; // SVG content untuk ornamen custom
   language?: "id" | "en"; // Bahasa: Indonesia atau English
+  religiousFormat?: ReligiousFormat; // Format agama
 }
 
 /**

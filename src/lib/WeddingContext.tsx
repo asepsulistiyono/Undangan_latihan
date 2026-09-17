@@ -4,6 +4,7 @@ import { WEDDING as DEFAULT_WEDDING } from "./wedding";
 import { getTheme, type Theme } from "./themes";
 import { updateMetaTags } from "./metaTags";
 import { translations, translateDate, type Language, type Translations } from "./translations";
+import { getReligiousFormat, type ReligiousFormat, type ReligiousFormatData } from "./religiousFormats";
 
 interface WeddingContextType {
   data: WeddingData;
@@ -11,6 +12,7 @@ interface WeddingContextType {
   theme: Theme;
   language: Language;
   t: Translations;
+  religiousFormat: ReligiousFormatData;
   translateDateStr: (dateStr: string) => string;
   getLocalizedText: (idText: string, enText?: string) => string;
   loading: boolean;
@@ -26,6 +28,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
   const theme = getTheme(weddingData.data.themeId || "emerald-garden");
   const language = (weddingData.data.language || "id") as Language;
   const t = translations[language];
+  const religiousFormat = getReligiousFormat((weddingData.data.religiousFormat || "islam") as ReligiousFormat);
   
   // Helper function to translate date
   const translateDateStr = (dateStr: string) => translateDate(dateStr, language);
@@ -40,6 +43,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
     theme,
     language,
     t,
+    religiousFormat,
     translateDateStr,
     getLocalizedText,
   };

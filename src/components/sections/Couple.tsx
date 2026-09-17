@@ -54,7 +54,7 @@ function PersonCard({
 
 export default function Couple() {
   const ref = useReveal();
-  const { mergedData, t, language } = useWedding();
+  const { mergedData, t, language, religiousFormat } = useWedding();
   
   // Gabungkan data mempelai dengan foto dari context
   const groom = { ...mergedData.groom, photo: mergedData.photos.groom };
@@ -64,11 +64,16 @@ export default function Couple() {
   const groomParents = language === "en" && groom.parentsEn ? groom.parentsEn : groom.parents;
   const brideParents = language === "en" && bride.parentsEn ? bride.parentsEn : bride.parents;
   
+  // Gunakan coupleBlessing dari religious format
+  const coupleBlessing = language === "en" 
+    ? religiousFormat.coupleBlessingEn 
+    : religiousFormat.coupleBlessing;
+  
   return (
     <section id="mempelai" className="relative z-10 py-24 sm:py-32">
       <div ref={ref} className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHead
-          eyebrow={t.couple.bismillah}
+          eyebrow={coupleBlessing}
           title={
             <>
               {t.couple.theBrideAndGroom.split(" ")[0]} <em className="italic text-gold-300">{t.couple.theBrideAndGroom.split(" ").slice(1).join(" ")}</em>

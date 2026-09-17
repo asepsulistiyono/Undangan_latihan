@@ -45,7 +45,7 @@ const inputCls =
 
 export default function Wishes() {
   const ref = useReveal();
-  const { mergedData, t, language } = useWedding();
+  const { mergedData, t, language, religiousFormat } = useWedding();
   const [stored, setStored] = useState<Wish[]>(loadStored);
   const [name, setName] = useState("");
   const [attend, setAttend] = useState<"hadir" | "berhalangan">("hadir");
@@ -196,7 +196,7 @@ export default function Wishes() {
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder={language === "id" ? "Tuliskan doa terbaik Anda untuk kedua mempelai…" : "Write your best wishes for the couple…"}
+              placeholder={language === "en" ? religiousFormat.wishesPlaceholderEn : religiousFormat.wishesPlaceholder}
               className={`${inputCls} mt-2.5 resize-none`}
             />
 

@@ -28,7 +28,7 @@ export default function Cover({
 }) {
   const guest = getGuestName();
   const parts = splitGuest(guest);
-  const { mergedData, data, t, language, translateDateStr } = useWedding();
+  const { mergedData, data, t, language, translateDateStr, religiousFormat } = useWedding();
   
   // Dapatkan ornamen yang dipilih
   const ornamentId = (data.ornamentId || "modern") as OrnamentId;
@@ -39,6 +39,11 @@ export default function Cover({
   
   // Terjemahkan tanggal jika bahasa Inggris
   const translatedDate = translateDateStr(mergedData.dateLabel);
+  
+  // Dapatkan salam pembuka berdasarkan bahasa
+  const openingGreeting = language === "en" 
+    ? religiousFormat.openingGreetingEn 
+    : religiousFormat.openingGreeting;
 
   return (
     <div
@@ -115,7 +120,11 @@ export default function Cover({
       >
         <Monogram className="size-16 text-gold-400 sm:size-20" />
 
-        <p className="mt-7 text-[11px] font-semibold uppercase tracking-[0.5em] text-sage-300">
+        <p className="mt-7 text-sm font-display italic text-gold-300/90">
+          {openingGreeting}
+        </p>
+
+        <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.5em] text-sage-300">
           {t.cover.invitation}
         </p>
 

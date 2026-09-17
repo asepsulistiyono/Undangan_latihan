@@ -5,7 +5,16 @@ import { DividerOrnament, Monogram } from "../Decor";
 
 export default function Closing() {
   const ref = useReveal();
-  const { mergedData, t, language } = useWedding();
+  const { mergedData, t, language, religiousFormat } = useWedding();
+
+  // Gunakan closing greeting dan blessing dari religious format
+  const closingGreeting = language === "en" 
+    ? religiousFormat.closingGreetingEn 
+    : religiousFormat.closingGreeting;
+  
+  const closingBlessing = language === "en" 
+    ? religiousFormat.closingBlessingEn 
+    : religiousFormat.closingBlessing;
 
   return (
     <footer className="relative z-10 overflow-hidden pb-32 pt-28 sm:pb-36">
@@ -18,14 +27,17 @@ export default function Closing() {
 
       <div ref={ref} className="relative mx-auto max-w-2xl px-5 text-center sm:px-8">
         <Monogram className="reveal mx-auto size-16 text-gold-400" />
-        <p className="reveal rd-1 mt-6 text-[11px] font-semibold uppercase tracking-[0.42em] text-sage-300/80">
-          {language === "id" ? "Wassalamu'alaikum Warahmatullahi Wabarakatuh" : "And God Bless You"}
+        <p className="reveal rd-1 mt-6 text-sm font-display italic text-gold-300/90">
+          {closingGreeting}
         </p>
         <h2 className="reveal rd-2 mt-5 font-display text-5xl font-light italic text-ivory sm:text-6xl">
           {t.closing.thankYou.split(" ")[0]} <span className="text-gold-300">{t.closing.thankYou.split(" ").slice(1).join(" ")}</span>
         </h2>
         <p className="reveal rd-3 mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-sage-300/90">
           {t.closing.subtitle}
+        </p>
+        <p className="reveal rd-4 mx-auto mt-4 max-w-xl text-sm italic text-gold-300/80">
+          {closingBlessing}
         </p>
         <DividerOrnament className="reveal rd-4 mt-9" />
         <p className="reveal rd-5 mt-9 font-display text-3xl italic text-gold-200 sm:text-4xl">
