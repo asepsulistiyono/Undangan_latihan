@@ -1,8 +1,8 @@
-import { useRef, useState, type ChangeEvent } from "react";
+import { useRef, useState, useEffect, type ChangeEvent } from "react";
 import { compressImage, formatSize, PRESETS } from "../../lib/imageCompress";
 import { supabase, BUCKET, SUPABASE_ENABLED } from "../../lib/supabase";
 import { IconUpload } from "../Icons";
-import { savePhoto, isIndexedDBAvailable } from "../../lib/indexedDB";
+import { savePhoto, getPhoto, isIndexedDBAvailable } from "../../lib/indexedDB";
 
 interface PhotoUploaderProps {
   label: string;
@@ -28,6 +28,27 @@ export default function PhotoUploader({
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
+
+  // Load preview dari IndexedDB saat component mount (untuk persist setelah reload)
+  useEffect(() => {
+    if (!currentUrl || !currentUrl.startsWith("indexeddb:")) return;
+    
+    const loadPreview = async () => {
+      if (!isIndexedDBAvailable()) return;
+      
+      const dbKey = currentUrl.replace("indexeddb:", "");
+      try {
+        const url = await getPhoto(dbKey);
+        if (url) {
+          setPreview(url);
+        }
+      } catch (err) {
+        console.error("Gagal load preview dari IndexedDB:", err);
+      }
+    };
+    
+    loadPreview();
+  }, [currentUrl]);
 
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,12 +100,15 @@ export default function PhotoUploader({
         onUpload(data.publicUrl);
       } else if (isMobile && isIndexedDBAvailable()) {
         // Mobile + Demo mode: gunakan IndexedDB (lebih reliable)
-        const localUrl = URL.createObjectURL(compressed);
-        setPreview(localUrl);
-
         // Simpan ke IndexedDB
         const photoKey = `photo-${Date.now()}-${Math.random().toString(36).slice(2)}`;
         await savePhoto(photoKey, compressed);
+        
+        // Load preview dari IndexedDB (persist setelah reload)
+        const previewUrl = await getPhoto(photoKey);
+        if (previewUrl) {
+          setPreview(previewUrl);
+        }
         
         // Simpan reference key di localStorage (bukan base64)
         onUpload(`indexeddb:${photoKey}`);
