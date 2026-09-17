@@ -28,7 +28,7 @@ export default function Cover({
 }) {
   const guest = getGuestName();
   const parts = splitGuest(guest);
-  const { mergedData, data, t } = useWedding();
+  const { mergedData, data, t, language, translateDateStr } = useWedding();
   
   // Dapatkan ornamen yang dipilih
   const ornamentId = (data.ornamentId || "modern") as OrnamentId;
@@ -36,6 +36,9 @@ export default function Cover({
   const SelectedOrnament = !isCustom && ornamentId !== "custom" 
     ? ORNAMENTS[ornamentId as Exclude<OrnamentId, "custom">]?.component || ORNAMENTS.modern.component
     : null;
+  
+  // Terjemahkan tanggal jika bahasa Inggris
+  const translatedDate = translateDateStr(mergedData.dateLabel);
 
   return (
     <div
@@ -131,7 +134,7 @@ export default function Cover({
         </h1>
 
         <p className="mt-5 text-xs font-medium uppercase tracking-[0.42em] text-gold-300/90">
-          {mergedData.dateLabel}
+          {translatedDate}
         </p>
 
         {/* nama tamu */}

@@ -21,6 +21,8 @@ export const WEDDING = {
     full: "Raka Adyatma Prasetya",
     parents:
       "Putra pertama dari Bapak Hendra Prasetya & Ibu Wulan Kusuma — Jakarta",
+    parentsEn:
+      "First son of Mr. Hendra Prasetya & Mrs. Wulan Kusuma — Jakarta",
     ig: "rakaadyatma",
     photo: IMG.groom,
     bio: "Arsitek yang percaya bahwa rumah terbaik adalah tempat kita pulang.",
@@ -30,6 +32,8 @@ export const WEDDING = {
     full: "Sekar Ayu Larasati",
     parents:
       "Putri kedua dari Bapak Bimo Laras & Ibu Ratna Dewi — Yogyakarta",
+    parentsEn:
+      "Second daughter of Mr. Bimo Laras & Mrs. Ratna Dewi — Yogyakarta",
     ig: "sekarlaras",
     photo: IMG.bride,
     bio: "Penata bunga yang menemukan taman paling indah di hati Raka.",
@@ -39,6 +43,7 @@ export const WEDDING = {
     arabic:
       "وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةًۗ",
     text: "Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.",
+    textEn: "And among His Signs is this, that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He has put love and mercy between your hearts. Verily, in that are indeed signs for a people who reflect.",
     source: "QS. Ar-Rum : 21",
   },
 
@@ -46,22 +51,26 @@ export const WEDDING = {
     {
       id: "akad",
       name: "Akad Nikah",
+      nameEn: "Wedding Ceremony",
       date: "Sabtu, 12 Juni 2027",
       time: "08.00 – 10.00 WIB",
       venue: "Pendopo Ageng · Plataran Cilandak",
       address: "Jl. Cilandak Tengah Raya No.14, Cilandak, Jakarta Selatan",
       maps: "https://maps.google.com/?q=Plataran+Cilandak+Jakarta+Selatan",
       note: "Mohon hadir 30 menit sebelumnya. Pakaian adat & batik dipersilakan.",
+      noteEn: "Please arrive 30 minutes early. Traditional attire & batik are welcome.",
     },
     {
       id: "resepsi",
       name: "Resepsi Pernikahan",
+      nameEn: "Wedding Reception",
       date: "Sabtu, 12 Juni 2027",
       time: "11.00 – 14.00 WIB",
       venue: "Glass Pavilion · Plataran Cilandak",
       address: "Jl. Cilandak Tengah Raya No.14, Cilandak, Jakarta Selatan",
       maps: "https://maps.google.com/?q=Plataran+Cilandak+Jakarta+Selatan",
       note: "Doa restu Anda adalah kado terindah. Dress code: sage, emerald & gold.",
+      noteEn: "Your blessings are the most precious gift. Dress code: sage, emerald & gold.",
     },
   ],
 
@@ -69,22 +78,30 @@ export const WEDDING = {
     {
       year: "2019",
       title: "Pertama Berjumpa",
+      titleEn: "First Meeting",
       text: "Di sebuah pameran arsitektur di Jakarta, Sekar menjatuhkan sketsanya — dan Raka memungutnya sambil pura-pura paham soal bunga. Obrolan singkat itu ternyata tak pernah benar-benar selesai.",
+      textEn: "At an architecture exhibition in Jakarta, Sekar dropped her sketch — and Raka picked it up while pretending to understand flowers. That brief conversation never really ended.",
     },
     {
       year: "2021",
       title: "Menyemai Rasa",
+      titleEn: "Growing Feelings",
       text: "Dari kopi sore menjadi perjalanan jauh: Dieng, Bromo, hingga hujan-hujanan di Malioboro. Kami belajar bahwa cinta tumbuh paling subur saat dirawat bersama.",
+      textEn: "From afternoon coffee to long journeys: Dieng, Bromo, to getting caught in the rain at Malioboro. We learned that love grows best when nurtured together.",
     },
     {
       year: "2025",
       title: "Lamaran",
+      titleEn: "The Proposal",
       text: "Di bawah langit senja Pantai Parangtritis, dengan debur ombak sebagai saksi, Raka berlutut membawa cincin dan seluruh keberaniannya. Sekar menjawab: iya.",
+      textEn: "Under the twilight sky of Parangtritis Beach, with the waves as witness, Raka knelt with a ring and all his courage. Sekar answered: yes.",
     },
     {
       year: "2027",
       title: "Menyempurnakan Janji",
+      titleEn: "Sealing the Promise",
       text: "Dengan restu kedua keluarga dan doa orang-orang tercinta, kami melangkah ke hari yang dinanti — mengikat janji sehidup semati di hadapan Tuhan.",
+      textEn: "With the blessings of both families and prayers of loved ones, we step into the awaited day — sealing a promise of life and death before God.",
     },
   ],
 

@@ -15,6 +15,33 @@ export interface Translations {
     scrollHint: string;
   };
   
+  // Days
+  days: {
+    minggu: string;
+    senin: string;
+    selasa: string;
+    rabu: string;
+    kamis: string;
+    jumat: string;
+    sabtu: string;
+  };
+  
+  // Months
+  months: {
+    januari: string;
+    februari: string;
+    maret: string;
+    april: string;
+    mei: string;
+    juni: string;
+    juli: string;
+    agustus: string;
+    september: string;
+    oktober: string;
+    november: string;
+    desember: string;
+  };
+  
   // Hero
   hero: {
     weAreGettingMarried: string;
@@ -112,6 +139,29 @@ export const translations: Record<Language, Translations> = {
       open: "Buka",
       scrollHint: "Gulir",
     },
+    days: {
+      minggu: "Minggu",
+      senin: "Senin",
+      selasa: "Selasa",
+      rabu: "Rabu",
+      kamis: "Kamis",
+      jumat: "Jumat",
+      sabtu: "Sabtu",
+    },
+    months: {
+      januari: "Januari",
+      februari: "Februari",
+      maret: "Maret",
+      april: "April",
+      mei: "Mei",
+      juni: "Juni",
+      juli: "Juli",
+      agustus: "Agustus",
+      september: "September",
+      oktober: "Oktober",
+      november: "November",
+      desember: "Desember",
+    },
     hero: {
       weAreGettingMarried: "Kami Menikah — Assalamu'alaikum Wr. Wb.",
       countdown: "Menghitung Hari",
@@ -190,6 +240,29 @@ export const translations: Record<Language, Translations> = {
       open: "Open",
       scrollHint: "Scroll",
     },
+    days: {
+      minggu: "Sunday",
+      senin: "Monday",
+      selasa: "Tuesday",
+      rabu: "Wednesday",
+      kamis: "Thursday",
+      jumat: "Friday",
+      sabtu: "Saturday",
+    },
+    months: {
+      januari: "January",
+      februari: "February",
+      maret: "March",
+      april: "April",
+      mei: "May",
+      juni: "June",
+      juli: "July",
+      agustus: "August",
+      september: "September",
+      oktober: "October",
+      november: "November",
+      desember: "December",
+    },
     hero: {
       weAreGettingMarried: "We Are Getting Married",
       countdown: "Counting The Days",
@@ -267,4 +340,40 @@ export const translations: Record<Language, Translations> = {
  */
 export function useTranslations(lang: Language = "id"): Translations {
   return translations[lang];
+}
+
+/**
+ * Translate date from Indonesian to English
+ * Example: "Sabtu, 12 Juni 2027" → "Saturday, 12 June 2027"
+ */
+export function translateDate(dateStr: string, lang: Language): string {
+  if (lang === "id") return dateStr;
+  
+  const t = translations.en;
+  let result = dateStr;
+  
+  // Translate days
+  result = result.replace(/\bMinggu\b/i, t.days.minggu);
+  result = result.replace(/\bSenin\b/i, t.days.senin);
+  result = result.replace(/\bSelasa\b/i, t.days.selasa);
+  result = result.replace(/\bRabu\b/i, t.days.rabu);
+  result = result.replace(/\bKamis\b/i, t.days.kamis);
+  result = result.replace(/\bJumat\b/i, t.days.jumat);
+  result = result.replace(/\bSabtu\b/i, t.days.sabtu);
+  
+  // Translate months
+  result = result.replace(/\bJanuari\b/i, t.months.januari);
+  result = result.replace(/\bFebruari\b/i, t.months.februari);
+  result = result.replace(/\bMaret\b/i, t.months.maret);
+  result = result.replace(/\bApril\b/i, t.months.april);
+  result = result.replace(/\bMei\b/i, t.months.mei);
+  result = result.replace(/\bJuni\b/i, t.months.juni);
+  result = result.replace(/\bJuli\b/i, t.months.juli);
+  result = result.replace(/\bAgustus\b/i, t.months.agustus);
+  result = result.replace(/\bSeptember\b/i, t.months.september);
+  result = result.replace(/\bOktober\b/i, t.months.oktober);
+  result = result.replace(/\bNovember\b/i, t.months.november);
+  result = result.replace(/\bDesember\b/i, t.months.desember);
+  
+  return result;
 }

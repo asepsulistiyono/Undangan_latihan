@@ -10,7 +10,7 @@ function Corner({ className }: { className: string }) {
 
 export default function Events() {
   const ref = useReveal();
-  const { mergedData, t } = useWedding();
+  const { mergedData, t, language, translateDateStr } = useWedding();
 
   return (
     <section
@@ -59,7 +59,9 @@ export default function Events() {
               ))}
             </div>
             <p className="mt-5 max-w-xs text-[13px] leading-relaxed text-sage-300/70">
-              Nuansa hijau sage, emerald, dan sentuhan emas — selaras dengan taman yang memeluk perayaan kami.
+              {language === "en" 
+                ? "Sage green, emerald, and gold accents — in harmony with the garden that embraces our celebration."
+                : "Nuansa hijau sage, emerald, dan sentuhan emas — selaras dengan taman yang memeluk perayaan kami."}
             </p>
           </div>
         </div>
@@ -68,6 +70,11 @@ export default function Events() {
         <div className="space-y-8">
           {mergedData.events.map((ev, i) => {
             const Icon = ev.id === "akad" ? IconRings : IconGlass;
+            // Gunakan versi Inggris jika tersedia
+            const eventName = language === "en" && ev.nameEn ? ev.nameEn : ev.name;
+            const eventNote = language === "en" && ev.noteEn ? ev.noteEn : ev.note;
+            const eventDate = translateDateStr(ev.date);
+            
             return (
               <article
                 key={ev.id}
@@ -84,10 +91,10 @@ export default function Events() {
                   </span>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-sage-300/70">
-                      {String(i + 1).padStart(2, "0")} — Rangkaian
+                      {String(i + 1).padStart(2, "0")} — {language === "en" ? "Event" : "Rangkaian"}
                     </p>
                     <h3 className="mt-1 font-display text-3xl font-light italic text-ivory">
-                      {ev.name}
+                      {eventName}
                     </h3>
                   </div>
                 </div>
@@ -95,7 +102,7 @@ export default function Events() {
                 <dl className="mt-7 space-y-3 text-sm">
                   <div className="flex items-center gap-3.5">
                     <IconCalendar className="size-[18px] shrink-0 text-gold-400" />
-                    <dd className="font-semibold text-ivory">{ev.date}</dd>
+                    <dd className="font-semibold text-ivory">{eventDate}</dd>
                   </div>
                   <div className="flex items-center gap-3.5">
                     <IconClock className="size-[18px] shrink-0 text-gold-400" />
@@ -113,7 +120,7 @@ export default function Events() {
                 </dl>
 
                 <p className="mt-6 border-l-2 border-gold-500/50 pl-4 font-display text-sm italic leading-relaxed text-gold-300/85">
-                  {ev.note}
+                  {eventNote}
                 </p>
 
                 <a
