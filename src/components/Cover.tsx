@@ -28,7 +28,7 @@ export default function Cover({
 }) {
   const guest = getGuestName();
   const parts = splitGuest(guest);
-  const { mergedData, data } = useWedding();
+  const { mergedData, data, t } = useWedding();
   
   // Dapatkan ornamen yang dipilih
   const ornamentId = (data.ornamentId || "modern") as OrnamentId;
@@ -113,7 +113,7 @@ export default function Cover({
         <Monogram className="size-16 text-gold-400 sm:size-20" />
 
         <p className="mt-7 text-[11px] font-semibold uppercase tracking-[0.5em] text-sage-300">
-          Undangan Pernikahan
+          {t.cover.invitation}
         </p>
 
         <h1 className="mt-4 font-display font-light leading-none text-ivory">
@@ -137,7 +137,7 @@ export default function Cover({
         {/* nama tamu */}
         <div className="mt-8 w-full max-w-xs border border-gold-500/25 bg-pine-900/70 px-5 py-4">
           <p className="text-[10px] uppercase tracking-[0.3em] text-sage-300/80">
-            Kepada Yth. Bapak/Ibu/Saudara/i
+            {t.cover.to}
           </p>
           <p
             className={`mt-2 break-words font-display italic leading-snug text-gold-200 ${sizeFor(guest.length)}`}
@@ -151,7 +151,7 @@ export default function Cover({
             </p>
           )}
           <p className="mt-1.5 text-[11px] leading-relaxed text-sage-300/70">
-            Mohon maaf apabila terdapat kesalahan penulisan nama & gelar.
+            {t.cover.apology}
           </p>
         </div>
 
@@ -173,12 +173,9 @@ export default function Cover({
             aria-label="Buka undangan"
           >
             <IconEnvelope className="size-6 transition-transform duration-300 group-hover:-translate-y-0.5" />
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.22em]">Buka</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-[0.22em]">{t.cover.open}</span>
           </button>
         </div>
-        <p className="mt-4 text-[11px] tracking-[0.28em] text-sage-300/70 uppercase">
-          Klik untuk membuka undangan
-        </p>
       </div>
     </div>
   );
