@@ -55,9 +55,18 @@ function Countdown({ dateISO, t }: { dateISO: string; t: any }) {
 /* ---------- pembuka: hero + marquee + ayat ---------- */
 export default function Hero({ open }: { open: boolean }) {
   const quoteRef = useReveal();
-  const { mergedData, t, language, translateDateStr } = useWedding();
+  const { mergedData, t, language, translateDateStr, religiousFormat } = useWedding();
   const weddingData = mergedData;
   const photos = weddingData.photos;
+  
+  // Gunakan ayat dari religious format atau dari data admin
+  const scripture = mergedData.quote.arabic || mergedData.quote.text !== WEDDING.quote.text
+    ? mergedData.quote
+    : religiousFormat.defaultScripture;
+  
+  const scriptureTitle = language === "en" 
+    ? religiousFormat.scriptureTitleEn 
+    : religiousFormat.scriptureTitle;
   
   // Terjemahkan tanggal jika bahasa Inggris
   const translatedDate = translateDateStr(mergedData.dateLabel);
@@ -147,18 +156,23 @@ export default function Hero({ open }: { open: boolean }) {
         </span>
         <div ref={quoteRef} className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
           <DividerOrnament className="reveal" />
-          <p
-            dir="rtl"
-            className="reveal rd-1 mt-9 text-2xl leading-[2.2] text-gold-200/95 sm:text-[1.7rem]"
-            style={{ fontFamily: "'Fraunces', 'Amiri', serif" }}
-          >
-            {mergedData.quote.arabic}
+          <p className="reveal rd-1 mt-7 text-[11px] font-bold uppercase tracking-[0.42em] text-gold-400">
+            {scriptureTitle}
           </p>
-          <blockquote className="reveal rd-2 mt-8 font-display text-lg font-light italic leading-relaxed text-sage-300/95 sm:text-xl">
-            &ldquo;{language === "en" && mergedData.quote.textEn ? mergedData.quote.textEn : mergedData.quote.text}&rdquo;
+          {scripture.arabic && (
+            <p
+              dir="rtl"
+              className="reveal rd-2 mt-4 text-2xl leading-[2.2] text-gold-200/95 sm:text-[1.7rem]"
+              style={{ fontFamily: "'Fraunces', 'Amiri', serif" }}
+            >
+              {scripture.arabic}
+            </p>
+          )}
+          <blockquote className="reveal rd-3 mt-8 font-display text-lg font-light italic leading-relaxed text-sage-300/95 sm:text-xl">
+            &ldquo;{language === "en" && scripture.textEn ? scripture.textEn : scripture.text}&rdquo;
           </blockquote>
-          <p className="reveal rd-3 mt-7 text-[11px] font-bold uppercase tracking-[0.42em] text-gold-400">
-            {mergedData.quote.source}
+          <p className="reveal rd-4 mt-7 text-[11px] font-bold uppercase tracking-[0.42em] text-gold-400">
+            {scripture.source}
           </p>
         </div>
       </section>

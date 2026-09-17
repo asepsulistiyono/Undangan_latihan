@@ -9,8 +9,9 @@ import PhotoUploader from "./PhotoUploader";
 import ThemeSelector from "./ThemeSelector";
 import OrnamentSelector from "./OrnamentSelector";
 import LanguageSelector from "./LanguageSelector";
+import ReligiousFormatSelector from "./ReligiousFormatSelector";
 
-type Tab = "pengantin" | "acara" | "kutipan" | "kisah" | "galeri" | "kado" | "dresscode" | "tema" | "ornamen" | "bahasa";
+type Tab = "pengantin" | "acara" | "kutipan" | "kisah" | "galeri" | "kado" | "dresscode" | "tema" | "ornamen" | "bahasa" | "agama";
 
 export default function AdminPanel({ profile, userName }: { profile: AdminProfile; userName: string | null }) {
   const { mergedData, updateData, refetch } = useWedding();
@@ -64,6 +65,7 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "bahasa", label: "Bahasa" },
+    { id: "agama", label: "Format Agama" },
     { id: "tema", label: "Tema" },
     { id: "ornamen", label: "Ornamen" },
     { id: "pengantin", label: "Pengantin" },
@@ -174,6 +176,7 @@ export default function AdminPanel({ profile, userName }: { profile: AdminProfil
         {/* Konten tab */}
         <div className="mt-8 space-y-6">
           {tab === "bahasa" && <LanguageSelector />}
+          {tab === "agama" && <ReligiousFormatSelector />}
           {tab === "tema" && <ThemeSelector />}
           {tab === "ornamen" && <OrnamentSelector />}
           {tab === "pengantin" && (
