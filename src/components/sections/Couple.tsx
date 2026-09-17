@@ -3,6 +3,7 @@ import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconInstagram } from "../Icons";
 import { SectionHead } from "../Decor";
+import Photo from "../Photo";
 
 function PersonCard({
   person,
@@ -18,10 +19,9 @@ function PersonCard({
       {/* bingkai berlapis dengan lengkungan kubah */}
       <div className="border border-gold-500/25 p-3 transition-colors duration-500 group-hover:border-gold-500/60">
         <div className="overflow-hidden rounded-t-full border border-gold-500/40">
-          <img
+          <Photo
             src={person.photo}
             alt={`Foto ${person.full}`}
-            loading="lazy"
             className="aspect-[3/4] w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
           />
         </div>

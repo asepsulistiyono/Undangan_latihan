@@ -4,6 +4,7 @@ import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconChevronL, IconChevronR, IconClose, IconSparkle } from "../Icons";
 import { SectionHead } from "../Decor";
+import Photo from "../Photo";
 
 export default function Gallery() {
   const ref = useReveal();
@@ -58,10 +59,9 @@ export default function Gallery() {
               } ${g.tall ? "row-span-2" : ""} ${i === 0 ? "md:row-span-2" : ""}`}
               aria-label={`Buka foto: ${g.caption}`}
             >
-              <img
+              <Photo
                 src={g.src}
                 alt={g.caption}
-                loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-110"
               />
               <span className="absolute inset-0 bg-gradient-to-t from-pine-950/90 via-pine-950/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -118,7 +118,7 @@ export default function Gallery() {
             className="flex max-h-full flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <Photo
               key={idx}
               src={items[idx].src}
               alt={items[idx].caption}
