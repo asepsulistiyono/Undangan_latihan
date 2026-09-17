@@ -10,7 +10,7 @@ function Corner({ className }: { className: string }) {
 
 export default function Events() {
   const ref = useReveal();
-  const { mergedData, t, language, translateDateStr } = useWedding();
+  const { mergedData, t, language, translateDateStr, religiousFormat } = useWedding();
 
   return (
     <section
@@ -70,8 +70,22 @@ export default function Events() {
         <div className="space-y-8">
           {mergedData.events.map((ev, i) => {
             const Icon = ev.id === "akad" ? IconRings : IconGlass;
-            // Gunakan versi Inggris jika tersedia
-            const eventName = language === "en" && ev.nameEn ? ev.nameEn : ev.name;
+            
+            // Gunakan nama acara dari religiousFormat berdasarkan ID acara
+            let eventName = ev.name;
+            if (ev.id === "akad") {
+              eventName = language === "en" 
+                ? religiousFormat.eventNames.ceremonyEn 
+                : religiousFormat.eventNames.ceremony;
+            } else if (ev.id === "resepsi") {
+              eventName = language === "en" 
+                ? religiousFormat.eventNames.receptionEn 
+                : religiousFormat.eventNames.reception;
+            } else {
+              // Fallback ke nameEn jika ada
+              eventName = language === "en" && ev.nameEn ? ev.nameEn : ev.name;
+            }
+            
             const eventNote = language === "en" && ev.noteEn ? ev.noteEn : ev.note;
             const eventDate = translateDateStr(ev.date);
             
