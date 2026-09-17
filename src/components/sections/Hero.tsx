@@ -59,8 +59,9 @@ export default function Hero({ open }: { open: boolean }) {
   const weddingData = mergedData;
   const photos = weddingData.photos;
   
-  // Gunakan ayat dari religious format atau dari data admin
-  const scripture = mergedData.quote.arabic || mergedData.quote.text !== WEDDING.quote.text
+  // Gunakan ayat dari religious format sebagai default
+  // User bisa override dengan mengisi quote custom di admin panel
+  const scripture = mergedData.quote.text
     ? mergedData.quote
     : religiousFormat.defaultScripture;
   
