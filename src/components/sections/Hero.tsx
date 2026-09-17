@@ -104,7 +104,7 @@ export default function Hero({ open }: { open: boolean }) {
           <div className="grid items-end gap-10 pb-28 md:pb-24 lg:grid-cols-[1.35fr_1fr]">
             <div>
               <p className="mask-line ml-d1 text-[11px] font-semibold uppercase tracking-[0.42em] text-gold-300">
-                <span>{t.hero.weAreGettingMarried}</span>
+                <span>{language === "en" ? religiousFormat.heroAnnouncementEn : religiousFormat.heroAnnouncement}</span>
               </p>
               <h1 className="mt-4 font-display font-light italic leading-[0.95] text-ivory">
                 <span className="mask-line ml-d1 text-[21vw] sm:text-8xl lg:text-[7rem]">

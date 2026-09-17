@@ -25,6 +25,10 @@ export interface ReligiousFormatData {
   closingGreeting: string;
   closingGreetingEn: string;
   
+  // Hero - Announcement
+  heroAnnouncement: string;
+  heroAnnouncementEn: string;
+  
   // Hero - Ayat/Kitab Suci
   scriptureTitle: string;
   scriptureTitleEn: string;
@@ -63,6 +67,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingGreeting: "Wassalamu'alaikum Warahmatullahi Wabarakatuh",
     closingGreetingEn: "And God Bless You",
     
+    heroAnnouncement: "Kami Menikah — Assalamu'alaikum Wr. Wb.",
+    heroAnnouncementEn: "We Are Getting Married — Peace Be Upon You",
+    
     scriptureTitle: "Ayat Suci Al-Quran",
     scriptureTitleEn: "Holy Quran Verse",
     defaultScripture: {
@@ -96,6 +103,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingGreeting: "Tuhan Yesus Memberkati",
     closingGreetingEn: "God Bless You",
     
+    heroAnnouncement: "Kami Menikah — Shalom",
+    heroAnnouncementEn: "We Are Getting Married — Shalom",
+    
     scriptureTitle: "Firman Tuhan",
     scriptureTitleEn: "Word of God",
     defaultScripture: {
@@ -127,6 +137,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     openingGreetingEn: "Peace Be With You in Christ",
     closingGreeting: "Tuhan Memberkati",
     closingGreetingEn: "God Bless You",
+    
+    heroAnnouncement: "Kami Menikah — Salam Sejahtera",
+    heroAnnouncementEn: "We Are Getting Married — Peace Be With You",
     
     scriptureTitle: "Bacaan Kitab Suci",
     scriptureTitleEn: "Holy Scripture Reading",
@@ -160,6 +173,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingGreeting: "Om Shanti Shanti Shanti Om",
     closingGreetingEn: "Om Peace Peace Peace Om",
     
+    heroAnnouncement: "Kami Menikah — Om Swastiastu",
+    heroAnnouncementEn: "We Are Getting Married — Om Swastiastu",
+    
     scriptureTitle: "Wedasana",
     scriptureTitleEn: "Sacred Verse",
     defaultScripture: {
@@ -191,6 +207,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     openingGreetingEn: "Namo Buddhaya",
     closingGreeting: "Sabbe Satta Bhavantu Sukhitatta",
     closingGreetingEn: "May All Beings Be Happy",
+    
+    heroAnnouncement: "Kami Menikah — Namo Buddhaya",
+    heroAnnouncementEn: "We Are Getting Married — Namo Buddhaya",
     
     scriptureTitle: "Dhammapada",
     scriptureTitleEn: "Dhammapada Verse",
@@ -224,6 +243,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingGreeting: "Tian Ming You De",
     closingGreetingEn: "Heaven Bless You",
     
+    heroAnnouncement: "Kami Menikah — Salam Kebajikan",
+    heroAnnouncementEn: "We Are Getting Married — Greetings of Virtue",
+    
     scriptureTitle: "Ajaran Suci",
     scriptureTitleEn: "Sacred Teaching",
     defaultScripture: {
@@ -255,6 +277,9 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     openingGreetingEn: "With Respect and Joy",
     closingGreeting: "Salam Hangat",
     closingGreetingEn: "Warm Regards",
+    
+    heroAnnouncement: "Kami Menikah — Dengan Sukacita",
+    heroAnnouncementEn: "We Are Getting Married — With Joy",
     
     scriptureTitle: "Kata-Kata Inspirasi",
     scriptureTitleEn: "Words of Inspiration",
