@@ -4,6 +4,7 @@ import { useWedding } from "../../lib/WeddingContext";
 import { useReveal } from "../../hooks/useReveal";
 import { IconCalendar, IconPin } from "../Icons";
 import { DividerOrnament, Marquee, Monogram } from "../Decor";
+import Photo from "../Photo";
 
 /* ---------- hitung mundur ---------- */
 function diff(dateISO: string) {
@@ -66,11 +67,10 @@ export default function Hero({ open }: { open: boolean }) {
         className={`relative z-10 flex min-h-[100svh] flex-col overflow-hidden ${open ? "is-open" : ""}`}
       >
         <div className="absolute inset-0" aria-hidden="true">
-          <img
+          <Photo
             src={photos.hero}
             alt=""
             className="anim-kenburns h-full w-full object-cover"
-            draggable={false}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-pine-950/80 via-pine-950/25 to-pine-950" />
           <div className="absolute inset-0 bg-gradient-to-r from-pine-950/60 via-transparent to-pine-950/30" />

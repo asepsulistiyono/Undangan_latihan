@@ -1,7 +1,8 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { compressImage, formatSize, PRESETS } from "../../lib/imageCompress";
 import { supabase, BUCKET, SUPABASE_ENABLED } from "../../lib/supabase";
-import { IconUpload, IconCheck, IconClose } from "../Icons";
+import { IconUpload } from "../Icons";
+import { savePhoto, isIndexedDBAvailable } from "../../lib/indexedDB";
 
 interface PhotoUploaderProps {
   label: string;
@@ -24,6 +25,10 @@ export default function PhotoUploader({
   const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -32,42 +37,31 @@ export default function PhotoUploader({
     setProgress(0);
     setUploading(true);
 
-    // Deteksi apakah ini mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
-
     try {
-      // Validasi ukuran file (max 10MB untuk mobile, 20MB untuk desktop)
+      // Validasi ukuran file
       const maxSize = isMobile ? 10 * 1024 * 1024 : 20 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error(
-          `File terlalu besar (${formatSize(file.size)}). Maksimal ${isMobile ? "10MB" : "20MB"} untuk ${isMobile ? "mobile" : "desktop"}.`
+          `File terlalu besar (${formatSize(file.size)}). Maksimal ${isMobile ? "10MB" : "20MB"}.`
         );
       }
 
-      // 1. Kompresi agresif dengan setting berbeda untuk mobile
+      // Kompresi foto
       const compressOptions = {
         ...PRESETS[preset],
-        // Untuk mobile, gunakan ukuran lebih kecil untuk menghemat memory
         ...(isMobile && {
           maxWidthOrHeight: Math.min(PRESETS[preset].maxWidthOrHeight, 1200),
-          maxSizeMB: Math.min(PRESETS[preset].maxSizeMB, 0.1),
-          quality: Math.min(PRESETS[preset].quality, 0.65),
+          maxSizeMB: Math.min(PRESETS[preset].maxSizeMB, 0.15),
+          quality: Math.min(PRESETS[preset].quality, 0.7),
         }),
         onProgress: (p: number) => setProgress(Math.round(p)),
       };
 
       const compressed = await compressImage(file, compressOptions);
 
-      // Validasi ukuran setelah kompresi
-      if (compressed.size > 500 * 1024) {
-        console.warn("Foto masih besar setelah kompresi:", formatSize(compressed.size));
-      }
-
-      // 2. Upload ke Supabase Storage (jika aktif)
+      // Upload berdasarkan mode
       if (SUPABASE_ENABLED) {
-        // Preview lokal dulu
+        // Production mode: upload ke Supabase Storage
         const localUrl = URL.createObjectURL(compressed);
         setPreview(localUrl);
 
@@ -77,34 +71,34 @@ export default function PhotoUploader({
           .upload(fileName, compressed, {
             cacheControl: "3600",
             upsert: false,
-            contentType: "image/webp",
+            contentType: compressed.type,
           });
         if (uploadError) throw uploadError;
 
-        // 3. Dapatkan URL publik
         const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
         onUpload(data.publicUrl);
-      } else {
-        // Fallback: konversi ke base64 untuk demo mode
-        // Cek apakah base64 akan exceed localStorage limit
-        const estimatedBase64Size = compressed.size * 1.37; // Base64 adds ~37%
-        const localStorageLimit = 5 * 1024 * 1024; // 5MB conservative limit
-        
-        if (estimatedBase64Size > localStorageLimit) {
-          throw new Error(
-            `Foto terlalu besar untuk disimpan di browser (${formatSize(compressed.size)}). ` +
-            `Silakan gunakan foto yang lebih kecil atau setup Supabase untuk storage cloud.`
-          );
-        }
+      } else if (isMobile && isIndexedDBAvailable()) {
+        // Mobile + Demo mode: gunakan IndexedDB (lebih reliable)
+        const localUrl = URL.createObjectURL(compressed);
+        setPreview(localUrl);
 
+        // Simpan ke IndexedDB
+        const photoKey = `photo-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        await savePhoto(photoKey, compressed);
+        
+        // Simpan reference key di localStorage (bukan base64)
+        onUpload(`indexeddb:${photoKey}`);
+      } else {
+        // Desktop + Demo mode: gunakan base64 di localStorage
         const reader = new FileReader();
         reader.onload = () => {
           const base64 = reader.result as string;
           
-          // Cek lagi ukuran base64
-          if (base64.length > localStorageLimit) {
+          // Cek ukuran base64
+          if (base64.length > 4 * 1024 * 1024) { // 4MB limit untuk base64
             setError(
-              `Foto terlalu besar untuk disimpan. Silakan gunakan foto yang lebih kecil.`
+              `Foto terlalu besar untuk disimpan di browser. ` +
+              `Silakan gunakan foto yang lebih kecil atau setup Supabase untuk storage cloud.`
             );
             setUploading(false);
             return;
@@ -122,15 +116,14 @@ export default function PhotoUploader({
     } catch (err: any) {
       console.error("Upload error:", err);
       
-      // Pesan error yang lebih user-friendly
       let errorMessage = "Gagal mengunggah foto";
       
-      if (err.message?.includes("too large") || err.message?.includes("terlalu besar")) {
+      if (err.message?.includes("terlalu besar")) {
         errorMessage = err.message;
       } else if (err.message?.includes("memory") || err.message?.includes("quota")) {
         errorMessage = "Memory browser penuh. Silakan refresh halaman dan coba foto yang lebih kecil.";
-      } else if (err.message?.includes("localStorage")) {
-        errorMessage = "Penyimpanan browser penuh. Silakan hapus beberapa data atau setup Supabase.";
+      } else if (err.message?.includes("IndexedDB")) {
+        errorMessage = "Gagal menyimpan foto. Browser tidak mendukung IndexedDB atau storage penuh.";
       } else if (isMobile) {
         errorMessage = "Gagal upload di mobile. Coba gunakan foto yang lebih kecil atau upload dari komputer.";
       }
@@ -197,7 +190,7 @@ export default function PhotoUploader({
           {error && (
             <div className="rounded-[3px] border border-rose-400/30 bg-rose-400/10 p-3">
               <p className="text-xs text-rose-300">{error}</p>
-              {error.includes("mobile") && (
+              {isMobile && (
                 <div className="mt-2 space-y-1 text-[10px] text-rose-200/80">
                   <p className="font-semibold">Tips untuk upload di HP:</p>
                   <ul className="list-inside list-disc space-y-0.5">
@@ -213,7 +206,7 @@ export default function PhotoUploader({
 
           {!SUPABASE_ENABLED && (preview || currentUrl) && (
             <p className="text-[10px] text-sage-300/50">
-              Mode demo — foto tersimpan di browser (max ~3MB total)
+              {isMobile ? "Mode demo — foto tersimpan di IndexedDB (persistent)" : "Mode demo — foto tersimpan di browser"}
             </p>
           )}
           
