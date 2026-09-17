@@ -264,8 +264,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingBlessingEn: "May The Three Jewels (Triratna) bless this marriage and make it a family full of loving-kindness and wisdom.",
     
     eventNames: {
-      ceremony: "Upacara Pemberkatan Nikah",
-      ceremonyEn: "Wedding Blessing Ceremony",
+      ceremony: "Vivahamangala",
+      ceremonyEn: "Vivahamangala",
       reception: "Perjamuan Syukur",
       receptionEn: "Thanksgiving Reception",
     },
@@ -306,7 +306,7 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingBlessingEn: "May Tian (God) bless this marriage and make it a harmonious and prosperous family.",
     
     eventNames: {
-      ceremony: "Upacara Pemberkatan Nikah",
+      ceremony: "Pemberkatan Perkawinan",
       ceremonyEn: "Wedding Blessing Ceremony",
       reception: "Perjamuan Syukur",
       receptionEn: "Thanksgiving Reception",

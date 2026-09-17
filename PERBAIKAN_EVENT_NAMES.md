@@ -75,8 +75,8 @@ eventNames: {
 **Buddha:**
 ```typescript
 eventNames: {
-  ceremony: "Upacara Pemberkatan Nikah",
-  ceremonyEn: "Wedding Blessing Ceremony",
+  ceremony: "Vivahamangala",
+  ceremonyEn: "Vivahamangala",
   reception: "Perjamuan Syukur",
   receptionEn: "Thanksgiving Reception",
 },
@@ -85,7 +85,7 @@ eventNames: {
 **Konghucu:**
 ```typescript
 eventNames: {
-  ceremony: "Upacara Pemberkatan Nikah",
+  ceremony: "Pemberkatan Perkawinan",
   ceremonyEn: "Wedding Blessing Ceremony",
   reception: "Perjamuan Syukur",
   receptionEn: "Thanksgiving Reception",
@@ -176,7 +176,7 @@ Sabtu, 12 Juni 2027
 
 ### Format Buddha
 ```
-Upacara Pemberkatan Nikah
+Vivahamangala
 Sabtu, 12 Juni 2027
 08.00 – 10.00 WIB
 
@@ -187,7 +187,7 @@ Sabtu, 12 Juni 2027
 
 ### Format Konghucu
 ```
-Upacara Pemberkatan Nikah
+Pemberkatan Perkawinan
 Sabtu, 12 Juni 2027
 08.00 – 10.00 WIB
 
@@ -231,6 +231,16 @@ Sabtu, 12 Juni 2027
 1. Pilih "Hindu"
 2. Buka undangan
 3. ✅ Events: "Upacara Pawiwahan" dan "Perjamuan Syukur"
+
+### Test 2b: Format Buddha
+1. Pilih "Buddha"
+2. Buka undangan
+3. ✅ Events: "Vivahamangala" dan "Perjamuan Syukur"
+
+### Test 2c: Format Konghucu
+1. Pilih "Konghucu"
+2. Buka undangan
+3. ✅ Events: "Pemberkatan Perkawinan" dan "Perjamuan Syukur"
 
 ### Test 3: Format Universal
 1. Pilih "Universal"
