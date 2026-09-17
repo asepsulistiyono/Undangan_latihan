@@ -32,7 +32,10 @@ export default function Cover({
   
   // Dapatkan ornamen yang dipilih
   const ornamentId = (data.ornamentId || "modern") as OrnamentId;
-  const SelectedOrnament = ORNAMENTS[ornamentId]?.component || ORNAMENTS.modern.component;
+  const isCustom = ornamentId === "custom" && data.customOrnament;
+  const SelectedOrnament = !isCustom && ornamentId !== "custom" 
+    ? ORNAMENTS[ornamentId as Exclude<OrnamentId, "custom">]?.component || ORNAMENTS.modern.component
+    : null;
 
   return (
     <div
@@ -58,22 +61,47 @@ export default function Cover({
           opening ? "scale-110 opacity-0" : ""
         }`}
       >
-        <SelectedOrnament
-          className="absolute left-2 top-2 size-16 text-gold-500/70 sm:size-24"
-          position="top-left"
-        />
-        <SelectedOrnament
-          className="absolute right-2 top-2 size-16 text-gold-500/70 sm:size-24"
-          position="top-right"
-        />
-        <SelectedOrnament
-          className="absolute bottom-2 right-2 size-16 text-gold-500/70 sm:size-24"
-          position="bottom-right"
-        />
-        <SelectedOrnament
-          className="absolute bottom-2 left-2 size-16 text-gold-500/70 sm:size-24"
-          position="bottom-left"
-        />
+        {isCustom ? (
+          // Render custom SVG
+          <>
+            <div
+              className="absolute left-2 top-2 size-16 text-gold-500/70 sm:size-24"
+              dangerouslySetInnerHTML={{ __html: data.customOrnament! }}
+            />
+            <div
+              className="absolute right-2 top-2 size-16 scale-x-[-1] text-gold-500/70 sm:size-24"
+              dangerouslySetInnerHTML={{ __html: data.customOrnament! }}
+            />
+            <div
+              className="absolute bottom-2 right-2 size-16 scale-x-[-1] scale-y-[-1] text-gold-500/70 sm:size-24"
+              dangerouslySetInnerHTML={{ __html: data.customOrnament! }}
+            />
+            <div
+              className="absolute bottom-2 left-2 size-16 scale-y-[-1] text-gold-500/70 sm:size-24"
+              dangerouslySetInnerHTML={{ __html: data.customOrnament! }}
+            />
+          </>
+        ) : SelectedOrnament ? (
+          // Render preset ornament
+          <>
+            <SelectedOrnament
+              className="absolute left-2 top-2 size-16 text-gold-500/70 sm:size-24"
+              position="top-left"
+            />
+            <SelectedOrnament
+              className="absolute right-2 top-2 size-16 text-gold-500/70 sm:size-24"
+              position="top-right"
+            />
+            <SelectedOrnament
+              className="absolute bottom-2 right-2 size-16 text-gold-500/70 sm:size-24"
+              position="bottom-right"
+            />
+            <SelectedOrnament
+              className="absolute bottom-2 left-2 size-16 text-gold-500/70 sm:size-24"
+              position="bottom-left"
+            />
+          </>
+        ) : null}
       </div>
 
       {/* isi sampul */}
