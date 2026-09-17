@@ -26,6 +26,7 @@ export interface WeddingData {
   themeId?: string;
   ornamentId?: string;
   customOrnament?: string; // SVG content untuk ornamen custom
+  language?: "id" | "en"; // Bahasa: Indonesia atau English
 }
 
 /**

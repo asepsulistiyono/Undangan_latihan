@@ -31,22 +31,22 @@ function Cell({ v, label }: { v: number; label: string }) {
   );
 }
 
-function Countdown({ dateISO }: { dateISO: string }) {
-  const [t, setT] = useState(() => diff(dateISO));
+function Countdown({ dateISO, t }: { dateISO: string; t: any }) {
+  const [time, setTime] = useState(() => diff(dateISO));
   useEffect(() => {
-    const id = window.setInterval(() => setT(diff(dateISO)), 1000);
+    const id = window.setInterval(() => setTime(diff(dateISO)), 1000);
     return () => window.clearInterval(id);
   }, [dateISO]);
   return (
     <div>
       <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-gold-400">
-        Menghitung Hari
+        {t.hero.countdown}
       </p>
       <div className="mt-3 flex gap-2 sm:gap-3">
-        <Cell v={t.hari} label="Hari" />
-        <Cell v={t.jam} label="Jam" />
-        <Cell v={t.menit} label="Menit" />
-        <Cell v={t.detik} label="Detik" />
+        <Cell v={time.hari} label={t.hero.days} />
+        <Cell v={time.jam} label={t.hero.hours} />
+        <Cell v={time.menit} label={t.hero.minutes} />
+        <Cell v={time.detik} label={t.hero.seconds} />
       </div>
     </div>
   );
@@ -55,7 +55,7 @@ function Countdown({ dateISO }: { dateISO: string }) {
 /* ---------- pembuka: hero + marquee + ayat ---------- */
 export default function Hero({ open }: { open: boolean }) {
   const quoteRef = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t } = useWedding();
   const weddingData = mergedData;
   const photos = weddingData.photos;
 
@@ -91,7 +91,7 @@ export default function Hero({ open }: { open: boolean }) {
           <div className="grid items-end gap-10 pb-28 md:pb-24 lg:grid-cols-[1.35fr_1fr]">
             <div>
               <p className="mask-line ml-d1 text-[11px] font-semibold uppercase tracking-[0.42em] text-gold-300">
-                <span>Kami Menikah — Assalamu&rsquo;alaikum Wr. Wb.</span>
+                <span>{t.hero.weAreGettingMarried}</span>
               </p>
               <h1 className="mt-4 font-display font-light italic leading-[0.95] text-ivory">
                 <span className="mask-line ml-d1 text-[21vw] sm:text-8xl lg:text-[7rem]">
@@ -119,7 +119,7 @@ export default function Hero({ open }: { open: boolean }) {
             </div>
             <div className="mask-line">
               <span>
-                <Countdown dateISO={mergedData.dateISO} />
+                <Countdown dateISO={mergedData.dateISO} t={t} />
               </span>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function Hero({ open }: { open: boolean }) {
 
         {/* penanda gulir */}
         <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2.5">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-sage-300/80">Gulir</span>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-sage-300/80">{t.cover.scrollHint}</span>
           <span className="anim-cue block h-9 w-px bg-gold-400/80" />
         </div>
       </section>
