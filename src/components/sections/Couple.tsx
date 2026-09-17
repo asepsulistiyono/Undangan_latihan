@@ -68,6 +68,11 @@ export default function Couple() {
   const coupleBlessing = language === "en" 
     ? religiousFormat.coupleBlessingEn 
     : religiousFormat.coupleBlessing;
+    
+  // Gunakan coupleSubtitle dari religious format
+  const coupleSubtitle = language === "en"
+    ? religiousFormat.coupleSubtitleEn
+    : religiousFormat.coupleSubtitle;
   
   return (
     <section id="mempelai" className="relative z-10 py-24 sm:py-32">
@@ -79,7 +84,7 @@ export default function Couple() {
               {t.couple.theBrideAndGroom.split(" ")[0]} <em className="italic text-gold-300">{t.couple.theBrideAndGroom.split(" ").slice(1).join(" ")}</em>
             </>
           }
-          sub={t.couple.subtitle}
+          sub={coupleSubtitle}
         />
 
         <div className="relative mt-16 grid gap-16 md:grid-cols-2 md:gap-10 lg:gap-16">

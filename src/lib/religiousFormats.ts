@@ -38,6 +38,8 @@ export interface ReligiousFormatData {
   // Couple Section
   coupleBlessing: string;
   coupleBlessingEn: string;
+  coupleSubtitle: string;
+  coupleSubtitleEn: string;
   
   // Closing
   closingBlessing: string;
@@ -72,6 +74,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Bismillahirrahmanirrahim",
     coupleBlessingEn: "In The Name of Allah, The Most Gracious, The Most Merciful",
+    coupleSubtitle: "Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang insyaAllah akan berjalan beriringan.",
+    coupleSubtitleEn: "With the blessings of Allah SWT, we intend to hold the wedding of our children — two hearts that will walk together in life.",
     
     closingBlessing: "Semoga Allah SWT memberkahi pernikahan ini dan menjadikan keluarga yang sakinah, mawaddah, warahmah.",
     closingBlessingEn: "May Allah SWT bless this marriage and make it a family full of tranquility, love, and mercy.",
@@ -102,6 +106,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Dalam Nama Tuhan Yesus Kristus",
     coupleBlessingEn: "In The Name of Lord Jesus Christ",
+    coupleSubtitle: "Dengan memohon berkat dan rahmat Tuhan Yesus Kristus, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang akan berjalan bersama dalam iman dan kasih.",
+    coupleSubtitleEn: "With the blessings and grace of Lord Jesus Christ, we intend to hold the wedding of our children — two hearts that will walk together in faith and love.",
     
     closingBlessing: "Kiranya Tuhan Yesus Kristus memberkati pernikahan ini dan menjadikan keluarga yang penuh kasih dan iman.",
     closingBlessingEn: "May Lord Jesus Christ bless this marriage and make it a family full of love and faith.",
@@ -132,6 +138,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Dalam Nama Bapa, Putra, dan Roh Kudus",
     coupleBlessingEn: "In The Name of The Father, The Son, and The Holy Spirit",
+    coupleSubtitle: "Dengan memohon berkat dan rahmat Tuhan, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang akan berjalan bersama dalam kasih karunia.",
+    coupleSubtitleEn: "With the blessings and grace of God, we intend to hold the wedding of our children — two hearts that will walk together in grace and love.",
     
     closingBlessing: "Kiranya Tuhan memberkati pernikahan ini dan menjadikan keluarga yang penuh kasih karunia.",
     closingBlessingEn: "May God bless this marriage and make it a family full of grace and love.",
@@ -162,6 +170,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Om Swastiastu",
     coupleBlessingEn: "Om Swastiastu",
+    coupleSubtitle: "Dengan memohon restu dan berkat Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang akan berjalan bersama dalam dharma.",
+    coupleSubtitleEn: "With the blessings of Ida Sang Hyang Widhi Wasa, we intend to hold the wedding of our children — two hearts that will walk together in dharma.",
     
     closingBlessing: "Semoga Ida Sang Hyang Widhi Wasa memberkati pernikahan ini dan menjadikan keluarga yang bahagia dan sejahtera.",
     closingBlessingEn: "May Ida Sang Hyang Widhi Wasa bless this marriage and make it a happy and prosperous family.",
@@ -192,6 +202,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Namo Buddhaya",
     coupleBlessingEn: "Namo Buddhaya",
+    coupleSubtitle: "Dengan memohon berkat dan restu Tiga Permata (Triratna), kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang akan berjalan bersama dalam cinta kasih dan kebijaksanaan.",
+    coupleSubtitleEn: "With the blessings of The Three Jewels (Triratna), we intend to hold the wedding of our children — two hearts that will walk together in loving-kindness and wisdom.",
     
     closingBlessing: "Semoga Tiga Permata (Triratna) memberkati pernikahan ini dan menjadikan keluarga yang penuh cinta kasih dan kebijaksanaan.",
     closingBlessingEn: "May The Three Jewels (Triratna) bless this marriage and make it a family full of loving-kindness and wisdom.",
@@ -222,6 +234,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Dengan Hormat dan Kebajikan",
     coupleBlessingEn: "With Respect and Virtue",
+    coupleSubtitle: "Dengan penuh hormat dan kebajikan, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang akan berjalan bersama dalam harmoni dan kebajikan.",
+    coupleSubtitleEn: "With respect and virtue, we intend to hold the wedding of our children — two hearts that will walk together in harmony and virtue.",
     
     closingBlessing: "Semoga Tian (Tuhan) memberkati pernikahan ini dan menjadikan keluarga yang harmonis dan sejahtera.",
     closingBlessingEn: "May Tian (God) bless this marriage and make it a harmonious and prosperous family.",
@@ -252,6 +266,8 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     coupleBlessing: "Dengan Cinta dan Kebahagiaan",
     coupleBlessingEn: "With Love and Happiness",
+    coupleSubtitle: "Dengan penuh cinta dan kebahagiaan, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang akan berjalan bersama dalam sukacita.",
+    coupleSubtitleEn: "With love and happiness, we intend to hold the wedding of our children — two hearts that will walk together in joy.",
     
     closingBlessing: "Semoga cinta dan kebahagiaan selalu menyertai pernikahan ini dan menjadikan keluarga yang penuh sukacita.",
     closingBlessingEn: "May love and happiness always accompany this marriage and make it a family full of joy.",
