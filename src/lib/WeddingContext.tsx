@@ -28,13 +28,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
   const theme = getTheme(weddingData.data.themeId || "emerald-garden");
   const language = (weddingData.data.language || "id") as Language;
   const t = translations[language];
-  
-  console.log("📖 WeddingContext - Data dari storage:", weddingData.data);
-  console.log("📖 WeddingContext - Religious format:", weddingData.data.religiousFormat);
-  
   const religiousFormat = getReligiousFormat((weddingData.data.religiousFormat || "islam") as ReligiousFormat);
-  
-  console.log("📖 WeddingContext - Religious format object:", religiousFormat);
   
   // Helper function to translate date
   const translateDateStr = (dateStr: string) => translateDate(dateStr, language);
