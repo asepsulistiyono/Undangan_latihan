@@ -55,9 +55,12 @@ function Countdown({ dateISO, t }: { dateISO: string; t: any }) {
 /* ---------- pembuka: hero + marquee + ayat ---------- */
 export default function Hero({ open }: { open: boolean }) {
   const quoteRef = useReveal();
-  const { mergedData, t } = useWedding();
+  const { mergedData, t, language, translateDateStr } = useWedding();
   const weddingData = mergedData;
   const photos = weddingData.photos;
+  
+  // Terjemahkan tanggal jika bahasa Inggris
+  const translatedDate = translateDateStr(mergedData.dateLabel);
 
   return (
     <>
@@ -108,7 +111,7 @@ export default function Hero({ open }: { open: boolean }) {
                 <span className="flex flex-wrap gap-3">
                   <span className="flex items-center gap-2.5 border border-gold-500/30 bg-pine-900/60 px-4 py-2 text-xs font-semibold tracking-[0.14em] text-gold-200 backdrop-blur-sm">
                     <IconCalendar className="size-4 text-gold-400" />
-                    {mergedData.dateLabel.toUpperCase()}
+                    {translatedDate.toUpperCase()}
                   </span>
                   <span className="flex items-center gap-2.5 border border-gold-500/30 bg-pine-900/60 px-4 py-2 text-xs font-semibold tracking-[0.14em] text-gold-200 backdrop-blur-sm">
                     <IconPin className="size-4 text-gold-400" />
@@ -152,7 +155,7 @@ export default function Hero({ open }: { open: boolean }) {
             {mergedData.quote.arabic}
           </p>
           <blockquote className="reveal rd-2 mt-8 font-display text-lg font-light italic leading-relaxed text-sage-300/95 sm:text-xl">
-            &ldquo;{mergedData.quote.text}&rdquo;
+            &ldquo;{language === "en" && mergedData.quote.textEn ? mergedData.quote.textEn : mergedData.quote.text}&rdquo;
           </blockquote>
           <p className="reveal rd-3 mt-7 text-[11px] font-bold uppercase tracking-[0.42em] text-gold-400">
             {mergedData.quote.source}

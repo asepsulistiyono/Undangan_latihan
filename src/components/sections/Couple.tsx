@@ -7,10 +7,12 @@ import Photo from "../Photo";
 
 function PersonCard({
   person,
+  parents,
   side,
   delay,
 }: {
   person: typeof WEDDING.groom;
+  parents: string;
   side: "left" | "right";
   delay: string;
 }) {
@@ -31,7 +33,7 @@ function PersonCard({
           {person.full}
         </h3>
         <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-sage-300/90">
-          {person.parents}
+          {parents}
         </p>
         <p className="mt-3 font-display text-sm italic text-gold-300/85">
           &ldquo;{person.bio}&rdquo;
@@ -52,11 +54,15 @@ function PersonCard({
 
 export default function Couple() {
   const ref = useReveal();
-  const { mergedData, t } = useWedding();
+  const { mergedData, t, language } = useWedding();
   
   // Gabungkan data mempelai dengan foto dari context
   const groom = { ...mergedData.groom, photo: mergedData.photos.groom };
   const bride = { ...mergedData.bride, photo: mergedData.photos.bride };
+  
+  // Gunakan parentsEn jika bahasa Inggris dan tersedia
+  const groomParents = language === "en" && groom.parentsEn ? groom.parentsEn : groom.parents;
+  const brideParents = language === "en" && bride.parentsEn ? bride.parentsEn : bride.parents;
   
   return (
     <section id="mempelai" className="relative z-10 py-24 sm:py-32">
@@ -80,8 +86,8 @@ export default function Couple() {
             &
           </span>
 
-          <PersonCard person={groom} side="left" delay="rd-1" />
-          <PersonCard person={bride} side="right" delay="rd-2" />
+          <PersonCard person={groom} parents={groomParents} side="left" delay="rd-1" />
+          <PersonCard person={bride} parents={brideParents} side="right" delay="rd-2" />
         </div>
       </div>
     </section>

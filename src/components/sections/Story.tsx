@@ -8,7 +8,7 @@ const icons = [IconLeaf, IconHeart, IconRings, IconSparkle];
 
 export default function Story() {
   const ref = useReveal();
-  const { mergedData, t } = useWedding();
+  const { mergedData, t, language } = useWedding();
 
   return (
     <section id="kisah" className="relative z-10 py-24 sm:py-32">
@@ -33,6 +33,9 @@ export default function Story() {
           {mergedData.story.map((s, i) => {
             const Icon = icons[i % icons.length];
             const leftSide = i % 2 === 0;
+            // Gunakan versi Inggris jika tersedia
+            const storyTitle = language === "en" && s.titleEn ? s.titleEn : s.title;
+            const storyText = language === "en" && s.textEn ? s.textEn : s.text;
             return (
               <li key={s.year} className="relative md:grid md:grid-cols-2 md:gap-16">
                 {/* lencana tahun */}
@@ -55,9 +58,9 @@ export default function Story() {
                   >
                     <p className="font-display text-2xl italic text-gold-400">{s.year}</p>
                     <h3 className="mt-1.5 font-display text-xl font-normal text-ivory">
-                      {s.title}
+                      {storyTitle}
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-sage-300/90">{s.text}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-sage-300/90">{storyText}</p>
                   </div>
                 </div>
               </li>

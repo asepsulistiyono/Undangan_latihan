@@ -3,7 +3,7 @@ import { useWeddingData, type WeddingData } from "./useWeddingData";
 import { WEDDING as DEFAULT_WEDDING } from "./wedding";
 import { getTheme, type Theme } from "./themes";
 import { updateMetaTags } from "./metaTags";
-import { translations, type Language, type Translations } from "./translations";
+import { translations, translateDate, type Language, type Translations } from "./translations";
 
 interface WeddingContextType {
   data: WeddingData;
@@ -11,6 +11,8 @@ interface WeddingContextType {
   theme: Theme;
   language: Language;
   t: Translations;
+  translateDateStr: (dateStr: string) => string;
+  getLocalizedText: (idText: string, enText?: string) => string;
   loading: boolean;
   error: string | null;
   updateData: (patch: WeddingData) => Promise<void>;
@@ -25,11 +27,21 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
   const language = (weddingData.data.language || "id") as Language;
   const t = translations[language];
   
+  // Helper function to translate date
+  const translateDateStr = (dateStr: string) => translateDate(dateStr, language);
+  
+  // Helper function to get localized text
+  const getLocalizedText = (idText: string, enText?: string) => {
+    return language === "en" && enText ? enText : idText;
+  };
+  
   const value = {
     ...weddingData,
     theme,
     language,
     t,
+    translateDateStr,
+    getLocalizedText,
   };
   
   // Update meta tags untuk preview link di WhatsApp/social media

@@ -13,11 +13,11 @@ export interface WeddingData {
   dateISO?: string;
   city?: string;
   venueMain?: string;
-  groom?: Partial<typeof DEFAULT_WEDDING.groom>;
-  bride?: Partial<typeof DEFAULT_WEDDING.bride>;
-  quote?: Partial<typeof DEFAULT_WEDDING.quote>;
-  events?: Array<Partial<(typeof DEFAULT_WEDDING.events)[number]>>;
-  story?: Array<Partial<(typeof DEFAULT_WEDDING.story)[number]>>;
+  groom?: Partial<typeof DEFAULT_WEDDING.groom> & { parentsEn?: string };
+  bride?: Partial<typeof DEFAULT_WEDDING.bride> & { parentsEn?: string };
+  quote?: Partial<typeof DEFAULT_WEDDING.quote> & { textEn?: string };
+  events?: Array<Partial<(typeof DEFAULT_WEDDING.events)[number]> & { nameEn?: string; noteEn?: string }>;
+  story?: Array<Partial<(typeof DEFAULT_WEDDING.story)[number]> & { titleEn?: string; textEn?: string }>;
   gallery?: Array<Partial<(typeof DEFAULT_WEDDING.gallery)[number]>>;
   gifts?: Array<Partial<(typeof DEFAULT_WEDDING.gifts)[number]>>;
   giftAddress?: string;
