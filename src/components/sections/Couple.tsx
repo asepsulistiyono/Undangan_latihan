@@ -52,7 +52,7 @@ function PersonCard({
 
 export default function Couple() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t } = useWedding();
   
   // Gabungkan data mempelai dengan foto dari context
   const groom = { ...mergedData.groom, photo: mergedData.photos.groom };
@@ -62,13 +62,13 @@ export default function Couple() {
     <section id="mempelai" className="relative z-10 py-24 sm:py-32">
       <div ref={ref} className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHead
-          eyebrow="Bismillahirrahmanirrahim"
+          eyebrow={t.couple.bismillah}
           title={
             <>
-              Kedua <em className="italic text-gold-300">Mempelai</em>
+              {t.couple.theBrideAndGroom.split(" ")[0]} <em className="italic text-gold-300">{t.couple.theBrideAndGroom.split(" ").slice(1).join(" ")}</em>
             </>
           }
-          sub="Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami — dua hati yang insyaAllah akan berjalan beriringan."
+          sub={t.couple.subtitle}
         />
 
         <div className="relative mt-16 grid gap-16 md:grid-cols-2 md:gap-10 lg:gap-16">

@@ -20,7 +20,7 @@ export async function copyText(text: string) {
   }
 }
 
-function CopyButton({ value, label = "Salin Nomor" }: { value: string; label?: string }) {
+function CopyButton({ value, label = "Salin Nomor", copiedText = "Tersalin!" }: { value: string; label?: string; copiedText?: string }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<number | undefined>(undefined);
 
@@ -41,26 +41,26 @@ function CopyButton({ value, label = "Salin Nomor" }: { value: string; label?: s
       }`}
     >
       {copied ? <IconCheck className="size-4" /> : <IconCopy className="size-4" />}
-      {copied ? "Tersalin!" : label}
+      {copied ? copiedText : label}
     </button>
   );
 }
 
 export default function Gift() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t } = useWedding();
 
   return (
     <section id="kado" className="relative z-10 py-24 sm:py-32">
       <div ref={ref} className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHead
-          eyebrow="Tanda Kasih"
+          eyebrow={t.gift.tokenOfLove}
           title={
             <>
-              Kado <em className="italic text-gold-300">Terindah</em>
+              {t.gift.mostBeautifulGift.split(" ")[0]} <em className="italic text-gold-300">{t.gift.mostBeautifulGift.split(" ").slice(1).join(" ")}</em>
             </>
           }
-          sub="Doa restu Anda adalah karunia yang paling berarti bagi kami. Namun bila memberi merupakan ungkapan kasih, tanda kasih dapat disalurkan melalui:"
+          sub={t.gift.subtitle}
         />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
@@ -90,7 +90,7 @@ export default function Gift() {
                 {g.number}
               </p>
               <div className="mt-6">
-                <CopyButton value={g.number} />
+                <CopyButton value={g.number} label={t.gift.copyNumber} copiedText={t.gift.copied} />
               </div>
             </div>
           ))}
@@ -103,14 +103,14 @@ export default function Gift() {
           </span>
           <div className="flex-1">
             <p className="text-xs font-extrabold uppercase tracking-[0.3em] text-gold-300">
-              Kirim Hadiah
+              {t.gift.sendGift}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-sage-300/90">
               {mergedData.giftAddress}
             </p>
           </div>
           <div className="w-full sm:w-auto">
-            <CopyButton value={mergedData.giftAddress} label="Salin Alamat" />
+            <CopyButton value={mergedData.giftAddress} label={t.gift.copyAddress} copiedText={t.gift.copied} />
           </div>
         </div>
       </div>

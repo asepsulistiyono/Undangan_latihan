@@ -5,7 +5,7 @@ import { DividerOrnament, Monogram } from "../Decor";
 
 export default function Closing() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t, language } = useWedding();
 
   return (
     <footer className="relative z-10 overflow-hidden pb-32 pt-28 sm:pb-36">
@@ -19,22 +19,20 @@ export default function Closing() {
       <div ref={ref} className="relative mx-auto max-w-2xl px-5 text-center sm:px-8">
         <Monogram className="reveal mx-auto size-16 text-gold-400" />
         <p className="reveal rd-1 mt-6 text-[11px] font-semibold uppercase tracking-[0.42em] text-sage-300/80">
-          Wassalamu&rsquo;alaikum Warahmatullahi Wabarakatuh
+          {language === "id" ? "Wassalamu'alaikum Warahmatullahi Wabarakatuh" : "And God Bless You"}
         </p>
         <h2 className="reveal rd-2 mt-5 font-display text-5xl font-light italic text-ivory sm:text-6xl">
-          Terima <span className="text-gold-300">Kasih</span>
+          {t.closing.thankYou.split(" ")[0]} <span className="text-gold-300">{t.closing.thankYou.split(" ").slice(1).join(" ")}</span>
         </h2>
         <p className="reveal rd-3 mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-sage-300/90">
-          Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila
-          Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas
-          perhatian dan doa baiknya, kami mengucapkan terima kasih.
+          {t.closing.subtitle}
         </p>
         <DividerOrnament className="reveal rd-4 mt-9" />
         <p className="reveal rd-5 mt-9 font-display text-3xl italic text-gold-200 sm:text-4xl">
           {mergedData.groom.short} <span className="text-gold-400">&</span> {mergedData.bride.short}
         </p>
         <p className="reveal rd-6 mt-3 text-[11px] uppercase tracking-[0.3em] text-sage-300/70">
-          Beserta keluarga besar
+          {t.closing.withFamily}
         </p>
       </div>
 

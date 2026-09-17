@@ -45,7 +45,7 @@ const inputCls =
 
 export default function Wishes() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t, language } = useWedding();
   const [stored, setStored] = useState<Wish[]>(loadStored);
   const [name, setName] = useState("");
   const [attend, setAttend] = useState<"hadir" | "berhalangan">("hadir");
@@ -63,7 +63,7 @@ export default function Wishes() {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !message.trim()) {
-      setError("Mohon lengkapi nama dan ucapan terlebih dahulu.");
+      setError(language === "id" ? "Mohon lengkapi nama dan ucapan terlebih dahulu." : "Please fill in name and message.");
       return;
     }
     setError("");
@@ -98,13 +98,13 @@ export default function Wishes() {
     >
       <div ref={ref} className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHead
-          eyebrow="Doa & Harapan"
+          eyebrow={t.wishes.prayersAndHopes}
           title={
             <>
-              Konfirmasi &amp; <em className="italic text-gold-300">Ucapan</em>
+              {t.wishes.confirmationAndWishes.split(" ")[0]} &amp; <em className="italic text-gold-300">{t.wishes.confirmationAndWishes.split(" ").slice(-1)[0]}</em>
             </>
           }
-          sub="Kehadiran dan doa restu Anda adalah kehormatan bagi kami. Sampaikan konfirmasi kehadiran serta untaian doa terbaik."
+          sub={t.wishes.subtitle}
         />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
@@ -115,11 +115,11 @@ export default function Wishes() {
             noValidate
           >
             <h3 className="font-display text-2xl font-light italic text-ivory">
-              Kirim Ucapan &amp; Konfirmasi
+              {t.wishes.sendWishes}
             </h3>
 
             <label htmlFor="w-name" className="mt-7 block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-              Nama
+              {t.wishes.name}
             </label>
             <input
               id="w-name"
@@ -131,13 +131,13 @@ export default function Wishes() {
             />
 
             <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-              Konfirmasi Kehadiran
+              {t.wishes.attendance}
             </p>
             <div className="mt-2.5 grid grid-cols-2 gap-2.5">
               {(
                 [
-                  ["hadir", "InsyaAllah Hadir"],
-                  ["berhalangan", "Mohon Maaf, Berhalangan"],
+                  ["hadir", t.wishes.willAttend],
+                  ["berhalangan", t.wishes.cannotAttend],
                 ] as const
               ).map(([val, label]) => (
                 <button
@@ -159,7 +159,7 @@ export default function Wishes() {
             {attend === "hadir" && (
               <>
                 <label htmlFor="w-guests" className="mt-5 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-                  <IconUsers className="size-4" /> Jumlah Tamu
+                  <IconUsers className="size-4" /> {t.wishes.numberOfGuests}
                 </label>
                 <div id="w-guests" className="mt-2.5 flex w-fit items-center border border-gold-500/25 rounded-[3px]">
                   <button
@@ -189,14 +189,14 @@ export default function Wishes() {
             )}
 
             <label htmlFor="w-msg" className="mt-5 block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-              Ucapan &amp; Doa
+              {t.wishes.message}
             </label>
             <textarea
               id="w-msg"
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Tuliskan doa terbaik Anda untuk kedua mempelai…"
+              placeholder={language === "id" ? "Tuliskan doa terbaik Anda untuk kedua mempelai…" : "Write your best wishes for the couple…"}
               className={`${inputCls} mt-2.5 resize-none`}
             />
 
@@ -211,14 +211,14 @@ export default function Wishes() {
               className="mt-7 flex w-full items-center justify-center gap-3 bg-gold-500 px-6 py-4 text-xs font-extrabold uppercase tracking-[0.25em] text-pine-950 shadow-[0_10px_30px_rgba(200,169,97,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-gold-400 active:translate-y-0"
             >
               <IconChat className="size-4" />
-              Kirim Ucapan
+              {t.wishes.sendWishes}
             </button>
           </form>
 
           {/* ===== dinding ucapan ===== */}
           <div className="reveal from-right rd-2">
             <div className="flex items-baseline justify-between">
-              <h3 className="font-display text-2xl font-light italic text-ivory">Ucapan Doa</h3>
+              <h3 className="font-display text-2xl font-light italic text-ivory">{t.wishes.wishesWall}</h3>
               <span className="border border-gold-500/30 px-3 py-1 text-xs font-bold text-gold-300">
                 {all.length} ucapan
               </span>
