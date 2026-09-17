@@ -27,18 +27,77 @@ export async function compressImage(
     throw new Error("File harus berupa gambar");
   }
 
-  const compressed = await imageCompression(file, {
-    maxSizeMB,
-    maxWidthOrHeight,
-    useWebWorker,
-    initialQuality: quality,
-    fileType: "image/webp",
-    onProgress,
-  });
+  // Deteksi mobile device
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
 
-  // Beri nama baru agar jelas
-  const newName = file.name.replace(/\.[^.]+$/, "") + ".webp";
-  return new File([compressed], newName, { type: "image/webp" });
+  // Untuk mobile, disable web worker karena sering bermasalah
+  const shouldUseWebWorker = isMobile ? false : useWebWorker;
+
+  try {
+    // Percobaan pertama dengan setting normal
+    const compressed = await imageCompression(file, {
+      maxSizeMB,
+      maxWidthOrHeight,
+      useWebWorker: shouldUseWebWorker,
+      initialQuality: quality,
+      fileType: "image/webp",
+      onProgress,
+    });
+
+    // Beri nama baru agar jelas
+    const newName = file.name.replace(/\.[^.]+$/, "") + ".webp";
+    return new File([compressed], newName, { type: "image/webp" });
+  } catch (firstError: any) {
+    // Jika gagal dan ini mobile, coba lagi dengan setting lebih rendah
+    if (isMobile) {
+      console.warn("Kompresi pertama gagal, mencoba dengan setting lebih rendah:", firstError);
+      
+      try {
+        // Percobaan kedua dengan ukuran lebih kecil dan kualitas lebih rendah
+        const compressed = await imageCompression(file, {
+          maxSizeMB: Math.min(maxSizeMB, 0.1), // Max 100KB
+          maxWidthOrHeight: Math.min(maxWidthOrHeight, 1000), // Max 1000px
+          useWebWorker: false, // Disable web worker
+          initialQuality: Math.min(quality, 0.6), // Quality 60%
+          fileType: "image/webp",
+          onProgress,
+        });
+
+        const newName = file.name.replace(/\.[^.]+$/, "") + ".webp";
+        return new File([compressed], newName, { type: "image/webp" });
+      } catch (secondError: any) {
+        // Jika masih gagal, coba fallback ke JPEG
+        console.warn("Kompresi WebP gagal, mencoba JPEG:", secondError);
+        
+        try {
+          const compressed = await imageCompression(file, {
+            maxSizeMB: Math.min(maxSizeMB, 0.15),
+            maxWidthOrHeight: Math.min(maxWidthOrHeight, 1200),
+            useWebWorker: false,
+            initialQuality: 0.7,
+            fileType: "image/jpeg", // Fallback ke JPEG
+            onProgress,
+          });
+
+          const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+          return new File([compressed], newName, { type: "image/jpeg" });
+        } catch (finalError: any) {
+          throw new Error(
+            `Gagal mengompresi foto: ${finalError.message || "Unknown error"}. ` +
+            `Silakan gunakan foto yang lebih kecil atau format lain.`
+          );
+        }
+      }
+    } else {
+      // Untuk desktop, langsung throw error
+      throw new Error(
+        `Gagal mengompresi foto: ${firstError.message || "Unknown error"}. ` +
+        `Silakan coba foto lain.`
+      );
+    }
+  }
 }
 
 /** Kompresi preset untuk berbagai jenis foto */
