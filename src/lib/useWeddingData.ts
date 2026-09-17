@@ -25,6 +25,7 @@ export interface WeddingData {
   photos?: Partial<typeof DEFAULT_IMG>;
   themeId?: string;
   ornamentId?: string;
+  customOrnament?: string; // SVG content untuk ornamen custom
 }
 
 /**

@@ -460,4 +460,4 @@ export const ORNAMENTS = {
   },
 } as const;
 
-export type OrnamentId = keyof typeof ORNAMENTS;
+export type OrnamentId = keyof typeof ORNAMENTS | "custom";
