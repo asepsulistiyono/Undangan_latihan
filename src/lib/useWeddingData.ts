@@ -136,7 +136,7 @@ export function useWeddingData(userId?: string | null) {
 /**
  * Gabungkan data dari DB dengan default, agar field yang tidak ada tetap terisi.
  */
-function mergeWithDefaults(data: WeddingData): typeof DEFAULT_WEDDING & { photos: typeof DEFAULT_IMG } {
+function mergeWithDefaults(data: WeddingData): typeof DEFAULT_WEDDING & { photos: typeof DEFAULT_IMG; religiousFormat?: ReligiousFormat; language?: "id" | "en" } {
   return {
     initials: data.initials ?? DEFAULT_WEDDING.initials,
     dateLabel: data.dateLabel ?? DEFAULT_WEDDING.dateLabel,
@@ -164,5 +164,7 @@ function mergeWithDefaults(data: WeddingData): typeof DEFAULT_WEDDING & { photos
       ? data.dresscode.map((d, i) => ({ ...DEFAULT_WEDDING.dresscode[i] || DEFAULT_WEDDING.dresscode[0], ...d }))
       : DEFAULT_WEDDING.dresscode,
     photos: { ...DEFAULT_IMG, ...data.photos },
+    religiousFormat: data.religiousFormat,
+    language: data.language,
   };
 }

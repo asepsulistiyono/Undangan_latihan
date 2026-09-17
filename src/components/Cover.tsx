@@ -30,6 +30,9 @@ export default function Cover({
   const parts = splitGuest(guest);
   const { mergedData, data, t, language, translateDateStr, religiousFormat } = useWedding();
   
+  console.log("🎨 Cover - Religious format:", religiousFormat);
+  console.log("🎨 Cover - Opening greeting:", religiousFormat.openingGreeting);
+  
   // Dapatkan ornamen yang dipilih
   const ornamentId = (data.ornamentId || "modern") as OrnamentId;
   const isCustom = ornamentId === "custom" && data.customOrnament;
@@ -44,6 +47,8 @@ export default function Cover({
   const openingGreeting = language === "en" 
     ? religiousFormat.openingGreetingEn 
     : religiousFormat.openingGreeting;
+    
+  console.log("🎨 Cover - Final opening greeting:", openingGreeting);
 
   return (
     <div
