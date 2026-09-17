@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPhoto, isIndexedDBAvailable } from "./indexedDB";
 
 /**
@@ -10,6 +10,7 @@ import { getPhoto, isIndexedDBAvailable } from "./indexedDB";
  */
 export function usePhotoResolver(photoUrl: string | undefined): string | null {
   const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!photoUrl) {
@@ -18,7 +19,7 @@ export function usePhotoResolver(photoUrl: string | undefined): string | null {
     }
 
     // Base64 atau HTTP URL - langsung gunakan
-    if (photoUrl.startsWith("data:") || photoUrl.startsWith("http://") || photoUrl.startsWith("https://")) {
+    if (photoUrl.startsWith("data:") || photoUrl.startsWith("blob:") || photoUrl.startsWith("http://") || photoUrl.startsWith("https://")) {
       setResolvedUrl(photoUrl);
       return;
     }
@@ -33,12 +34,22 @@ export function usePhotoResolver(photoUrl: string | undefined): string | null {
         return;
       }
 
-      let objectUrl: string | null = null;
+      let cancelled = false;
 
       getPhoto(key)
         .then((url) => {
+          if (cancelled) {
+            // Jika effect sudah di-cancel, revoke URL immediately
+            if (url) URL.revokeObjectURL(url);
+            return;
+          }
+          
           if (url) {
-            objectUrl = url;
+            // Revoke old object URL jika ada
+            if (objectUrlRef.current) {
+              URL.revokeObjectURL(objectUrlRef.current);
+            }
+            objectUrlRef.current = url;
             setResolvedUrl(url);
           } else {
             console.warn("Foto tidak ditemukan di IndexedDB:", key);
@@ -46,15 +57,17 @@ export function usePhotoResolver(photoUrl: string | undefined): string | null {
           }
         })
         .catch((err) => {
-          console.error("Gagal load foto dari IndexedDB:", err);
-          setResolvedUrl(null);
+          if (!cancelled) {
+            console.error("Gagal load foto dari IndexedDB:", err);
+            setResolvedUrl(null);
+          }
         });
 
-      // Cleanup object URL saat unmount
+      // Cleanup saat unmount atau photoUrl berubah
       return () => {
-        if (objectUrl) {
-          URL.revokeObjectURL(objectUrl);
-        }
+        cancelled = true;
+        // Jangan revoke object URL di sini karena masih digunakan oleh <img>
+        // Object URL akan di-revoke saat component unmount atau saat ada URL baru
       };
     }
 
@@ -62,6 +75,15 @@ export function usePhotoResolver(photoUrl: string | undefined): string | null {
     console.warn("Unknown photo URL format:", photoUrl);
     setResolvedUrl(null);
   }, [photoUrl]);
+
+  // Revoke object URL saat component unmount
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
 
   return resolvedUrl;
 }
