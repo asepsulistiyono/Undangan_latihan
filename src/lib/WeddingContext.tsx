@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { useWeddingData, type WeddingData } from "./useWeddingData";
 import { WEDDING as DEFAULT_WEDDING } from "./wedding";
 import { getTheme, type Theme } from "./themes";
@@ -21,6 +21,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
   const weddingData = useWeddingData(userId);
   const theme = getTheme(weddingData.data.themeId || "emerald-garden");
   const [resolvedPhotos, setResolvedPhotos] = useState<Record<string, string>>({});
+  const objectUrlsRef = useRef<string[]>([]);
   
   // Resolve foto dari IndexedDB saat data di-load
   useEffect(() => {
@@ -28,15 +29,21 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
     
     const photos = weddingData.mergedData.photos;
     const photoKeys = Object.keys(photos);
-    const newResolved: Record<string, string> = {};
-    const objectUrls: string[] = [];
+    
+    // Revoke old object URLs sebelum resolve yang baru
+    objectUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    objectUrlsRef.current = [];
     
     const resolvePhotos = async () => {
+      const newResolved: Record<string, string> = {};
+      const newObjectUrls: string[] = [];
+      
       for (const key of photoKeys) {
         const photoUrl = (photos as Record<string, string>)[key];
         
-        // Skip jika sudah base64 atau HTTP URL
-        if (!photoUrl || photoUrl.startsWith("data:") || photoUrl.startsWith("http://") || photoUrl.startsWith("https://")) {
+        // Skip jika sudah base64, blob, atau HTTP URL
+        if (!photoUrl || photoUrl.startsWith("data:") || photoUrl.startsWith("blob:") || 
+            photoUrl.startsWith("http://") || photoUrl.startsWith("https://")) {
           continue;
         }
         
@@ -47,7 +54,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
             const url = await getPhoto(dbKey);
             if (url) {
               newResolved[key] = url;
-              objectUrls.push(url);
+              newObjectUrls.push(url);
             }
           } catch (err) {
             console.error(`Gagal resolve foto ${key}:`, err);
@@ -55,15 +62,17 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
         }
       }
       
+      objectUrlsRef.current = newObjectUrls;
       setResolvedPhotos(newResolved);
-      
-      // Cleanup function untuk revoke object URLs
-      return () => {
-        objectUrls.forEach(url => URL.revokeObjectURL(url));
-      };
     };
     
     resolvePhotos();
+    
+    // Cleanup saat component unmount
+    return () => {
+      objectUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+      objectUrlsRef.current = [];
+    };
   }, [weddingData.loading, weddingData.mergedData]);
   
   // Merge resolved photos ke mergedData
