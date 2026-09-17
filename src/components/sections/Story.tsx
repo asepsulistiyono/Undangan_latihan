@@ -8,19 +8,19 @@ const icons = [IconLeaf, IconHeart, IconRings, IconSparkle];
 
 export default function Story() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t } = useWedding();
 
   return (
     <section id="kisah" className="relative z-10 py-24 sm:py-32">
       <div ref={ref} className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHead
-          eyebrow="Perjalanan Kami"
+          eyebrow={t.story.ourJourney}
           title={
             <>
-              Kisah <em className="italic text-gold-300">Kami</em>
+              {t.story.ourStory.split(" ")[0]} <em className="italic text-gold-300">{t.story.ourStory.split(" ").slice(1).join(" ")}</em>
             </>
           }
-          sub="Empat bab yang membawa kami ke altar — dari pertemuan yang tak disengaja hingga janji yang akan segera diikrarkan."
+          sub={t.story.subtitle}
         />
 
         <ol className="relative mt-20 space-y-14 md:space-y-20">

@@ -10,7 +10,7 @@ function Corner({ className }: { className: string }) {
 
 export default function Events() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t } = useWedding();
 
   return (
     <section
@@ -22,13 +22,13 @@ export default function Events() {
         <div className="self-start lg:sticky lg:top-24">
           <SectionHead
             align="left"
-            eyebrow="Simpan Tanggalnya"
+            eyebrow={t.events.saveTheDate}
             title={
               <>
-                Rangkaian <em className="italic text-gold-300">Acara</em>
+                {t.events.eventSeries.split(" ")[0]} <em className="italic text-gold-300">{t.events.eventSeries.split(" ").slice(1).join(" ")}</em>
               </>
             }
-            sub="Tanpa mengurangi rasa hormat, kami memohon kehadiran Bapak/Ibu/Saudara/i untuk turut menyaksikan dan mendoakan momen sakral kami."
+            sub=""
           />
 
           <a
@@ -38,12 +38,12 @@ export default function Events() {
             className="reveal rd-3 mt-9 inline-flex items-center gap-3 bg-gold-500 px-6 py-3.5 text-xs font-extrabold uppercase tracking-[0.22em] text-pine-950 shadow-[0_10px_30px_rgba(200,169,97,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-gold-400"
           >
             <IconCalendar className="size-4" />
-            Simpan ke Google Kalender
+            {t.events.saveToCalendar}
           </a>
 
           <div className="reveal rd-4 mt-12">
             <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-gold-400">
-              Dress Code
+              {t.events.dressCode}
             </p>
             <div className="mt-4 flex items-center gap-6">
               {mergedData.dresscode.map((d) => (
@@ -123,7 +123,7 @@ export default function Events() {
                   className="mt-7 inline-flex items-center gap-2.5 border border-gold-500/40 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-gold-300 transition-all duration-300 hover:bg-gold-500 hover:text-pine-950"
                 >
                   <IconPin className="size-4" />
-                  Lihat Lokasi
+                  {t.events.viewLocation}
                 </a>
               </article>
             );

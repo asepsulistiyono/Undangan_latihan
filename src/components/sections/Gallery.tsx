@@ -8,7 +8,7 @@ import Photo from "../Photo";
 
 export default function Gallery() {
   const ref = useReveal();
-  const { mergedData } = useWedding();
+  const { mergedData, t } = useWedding();
   const [idx, setIdx] = useState<number | null>(null);
   const items = mergedData.gallery;
 
@@ -40,13 +40,13 @@ export default function Gallery() {
     >
       <div ref={ref} className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHead
-          eyebrow="Lewat Lensa"
+          eyebrow={t.gallery.throughTheLens}
           title={
             <>
-              Galeri <em className="italic text-gold-300">Momen</em>
+              {t.gallery.momentGallery.split(" ")[0]} <em className="italic text-gold-300">{t.gallery.momentGallery.split(" ").slice(1).join(" ")}</em>
             </>
           }
-          sub="Potongan-potongan kecil dari perjalanan kami — cahaya, tawa, dan hijau dedaunan yang menjadi saksi."
+          sub={t.gallery.subtitle}
         />
 
         <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 [grid-auto-rows:170px] sm:[grid-auto-rows:200px]">
