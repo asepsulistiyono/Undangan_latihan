@@ -49,6 +49,14 @@ export interface ReligiousFormatData {
   closingBlessing: string;
   closingBlessingEn: string;
   
+  // Events
+  eventNames: {
+    ceremony: string;
+    ceremonyEn: string;
+    reception: string;
+    receptionEn: string;
+  };
+  
   // Wishes
   wishesPlaceholder: string;
   wishesPlaceholderEn: string;
@@ -87,6 +95,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingBlessing: "Semoga Allah SWT memberkahi pernikahan ini dan menjadikan keluarga yang sakinah, mawaddah, warahmah.",
     closingBlessingEn: "May Allah SWT bless this marriage and make it a family full of tranquility, love, and mercy.",
     
+    eventNames: {
+      ceremony: "Akad Nikah",
+      ceremonyEn: "Wedding Ceremony",
+      reception: "Resepsi Pernikahan",
+      receptionEn: "Wedding Reception",
+    },
+    
     wishesPlaceholder: "Tuliskan doa terbaik Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your best prayers for the couple…",
   },
@@ -121,6 +136,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     closingBlessing: "Kiranya Tuhan Yesus Kristus memberkati pernikahan ini dan menjadikan keluarga yang penuh kasih dan iman.",
     closingBlessingEn: "May Lord Jesus Christ bless this marriage and make it a family full of love and faith.",
+    
+    eventNames: {
+      ceremony: "Ibadah Pemberkatan Nikah",
+      ceremonyEn: "Wedding Blessing Service",
+      reception: "Perjamuan Syukur",
+      receptionEn: "Thanksgiving Reception",
+    },
     
     wishesPlaceholder: "Tuliskan berkat dan doa Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your blessings and prayers for the couple…",
@@ -157,6 +179,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingBlessing: "Kiranya Tuhan memberkati pernikahan ini dan menjadikan keluarga yang penuh kasih karunia.",
     closingBlessingEn: "May God bless this marriage and make it a family full of grace and love.",
     
+    eventNames: {
+      ceremony: "Misa Pemberkatan Nikah",
+      ceremonyEn: "Wedding Blessing Mass",
+      reception: "Perjamuan Syukur",
+      receptionEn: "Thanksgiving Reception",
+    },
+    
     wishesPlaceholder: "Tuliskan berkat dan doa Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your blessings and prayers for the couple…",
   },
@@ -191,6 +220,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     closingBlessing: "Semoga Ida Sang Hyang Widhi Wasa memberkati pernikahan ini dan menjadikan keluarga yang bahagia dan sejahtera.",
     closingBlessingEn: "May Ida Sang Hyang Widhi Wasa bless this marriage and make it a happy and prosperous family.",
+    
+    eventNames: {
+      ceremony: "Upacara Pawiwahan",
+      ceremonyEn: "Pawiwahan Ceremony",
+      reception: "Perjamuan Syukur",
+      receptionEn: "Thanksgiving Reception",
+    },
     
     wishesPlaceholder: "Tuliskan doa dan harapan Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your prayers and wishes for the couple…",
@@ -227,6 +263,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingBlessing: "Semoga Tiga Permata (Triratna) memberkati pernikahan ini dan menjadikan keluarga yang penuh cinta kasih dan kebijaksanaan.",
     closingBlessingEn: "May The Three Jewels (Triratna) bless this marriage and make it a family full of loving-kindness and wisdom.",
     
+    eventNames: {
+      ceremony: "Upacara Pemberkatan Nikah",
+      ceremonyEn: "Wedding Blessing Ceremony",
+      reception: "Perjamuan Syukur",
+      receptionEn: "Thanksgiving Reception",
+    },
+    
     wishesPlaceholder: "Tuliskan doa dan harapan Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your prayers and wishes for the couple…",
   },
@@ -262,6 +305,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     closingBlessing: "Semoga Tian (Tuhan) memberkati pernikahan ini dan menjadikan keluarga yang harmonis dan sejahtera.",
     closingBlessingEn: "May Tian (God) bless this marriage and make it a harmonious and prosperous family.",
     
+    eventNames: {
+      ceremony: "Upacara Pemberkatan Nikah",
+      ceremonyEn: "Wedding Blessing Ceremony",
+      reception: "Perjamuan Syukur",
+      receptionEn: "Thanksgiving Reception",
+    },
+    
     wishesPlaceholder: "Tuliskan doa dan harapan Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your prayers and wishes for the couple…",
   },
@@ -296,6 +346,13 @@ export const religiousFormats: Record<ReligiousFormat, ReligiousFormatData> = {
     
     closingBlessing: "Semoga cinta dan kebahagiaan selalu menyertai pernikahan ini dan menjadikan keluarga yang penuh sukacita.",
     closingBlessingEn: "May love and happiness always accompany this marriage and make it a family full of joy.",
+    
+    eventNames: {
+      ceremony: "Upacara Pernikahan",
+      ceremonyEn: "Wedding Ceremony",
+      reception: "Perjamuan Syukur",
+      receptionEn: "Reception",
+    },
     
     wishesPlaceholder: "Tuliskan ucapan dan harapan terbaik Anda untuk kedua mempelai…",
     wishesPlaceholderEn: "Write your best wishes for the couple…",
