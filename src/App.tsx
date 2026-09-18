@@ -33,8 +33,9 @@ export default function App() {
   // Timeout untuk auth loading - pastikan tidak stuck selamanya
   useEffect(() => {
     const timer = setTimeout(() => {
+      console.log("Auth loading timeout - forcing to false");
       setAuthLoading(false);
-    }, 10000); // 10 detik timeout
+    }, 5000); // 5 detik timeout (lebih cepat)
     return () => clearTimeout(timer);
   }, []);
   const [userName, setUserName] = useState<string | null>(null);
@@ -169,23 +170,43 @@ export default function App() {
 
   // Route: Admin
   if (isAdminRoute) {
+    // Jika masih loading, tampilkan loading screen dengan timeout
     if (authLoading) {
       return (
         <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-pine-950 px-5 text-center">
           <div className="size-12 animate-spin rounded-full border-2 border-gold-400 border-t-transparent" />
           <p className="text-sm text-sage-300/80">Memuat...</p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              setAuthLoading(false);
+              setUser(null);
+            }}
             className="mt-2 text-xs text-gold-400 underline hover:text-gold-300"
           >
-            Muat ulang jika stuck
+            Lewati loading
           </button>
         </div>
       );
     }
 
+    // Jika belum login, tampilkan form login
     if (!user) {
-      return <AdminLogin onLogin={() => {}} />;
+      try {
+        return <AdminLogin onLogin={() => {}} />;
+      } catch (err) {
+        console.error("Error rendering AdminLogin:", err);
+        return (
+          <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-pine-950 px-5 text-center">
+            <p className="text-sm text-rose-300">Error loading login page</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="text-xs text-gold-400 underline hover:text-gold-300"
+            >
+              Reload
+            </button>
+          </div>
+        );
+      }
     }
 
     if (!profile) {
