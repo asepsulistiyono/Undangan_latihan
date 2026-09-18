@@ -55,16 +55,16 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
         <form onSubmit={handleSubmit} className="mt-10 w-full space-y-5">
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-              Username
+              Email
             </label>
             <input
-              type="text"
+              type="email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              autoComplete="username"
+              autoComplete="email"
               className="mt-2.5 w-full rounded-[3px] border border-gold-500/25 bg-pine-900/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-gold-400 focus:outline-none"
-              placeholder="Masukkan username"
+              placeholder="contoh@email.com"
             />
           </div>
           <div>

@@ -120,8 +120,8 @@ function ensureDemoSuperAdmin(): void {
 
 export async function signIn(username: string, password: string) {
   if (SUPABASE_ENABLED) {
-    // Coba login dengan format email yang diberikan, atau tambahkan @demo.local jika tidak ada domain
-    const email = username.includes('@') ? username : username + "@demo.local";
+    // Gunakan email yang dimasukkan user apa adanya
+    const email = username;
     const { data, error } = await supabase.auth.signInWithPassword({ 
       email,
       password 
@@ -231,8 +231,8 @@ export async function createAdmin(
   name: string | null
 ) {
   if (SUPABASE_ENABLED) {
-    // Gunakan email yang diberikan, atau tambahkan @wedding.local jika tidak ada domain
-    const email = username.includes('@') ? username : username + "@wedding.local";
+    // Gunakan email yang dimasukkan user apa adanya
+    const email = username;
     
     console.log("Creating admin with email:", email);
     
@@ -242,7 +242,7 @@ export async function createAdmin(
         p_email: email,
         p_password: password,
         p_role: role,
-        p_name: name || username
+        p_name: name || email.split('@')[0]
       });
       
       if (!rpcError && rpcData) {
@@ -259,7 +259,7 @@ export async function createAdmin(
       password,
       options: {
         data: {
-          name: name || username,
+          name: name || email.split('@')[0],
           role: role
         }
       }
@@ -280,7 +280,7 @@ export async function createAdmin(
     const { error: profileError } = await supabase.from("admin_profiles").insert({
       user_id: authData.user.id,
       role,
-      name: name || username,
+      name: name || email.split('@')[0],
     });
     
     if (profileError) {
