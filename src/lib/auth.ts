@@ -349,7 +349,21 @@ export async function getAdminPassword(userId: string): Promise<string | null> {
 
 export async function getAdminWA(): Promise<string> {
   if (SUPABASE_ENABLED) {
-    return "6281234567890"; // Default
+    try {
+      const { data, error } = await supabase
+        .from("settings")
+        .select("data")
+        .single();
+      
+      if (error || !data) {
+        return "6281234567890"; // Default
+      }
+      
+      return (data.data as any)?.adminWA || "6281234567890";
+    } catch (err) {
+      console.error("Error getting admin WA:", err);
+      return "6281234567890"; // Default
+    }
   }
   const config = loadDemoConfig();
   return config.adminWA;
@@ -357,7 +371,47 @@ export async function getAdminWA(): Promise<string> {
 
 export async function setAdminWA(wa: string) {
   if (SUPABASE_ENABLED) {
-    throw new Error("Setting WA hanya tersedia di mode demo");
+    try {
+      // Get current settings
+      const { data: currentData, error: fetchError } = await supabase
+        .from("settings")
+        .select("data, id")
+        .single();
+      
+      if (fetchError || !currentData) {
+        // Insert new settings
+        const { error: insertError } = await supabase
+          .from("settings")
+          .insert({
+            data: { adminWA: wa }
+          });
+        
+        if (insertError) {
+          throw new Error(`Gagal menyimpan nomor WA: ${insertError.message}`);
+        }
+      } else {
+        // Update existing settings
+        const updatedData = {
+          ...(currentData.data as any),
+          adminWA: wa
+        };
+        
+        const { error: updateError } = await supabase
+          .from("settings")
+          .update({ data: updatedData })
+          .eq("id", currentData.id);
+        
+        if (updateError) {
+          throw new Error(`Gagal menyimpan nomor WA: ${updateError.message}`);
+        }
+      }
+      
+      console.log("Admin WA updated successfully:", wa);
+    } catch (err: any) {
+      console.error("Error setting admin WA:", err);
+      throw new Error(err.message || "Gagal menyimpan nomor WhatsApp");
+    }
+    return;
   }
   const config = loadDemoConfig();
   config.adminWA = wa;
