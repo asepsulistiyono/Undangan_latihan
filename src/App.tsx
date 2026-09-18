@@ -29,6 +29,14 @@ export default function App() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<AdminProfile | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Timeout untuk auth loading - pastikan tidak stuck selamanya
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAuthLoading(false);
+    }, 10000); // 10 detik timeout
+    return () => clearTimeout(timer);
+  }, []);
   const [userName, setUserName] = useState<string | null>(null);
 
   // Rute berbasis hash
@@ -40,31 +48,44 @@ export default function App() {
 
   // Subscribe auth state
   useEffect(() => {
+    let mounted = true;
+    
     const unsub = onAuthStateChange((u) => {
+      if (!mounted) return;
+      
       setUser(u);
       
       // Handle async operations
       const loadProfile = async () => {
         if (u) {
           try {
+            console.log("Loading profile for user:", u.id);
             const p = await getAdminProfile(u.id);
+            if (!mounted) return;
+            console.log("Profile loaded:", p);
             setProfile(p);
             setUserName(u.name || u.username);
           } catch (error) {
             console.error("Error loading profile:", error);
+            if (!mounted) return;
             setProfile(null);
             setUserName(null);
           }
         } else {
+          if (!mounted) return;
           setProfile(null);
           setUserName(null);
         }
-        setAuthLoading(false);
+        if (mounted) {
+          setAuthLoading(false);
+        }
       };
       
       loadProfile();
     });
+    
     return () => {
+      mounted = false;
       if (typeof unsub === "function") unsub();
     };
   }, []);
@@ -150,8 +171,15 @@ export default function App() {
   if (isAdminRoute) {
     if (authLoading) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-pine-950">
+        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-pine-950 px-5 text-center">
           <div className="size-12 animate-spin rounded-full border-2 border-gold-400 border-t-transparent" />
+          <p className="text-sm text-sage-300/80">Memuat...</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 text-xs text-gold-400 underline hover:text-gold-300"
+          >
+            Muat ulang jika stuck
+          </button>
         </div>
       );
     }
