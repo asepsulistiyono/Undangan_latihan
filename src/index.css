@@ -269,3 +269,127 @@ body::after {
     animation: none !important;
   }
 }
+
+/* ---------- Template Styles ---------- */
+.template-wrapper {
+  /* Apply template colors */
+  --color-primary: var(--template-primary, #0b1f17);
+  --color-secondary: var(--template-secondary, #c8a961);
+  --color-accent: var(--template-accent, #a9c3ad);
+  --color-background: var(--template-background, #071510);
+  --color-text: var(--template-text, #f4edda);
+}
+
+/* Apply template background */
+.template-wrapper {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* Template-specific overrides */
+.template-wrapper[data-template="modern-minimalist"] {
+  font-family: var(--template-font-body, "Inter"), sans-serif;
+}
+
+.template-wrapper[data-template="modern-minimalist"] h1,
+.template-wrapper[data-template="modern-minimalist"] h2,
+.template-wrapper[data-template="modern-minimalist"] h3 {
+  font-family: var(--template-font-heading, "Inter"), sans-serif;
+}
+
+.template-wrapper[data-template="romantic-garden"] {
+  font-family: var(--template-font-body, "Lato"), sans-serif;
+}
+
+.template-wrapper[data-template="romantic-garden"] h1,
+.template-wrapper[data-template="romantic-garden"] h2,
+.template-wrapper[data-template="romantic-garden"] h3 {
+  font-family: var(--template-font-heading, "Playfair Display"), serif;
+}
+
+.template-wrapper[data-template="royal-luxury"] {
+  font-family: var(--template-font-body, "Raleway"), sans-serif;
+}
+
+.template-wrapper[data-template="royal-luxury"] h1,
+.template-wrapper[data-template="royal-luxury"] h2,
+.template-wrapper[data-template="royal-luxury"] h3 {
+  font-family: var(--template-font-heading, "Cinzel"), serif;
+}
+
+.template-wrapper[data-template="japanese-zen"] {
+  font-family: var(--template-font-body, "Noto Sans JP"), sans-serif;
+}
+
+.template-wrapper[data-template="japanese-zen"] h1,
+.template-wrapper[data-template="japanese-zen"] h2,
+.template-wrapper[data-template="japanese-zen"] h3 {
+  font-family: var(--template-font-heading, "Noto Serif JP"), serif;
+}
+
+.template-wrapper[data-template="art-deco"] {
+  font-family: var(--template-font-body, "Montserrat"), sans-serif;
+}
+
+.template-wrapper[data-template="art-deco"] h1,
+.template-wrapper[data-template="art-deco"] h2,
+.template-wrapper[data-template="art-deco"] h3 {
+  font-family: var(--template-font-heading, "Bebas Neue"), sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.template-wrapper[data-template="islamic-calligraphy"] {
+  font-family: var(--template-font-body, "Cairo"), sans-serif;
+}
+
+.template-wrapper[data-template="islamic-calligraphy"] h1,
+.template-wrapper[data-template="islamic-calligraphy"] h2,
+.template-wrapper[data-template="islamic-calligraphy"] h3 {
+  font-family: var(--template-font-heading, "Amiri"), serif;
+}
+
+/* Template color applications */
+.template-wrapper .text-gold-400,
+.template-wrapper .text-gold-500 {
+  color: var(--color-secondary) !important;
+}
+
+.template-wrapper .bg-gold-500 {
+  background-color: var(--color-secondary) !important;
+}
+
+.template-wrapper .border-gold-500\/30,
+.template-wrapper .border-gold-500\/40 {
+  border-color: var(--color-secondary) !important;
+}
+
+/* Hero section template styles */
+.template-wrapper[data-hero-style="fullscreen"] #beranda {
+  min-height: 100vh;
+}
+
+.template-wrapper[data-hero-style="centered"] #beranda .flex-1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Couple section template styles */
+.template-wrapper[data-couple-style="circular"] #mempelai img {
+  border-radius: 50%;
+}
+
+.template-wrapper[data-couple-style="stacked"] #mempelai .grid {
+  grid-template-columns: 1fr !important;
+}
+
+/* Event section template styles */
+.template-wrapper[data-event-style="timeline"] #acara .space-y-8 > * {
+  position: relative;
+  padding-left: 2rem;
+  border-left: 2px solid var(--color-secondary);
+}
+
+.template-wrapper[data-event-style="accordion"] #acara article {
+  margin-bottom: 0.5rem;
+}

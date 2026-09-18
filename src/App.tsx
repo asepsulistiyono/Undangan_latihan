@@ -15,6 +15,7 @@ import AdminLogin from "./components/admin/AdminLogin";
 import AdminPanel from "./components/admin/AdminPanel";
 import SuperAdminPanel from "./components/admin/SuperAdminPanel";
 import ThemeWrapper from "./components/ThemeWrapper";
+import TemplateWrapper from "./components/TemplateWrapper";
 import { onAuthStateChange, getAdminProfile, type AdminProfile } from "./lib/auth";
 import { SUPABASE_ENABLED } from "./lib/supabase";
 import { WeddingProvider } from "./lib/WeddingContext";
@@ -215,36 +216,38 @@ export default function App() {
   return (
     <WeddingProvider key={publicUserId || "default"} userId={publicUserId}>
       <ThemeWrapper>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0"
-          style={{
-            background:
-              "radial-gradient(55% 40% at 85% -5%, rgba(200,169,97,0.09), transparent 65%), radial-gradient(60% 45% at -10% 35%, rgba(32,71,52,0.5), transparent 60%), radial-gradient(70% 50% at 110% 80%, rgba(24,56,41,0.55), transparent 65%)",
-          }}
-        />
+        <TemplateWrapper>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 z-0"
+            style={{
+              background:
+                "radial-gradient(55% 40% at 85% -5%, rgba(200,169,97,0.09), transparent 65%), radial-gradient(60% 45% at -10% 35%, rgba(32,71,52,0.5), transparent 60%), radial-gradient(70% 50% at 110% 80%, rgba(24,56,41,0.55), transparent 65%)",
+            }}
+          />
 
-        <Petals />
+          <Petals />
 
-        {stage !== "open" && <Cover opening={stage === "opening"} onOpen={open} />}
+          {stage !== "open" && <Cover opening={stage === "opening"} onOpen={open} />}
 
-        <main
-          className={`relative z-10 transition-opacity duration-1000 ${
-            stage === "open" ? "opacity-100" : "opacity-0"
-          }`}
-          aria-hidden={stage !== "open"}
-        >
-          <Hero open={stage === "open"} />
-          <Couple />
-          <Events />
-          <Story />
-          <Gallery />
-          <Gift />
-          <Wishes />
-          <Closing />
-        </main>
+          <main
+            className={`relative z-10 transition-opacity duration-1000 ${
+              stage === "open" ? "opacity-100" : "opacity-0"
+            }`}
+            aria-hidden={stage !== "open"}
+          >
+            <Hero open={stage === "open"} />
+            <Couple />
+            <Events />
+            <Story />
+            <Gallery />
+            <Gift />
+            <Wishes />
+            <Closing />
+          </main>
 
-        {stage === "open" && <Nav />}
+          {stage === "open" && <Nav />}
+        </TemplateWrapper>
       </ThemeWrapper>
     </WeddingProvider>
   );
