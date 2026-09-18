@@ -185,6 +185,8 @@ export async function changePassword(newPassword: string) {
 export async function getAdminProfile(userId: string): Promise<AdminProfile | null> {
   if (SUPABASE_ENABLED) {
     try {
+      console.log("🔍 Getting admin profile for user ID:", userId);
+      
       const { data, error } = await supabase
         .from("admin_profiles")
         .select("*")
@@ -192,18 +194,27 @@ export async function getAdminProfile(userId: string): Promise<AdminProfile | nu
         .maybeSingle();
       
       if (error) {
-        console.error("Error fetching admin profile:", error);
+        console.error("❌ Error fetching admin profile:", error);
+        console.error("Error details:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         return null;
       }
       
       if (!data) {
-        console.log("No admin profile found for user:", userId);
+        console.warn("⚠️ No admin profile found for user ID:", userId);
+        console.warn("💡 User ID tidak ada di tabel admin_profiles");
+        console.warn("💡 Jalankan SQL untuk insert user sebagai admin");
         return null;
       }
       
+      console.log("✅ Admin profile found:", data);
       return data as AdminProfile;
     } catch (err) {
-      console.error("Exception in getAdminProfile:", err);
+      console.error("❌ Exception in getAdminProfile:", err);
       return null;
     }
   }
