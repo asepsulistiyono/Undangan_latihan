@@ -332,15 +332,15 @@ export default function SuperAdminPanel({ profile, userName }: { profile: AdminP
             </div>
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-[0.28em] text-gold-400">
-                Username
+                Email
               </label>
               <input
-                type="text"
+                type="email"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
                 required
                 className="mt-2.5 w-full rounded-[3px] border border-gold-500/25 bg-pine-900/80 px-4 py-3 text-sm text-ivory placeholder:text-sage-300/40 transition-colors focus:border-gold-400 focus:outline-none"
-                placeholder="username_admin"
+                placeholder="email@domain.com"
               />
             </div>
             <div>
