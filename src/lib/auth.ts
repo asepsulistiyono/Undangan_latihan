@@ -183,13 +183,28 @@ export async function changePassword(newPassword: string) {
 
 export async function getAdminProfile(userId: string): Promise<AdminProfile | null> {
   if (SUPABASE_ENABLED) {
-    const { data, error } = await supabase
-      .from("admin_profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    if (error || !data) return null;
-    return data as AdminProfile;
+    try {
+      const { data, error } = await supabase
+        .from("admin_profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+      
+      if (error) {
+        console.error("Error fetching admin profile:", error);
+        return null;
+      }
+      
+      if (!data) {
+        console.log("No admin profile found for user:", userId);
+        return null;
+      }
+      
+      return data as AdminProfile;
+    } catch (err) {
+      console.error("Exception in getAdminProfile:", err);
+      return null;
+    }
   }
   ensureDemoSuperAdmin();
   const profiles = loadDemoProfiles();
@@ -309,10 +324,37 @@ export async function setAdminWA(wa: string) {
 
 export function onAuthStateChange(callback: (user: any) => void): () => void {
   if (SUPABASE_ENABLED) {
+    let callbackCalled = false;
+    
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      callback(session?.user || null);
+      callbackCalled = true;
+      try {
+        callback(session?.user || null);
+      } catch (err) {
+        console.error("Error in auth state callback:", err);
+        callback(null);
+      }
     });
-    return () => data.subscription.unsubscribe();
+    
+    // Fallback: jika onAuthStateChange tidak memanggil callback dalam 3 detik,
+    // cek session manual
+    const fallbackTimer = setTimeout(async () => {
+      if (!callbackCalled) {
+        console.log("Auth state change not called, checking session manually...");
+        try {
+          const { data: sessionData } = await supabase.auth.getSession();
+          callback(sessionData.session?.user || null);
+        } catch (err) {
+          console.error("Error checking session:", err);
+          callback(null);
+        }
+      }
+    }, 3000);
+    
+    return () => {
+      clearTimeout(fallbackTimer);
+      data.subscription.unsubscribe();
+    };
   }
 
   // Mode demo — cek session saat ini dan subscribe ke event
