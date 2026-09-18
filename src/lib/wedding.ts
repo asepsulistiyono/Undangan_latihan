@@ -26,6 +26,7 @@ export const WEDDING = {
     ig: "rakaadyatma",
     photo: IMG.groom,
     bio: "Arsitek yang percaya bahwa rumah terbaik adalah tempat kita pulang.",
+    bioEn: "An architect who believes that the best home is where we return.",
   },
   bride: {
     short: "Sekar",
@@ -37,6 +38,7 @@ export const WEDDING = {
     ig: "sekarlaras",
     photo: IMG.bride,
     bio: "Penata bunga yang menemukan taman paling indah di hati Raka.",
+    bioEn: "A florist who found the most beautiful garden in Raka's heart.",
   },
 
   quote: {
