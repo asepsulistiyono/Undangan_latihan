@@ -164,10 +164,11 @@ export function Petals({ count = 16 }: { count?: number }) {
 
 /* ---------------- Marquee nama & tanggal ---------------- */
 export function Marquee() {
-  const { mergedData } = useWedding();
+  const { mergedData, translateDateStr } = useWedding();
+  const translatedDate = translateDateStr(mergedData.dateLabel);
   const items = [
     `${mergedData.groom.short} & ${mergedData.bride.short}`,
-    mergedData.dateLabel,
+    translatedDate,
     mergedData.venueMain,
     "Save the Date",
   ];
