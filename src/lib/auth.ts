@@ -231,20 +231,32 @@ export async function createAdmin(
   name: string | null
 ) {
   if (SUPABASE_ENABLED) {
-    // Gunakan email yang diberikan, atau tambahkan @demo.local jika tidak ada domain
+    // Gunakan email yang diberikan, atau tambahkan @wedding.local jika tidak ada domain
     const email = username.includes('@') ? username : username + "@wedding.local";
     
     console.log("Creating admin with email:", email);
     
+    // Cara 1: Coba gunakan RPC function (jika sudah dibuat)
+    try {
+      const { data: rpcData, error: rpcError } = await supabase.rpc('create_new_admin', {
+        p_email: email,
+        p_password: password,
+        p_role: role,
+        p_name: name || username
+      });
+      
+      if (!rpcError && rpcData) {
+        console.log("Admin created via RPC:", rpcData);
+        return { id: rpcData, email };
+      }
+    } catch (rpcErr) {
+      console.log("RPC function not available, trying signUp method...");
+    }
+    
+    // Cara 2: Gunakan signUp (fallback)
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
       email,
-      password,
-      options: {
-        data: {
-          name: name || username,
-          role: role
-        }
-      }
+      password
     });
     
     if (authError) {
@@ -271,6 +283,9 @@ export async function createAdmin(
     }
     
     console.log("Admin profile created successfully");
+    
+    // Sign out new user (kita tidak mau auto-login sebagai user baru)
+    await supabase.auth.signOut();
     
     return authData.user;
   }
