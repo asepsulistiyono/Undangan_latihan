@@ -65,7 +65,19 @@ export default function App() {
             if (!mounted) return;
             console.log("Profile loaded:", p);
             setProfile(p);
-            setUserName(u.name || u.username);
+            
+            // Get username from profile name, or email, or user metadata
+            let displayName = p?.name || null;
+            if (!displayName) {
+              // Try to get from user metadata
+              displayName = u.user_metadata?.name || null;
+            }
+            if (!displayName && u.email) {
+              // Use email prefix as fallback
+              displayName = u.email.split('@')[0];
+            }
+            
+            setUserName(displayName);
           } catch (error) {
             console.error("Error loading profile:", error);
             if (!mounted) return;

@@ -256,7 +256,13 @@ export async function createAdmin(
     // Cara 2: Gunakan signUp (fallback)
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
       email,
-      password
+      password,
+      options: {
+        data: {
+          name: name || username,
+          role: role
+        }
+      }
     });
     
     if (authError) {
@@ -274,7 +280,7 @@ export async function createAdmin(
     const { error: profileError } = await supabase.from("admin_profiles").insert({
       user_id: authData.user.id,
       role,
-      name,
+      name: name || username,
     });
     
     if (profileError) {
