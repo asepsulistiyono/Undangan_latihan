@@ -8,11 +8,13 @@ import Photo from "../Photo";
 function PersonCard({
   person,
   parents,
+  bio,
   side,
   delay,
 }: {
   person: typeof WEDDING.groom;
   parents: string;
+  bio: string;
   side: "left" | "right";
   delay: string;
 }) {
@@ -36,7 +38,7 @@ function PersonCard({
           {parents}
         </p>
         <p className="mt-3 font-display text-sm italic text-gold-300/85">
-          &ldquo;{person.bio}&rdquo;
+          &ldquo;{bio}&rdquo;
         </p>
         <a
           href={`https://instagram.com/${person.ig}`}
@@ -63,6 +65,10 @@ export default function Couple() {
   // Gunakan parentsEn jika bahasa Inggris dan tersedia
   const groomParents = language === "en" && groom.parentsEn ? groom.parentsEn : groom.parents;
   const brideParents = language === "en" && bride.parentsEn ? bride.parentsEn : bride.parents;
+  
+  // Gunakan bioEn jika bahasa Inggris dan tersedia
+  const groomBio = language === "en" && groom.bioEn ? groom.bioEn : groom.bio;
+  const brideBio = language === "en" && bride.bioEn ? bride.bioEn : bride.bio;
   
   // Gunakan coupleBlessing dari religious format
   const coupleBlessing = language === "en" 
@@ -96,8 +102,8 @@ export default function Couple() {
             &
           </span>
 
-          <PersonCard person={groom} parents={groomParents} side="left" delay="rd-1" />
-          <PersonCard person={bride} parents={brideParents} side="right" delay="rd-2" />
+          <PersonCard person={groom} parents={groomParents} bio={groomBio} side="left" delay="rd-1" />
+          <PersonCard person={bride} parents={brideParents} bio={brideBio} side="right" delay="rd-2" />
         </div>
       </div>
     </section>
