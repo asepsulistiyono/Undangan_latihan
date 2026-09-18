@@ -5,6 +5,7 @@ import { getTheme, type Theme } from "./themes";
 import { updateMetaTags } from "./metaTags";
 import { translations, translateDate, type Language, type Translations } from "./translations";
 import { getReligiousFormat, type ReligiousFormat, type ReligiousFormatData } from "./religiousFormats";
+import { getTemplate, type TemplateId, type DesignTemplate } from "./templates";
 
 interface WeddingContextType {
   data: WeddingData;
@@ -13,6 +14,7 @@ interface WeddingContextType {
   language: Language;
   t: Translations;
   religiousFormat: ReligiousFormatData;
+  template: DesignTemplate;
   translateDateStr: (dateStr: string) => string;
   getLocalizedText: (idText: string, enText?: string) => string;
   loading: boolean;
@@ -29,6 +31,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
   const language = (weddingData.data.language || "id") as Language;
   const t = translations[language];
   const religiousFormat = getReligiousFormat((weddingData.data.religiousFormat || "islam") as ReligiousFormat);
+  const template = getTemplate((weddingData.data.templateId || "classic-elegant") as TemplateId);
   
   // Helper function to translate date
   const translateDateStr = (dateStr: string) => translateDate(dateStr, language);
@@ -44,6 +47,7 @@ export function WeddingProvider({ children, userId }: { children: ReactNode; use
     language,
     t,
     religiousFormat,
+    template,
     translateDateStr,
     getLocalizedText,
   };

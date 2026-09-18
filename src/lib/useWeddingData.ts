@@ -8,6 +8,8 @@ import { WEDDING as DEFAULT_WEDDING, IMG as DEFAULT_IMG } from "./wedding";
  */
 import type { ReligiousFormat } from "./religiousFormats";
 
+import type { TemplateId } from "./templates";
+
 export interface WeddingData {
   initials?: string;
   dateLabel?: string;
@@ -30,6 +32,7 @@ export interface WeddingData {
   customOrnament?: string; // SVG content untuk ornamen custom
   language?: "id" | "en"; // Bahasa: Indonesia atau English
   religiousFormat?: ReligiousFormat; // Format agama
+  templateId?: TemplateId; // Desain template
 }
 
 /**
