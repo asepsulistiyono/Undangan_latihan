@@ -78,6 +78,9 @@ export default function Hero({ open }: { open: boolean }) {
       <section
         id="beranda"
         className={`relative z-10 flex min-h-[100svh] flex-col overflow-hidden ${open ? "is-open" : ""}`}
+        style={{
+          backgroundColor: religiousFormat.color,
+        }}
       >
         <div className="absolute inset-0" aria-hidden="true">
           <Photo

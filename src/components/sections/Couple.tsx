@@ -56,7 +56,7 @@ function PersonCard({
 
 export default function Couple() {
   const ref = useReveal();
-  const { mergedData, t, language, religiousFormat } = useWedding();
+  const { mergedData, t, language, religiousFormat, template } = useWedding();
   
   // Gabungkan data mempelai dengan foto dari context
   const groom = { ...mergedData.groom, photo: mergedData.photos.groom };
@@ -93,7 +93,12 @@ export default function Couple() {
           sub={coupleSubtitle}
         />
 
-        <div className="relative mt-16 grid gap-16 md:grid-cols-2 md:gap-10 lg:gap-16">
+        <div 
+          className="relative mt-16 grid gap-16 md:grid-cols-2 md:gap-10 lg:gap-16"
+          style={{
+            gridTemplateColumns: template.layout.coupleStyle === "stacked" ? "1fr" : undefined,
+          }}
+        >
           {/* ampersand raksasa di tengah */}
           <span
             aria-hidden="true"
