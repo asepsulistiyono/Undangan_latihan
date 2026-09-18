@@ -232,19 +232,46 @@ export async function createAdmin(
 ) {
   if (SUPABASE_ENABLED) {
     // Gunakan email yang diberikan, atau tambahkan @demo.local jika tidak ada domain
-    const email = username.includes('@') ? username : username + "@demo.local";
+    const email = username.includes('@') ? username : username + "@wedding.local";
+    
+    console.log("Creating admin with email:", email);
+    
     const { data: authData, error: authError } = await supabase.auth.signUp({ 
       email,
-      password 
+      password,
+      options: {
+        data: {
+          name: name || username,
+          role: role
+        }
+      }
     });
-    if (authError) throw authError;
-    if (!authData.user) throw new Error("Gagal membuat user");
+    
+    if (authError) {
+      console.error("Auth error:", authError);
+      throw new Error(`Gagal membuat user: ${authError.message}`);
+    }
+    
+    if (!authData.user) {
+      throw new Error("Gagal membuat user: User data tidak ditemukan");
+    }
+    
+    console.log("User created:", authData.user.id);
+    
+    // Insert ke admin_profiles
     const { error: profileError } = await supabase.from("admin_profiles").insert({
       user_id: authData.user.id,
       role,
       name,
     });
-    if (profileError) throw profileError;
+    
+    if (profileError) {
+      console.error("Profile error:", profileError);
+      throw new Error(`Gagal membuat profile admin: ${profileError.message}`);
+    }
+    
+    console.log("Admin profile created successfully");
+    
     return authData.user;
   }
 
