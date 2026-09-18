@@ -120,8 +120,9 @@ function ensureDemoSuperAdmin(): void {
 
 export async function signIn(username: string, password: string) {
   if (SUPABASE_ENABLED) {
-    // Gunakan email yang dimasukkan user apa adanya
-    const email = username;
+    // Username akan dikonversi ke email secara internal
+    // User hanya perlu ingat username, tidak perlu @domain
+    const email = username.includes('@') ? username : username + "@wedding.local";
     const { data, error } = await supabase.auth.signInWithPassword({ 
       email,
       password 
@@ -231,8 +232,9 @@ export async function createAdmin(
   name: string | null
 ) {
   if (SUPABASE_ENABLED) {
-    // Gunakan email yang dimasukkan user apa adanya
-    const email = username;
+    // Username akan dikonversi ke email secara internal
+    // User hanya perlu ingat username, tidak perlu @domain
+    const email = username.includes('@') ? username : username + "@wedding.local";
     
     console.log("Creating admin with email:", email);
     
