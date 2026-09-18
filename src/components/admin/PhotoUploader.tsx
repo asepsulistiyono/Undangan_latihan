@@ -67,18 +67,48 @@ export default function PhotoUploader({
         );
       }
 
-      // Kompresi foto
-      const compressOptions = {
-        ...PRESETS[preset],
-        ...(isMobile && {
-          maxWidthOrHeight: Math.min(PRESETS[preset].maxWidthOrHeight, 1200),
-          maxSizeMB: Math.min(PRESETS[preset].maxSizeMB, 0.15),
-          quality: Math.min(PRESETS[preset].quality, 0.7),
-        }),
-        onProgress: (p: number) => setProgress(Math.round(p)),
-      };
+      // Validasi tipe file
+      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+      if (!validTypes.includes(file.type.toLowerCase())) {
+        throw new Error(
+          `Format file tidak didukung (${file.type}). Gunakan JPG, PNG, atau WebP.`
+        );
+      }
 
-      const compressed = await compressImage(file, compressOptions);
+      // Kompresi foto dengan retry mechanism
+      let compressed: File = file; // Default ke file original
+      let compressAttempts = 0;
+      const maxAttempts = isMobile ? 3 : 2;
+
+      while (compressAttempts < maxAttempts) {
+        try {
+          const compressOptions = {
+            ...PRESETS[preset],
+            ...(isMobile && {
+              maxWidthOrHeight: Math.min(PRESETS[preset].maxWidthOrHeight, 1200 - (compressAttempts * 200)),
+              maxSizeMB: Math.min(PRESETS[preset].maxSizeMB, 0.15 - (compressAttempts * 0.03)),
+              quality: Math.min(PRESETS[preset].quality, 0.7 - (compressAttempts * 0.1)),
+            }),
+            onProgress: (p: number) => setProgress(Math.round(p)),
+          };
+
+          compressed = await compressImage(file, compressOptions);
+          break; // Berhasil, keluar dari loop
+        } catch (compressError: any) {
+          compressAttempts++;
+          console.warn(`Attempt ${compressAttempts} gagal:`, compressError);
+          
+          if (compressAttempts >= maxAttempts) {
+            // Jika semua attempt gagal, gunakan file original
+            console.warn("Semua attempt kompresi gagal, menggunakan file original");
+            compressed = file;
+            break;
+          }
+          
+          // Tunggu sebentar sebelum retry
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+      }
 
       // Upload berdasarkan mode
       if (SUPABASE_ENABLED) {
@@ -87,14 +117,39 @@ export default function PhotoUploader({
         setPreview(localUrl);
 
         const fileName = `${Date.now()}-${compressed.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from(BUCKET)
-          .upload(fileName, compressed, {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: compressed.type,
-          });
-        if (uploadError) throw uploadError;
+        
+        // Retry upload jika gagal
+        let uploadAttempts = 0;
+        const maxUploadAttempts = 3;
+        let uploadError: any = null;
+
+        while (uploadAttempts < maxUploadAttempts) {
+          const { error } = await supabase.storage
+            .from(BUCKET)
+            .upload(fileName, compressed, {
+              cacheControl: "3600",
+              upsert: uploadAttempts > 0, // Enable upsert untuk retry
+              contentType: compressed.type,
+            });
+          
+          if (!error) {
+            uploadError = null;
+            break; // Berhasil
+          }
+          
+          uploadError = error;
+          uploadAttempts++;
+          console.warn(`Upload attempt ${uploadAttempts} gagal:`, error);
+          
+          if (uploadAttempts < maxUploadAttempts) {
+            // Tunggu sebelum retry
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+
+        if (uploadError) {
+          throw uploadError;
+        }
 
         const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
         onUpload(data.publicUrl);
@@ -148,8 +203,26 @@ export default function PhotoUploader({
         errorMessage = "Memory browser penuh. Silakan refresh halaman dan coba foto yang lebih kecil.";
       } else if (err.message?.includes("IndexedDB")) {
         errorMessage = "Gagal menyimpan foto. Browser tidak mendukung IndexedDB atau storage penuh.";
+      } else if (err.message?.includes("format") || err.message?.includes("Format")) {
+        errorMessage = err.message;
+      } else if (err.message?.includes("Bucket not found")) {
+        errorMessage = "Storage bucket belum dibuat. Silakan setup Supabase Storage terlebih dahulu.";
+      } else if (err.message?.includes("Invalid API key")) {
+        errorMessage = "Konfigurasi Supabase tidak valid. Periksa file .env.";
+      } else if (err.message?.includes("CORS") || err.message?.includes("cors")) {
+        errorMessage = "Error koneksi. Periksa koneksi internet atau coba lagi.";
+      } else if (err.message?.includes("NetworkError") || err.message?.includes("network")) {
+        errorMessage = "Error jaringan. Periksa koneksi internet Anda.";
+      } else if (err.status === 413) {
+        errorMessage = "File terlalu besar untuk server. Gunakan foto yang lebih kecil.";
+      } else if (err.status === 401 || err.status === 403) {
+        errorMessage = "Tidak memiliki izin upload. Periksa konfigurasi Supabase.";
+      } else if (err.status === 500) {
+        errorMessage = "Server error. Silakan coba lagi dalam beberapa saat.";
       } else if (isMobile) {
         errorMessage = "Gagal upload di mobile. Coba gunakan foto yang lebih kecil atau upload dari komputer.";
+      } else {
+        errorMessage = `Gagal mengunggah foto: ${err.message || "Unknown error"}. Silakan coba foto lain atau refresh halaman.`;
       }
       
       setError(errorMessage);

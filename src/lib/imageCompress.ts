@@ -35,69 +35,126 @@ export async function compressImage(
   // Untuk mobile, disable web worker karena sering bermasalah
   const shouldUseWebWorker = isMobile ? false : useWebWorker;
 
+  // Untuk mobile, gunakan setting yang lebih konservatif
+  const mobileMaxSizeMB = Math.min(maxSizeMB, 0.1); // Max 100KB
+  const mobileMaxDimension = Math.min(maxWidthOrHeight, 1200); // Max 1200px
+  const mobileQuality = Math.min(quality, 0.65); // Quality 65%
+
   try {
-    // Percobaan pertama dengan setting normal
+    // Untuk mobile, langsung gunakan setting konservatif
     const compressed = await imageCompression(file, {
-      maxSizeMB,
-      maxWidthOrHeight,
+      maxSizeMB: isMobile ? mobileMaxSizeMB : maxSizeMB,
+      maxWidthOrHeight: isMobile ? mobileMaxDimension : maxWidthOrHeight,
       useWebWorker: shouldUseWebWorker,
-      initialQuality: quality,
-      fileType: "image/webp",
+      initialQuality: isMobile ? mobileQuality : quality,
+      fileType: "image/jpeg", // Gunakan JPEG untuk kompatibilitas maksimal
       onProgress,
     });
 
     // Beri nama baru agar jelas
-    const newName = file.name.replace(/\.[^.]+$/, "") + ".webp";
-    return new File([compressed], newName, { type: "image/webp" });
+    const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([compressed], newName, { type: "image/jpeg" });
   } catch (firstError: any) {
-    // Jika gagal dan ini mobile, coba lagi dengan setting lebih rendah
+    console.error("Error kompresi pertama:", firstError);
+    
+    // Jika gagal, coba dengan canvas manual (fallback ultimate)
     if (isMobile) {
-      console.warn("Kompresi pertama gagal, mencoba dengan setting lebih rendah:", firstError);
+      console.warn("Kompresi gagal, mencoba fallback canvas manual...");
       
       try {
-        // Percobaan kedua dengan ukuran lebih kecil dan kualitas lebih rendah
-        const compressed = await imageCompression(file, {
-          maxSizeMB: Math.min(maxSizeMB, 0.1), // Max 100KB
-          maxWidthOrHeight: Math.min(maxWidthOrHeight, 1000), // Max 1000px
-          useWebWorker: false, // Disable web worker
-          initialQuality: Math.min(quality, 0.6), // Quality 60%
-          fileType: "image/webp",
-          onProgress,
-        });
-
-        const newName = file.name.replace(/\.[^.]+$/, "") + ".webp";
-        return new File([compressed], newName, { type: "image/webp" });
-      } catch (secondError: any) {
-        // Jika masih gagal, coba fallback ke JPEG
-        console.warn("Kompresi WebP gagal, mencoba JPEG:", secondError);
+        return await compressWithCanvas(file, mobileMaxDimension, mobileQuality);
+      } catch (canvasError: any) {
+        console.error("Canvas fallback juga gagal:", canvasError);
         
-        try {
-          const compressed = await imageCompression(file, {
-            maxSizeMB: Math.min(maxSizeMB, 0.15),
-            maxWidthOrHeight: Math.min(maxWidthOrHeight, 1200),
-            useWebWorker: false,
-            initialQuality: 0.7,
-            fileType: "image/jpeg", // Fallback ke JPEG
-            onProgress,
-          });
-
-          const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
-          return new File([compressed], newName, { type: "image/jpeg" });
-        } catch (finalError: any) {
-          throw new Error(
-            `Gagal mengompresi foto: ${finalError.message || "Unknown error"}. ` +
-            `Silakan gunakan foto yang lebih kecil atau format lain.`
-          );
-        }
+        // Jika semua gagal, return file original (tanpa kompresi)
+        console.warn("Semua metode kompresi gagal, menggunakan file original");
+        return file;
       }
     } else {
-      // Untuk desktop, langsung throw error
       throw new Error(
         `Gagal mengompresi foto: ${firstError.message || "Unknown error"}. ` +
         `Silakan coba foto lain.`
       );
     }
   }
+}
+
+/**
+ * Fallback kompresi menggunakan canvas manual
+ * Lebih reliable di mobile device
+ */
+async function compressWithCanvas(
+  file: File,
+  maxDimension: number,
+  quality: number
+): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      reject(new Error("Canvas not supported"));
+      return;
+    }
+
+    img.onload = () => {
+      try {
+        // Calculate new dimensions
+        let { width, height } = img;
+        
+        if (width > height) {
+          if (width > maxDimension) {
+            height = (height * maxDimension) / width;
+            width = maxDimension;
+          }
+        } else {
+          if (height > maxDimension) {
+            width = (width * maxDimension) / height;
+            height = maxDimension;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw image
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to blob
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Failed to create blob"));
+              return;
+            }
+
+            const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+            const compressedFile = new File([blob], newName, { type: "image/jpeg" });
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      } catch (err) {
+        reject(err);
+      }
+    };
+
+    img.onerror = () => {
+      reject(new Error("Failed to load image"));
+    };
+
+    // Load image from file
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => {
+      reject(new Error("Failed to read file"));
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 /** Kompresi preset untuk berbagai jenis foto */
