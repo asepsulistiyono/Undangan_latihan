@@ -54,8 +54,6 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
     }
   };
 
-  const normalizedWA = adminWA.replace(/\D/g, "");
-
 const normalizedWA = adminWA.replace(/\D/g, "");
 
 const waLink = normalizedWA
