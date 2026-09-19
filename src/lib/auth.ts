@@ -244,13 +244,14 @@ export async function createAdmin(
 ) {
   if (SUPABASE_ENABLED) {
     // Username akan dikonversi ke email secara internal
-    // User hanya perlu ingat username, tidak perlu @domain
     const email = username.includes('@') ? username : username + "@wedding.local";
     
-    console.log("Creating admin with email:", email);
+    console.log("🔧 Creating admin with email:", email, "role:", role);
     
-    // Cara 1: Coba gunakan RPC function (jika sudah dibuat)
+    // Cara 1: Gunakan RPC function (RECOMMENDED - tidak mengubah session)
     try {
+      console.log("📞 Trying RPC function create_new_admin...");
+      
       const { data: rpcData, error: rpcError } = await supabase.rpc('create_new_admin', {
         p_email: email,
         p_password: password,
@@ -258,55 +259,25 @@ export async function createAdmin(
         p_name: name || email.split('@')[0]
       });
       
-      if (!rpcError && rpcData) {
-        console.log("Admin created via RPC:", rpcData);
+      if (rpcError) {
+        console.error("❌ RPC error:", rpcError);
+        throw rpcError;
+      }
+      
+      if (rpcData) {
+        console.log("✅ Admin created via RPC successfully! User ID:", rpcData);
         return { id: rpcData, email };
       }
-    } catch (rpcErr) {
-      console.log("RPC function not available, trying signUp method...");
+      
+      throw new Error("RPC function tidak mengembalikan data");
+    } catch (rpcErr: any) {
+      console.error("❌ RPC function failed:", rpcErr.message);
+      console.log("💡 Pastikan sudah menjalankan CREATE_RPC_FUNCTION.sql di SQL Editor");
+      throw new Error(
+        `Gagal membuat admin: ${rpcErr.message || "Unknown error"}. ` +
+        `Pastikan sudah menjalankan script CREATE_RPC_FUNCTION.sql di Supabase SQL Editor.`
+      );
     }
-    
-    // Cara 2: Gunakan signUp (fallback)
-    const { data: authData, error: authError } = await supabase.auth.signUp({ 
-      email,
-      password,
-      options: {
-        data: {
-          name: name || email.split('@')[0],
-          role: role
-        }
-      }
-    });
-    
-    if (authError) {
-      console.error("Auth error:", authError);
-      throw new Error(`Gagal membuat user: ${authError.message}`);
-    }
-    
-    if (!authData.user) {
-      throw new Error("Gagal membuat user: User data tidak ditemukan");
-    }
-    
-    console.log("User created:", authData.user.id);
-    
-    // Insert ke admin_profiles
-    const { error: profileError } = await supabase.from("admin_profiles").insert({
-      user_id: authData.user.id,
-      role,
-      name: name || email.split('@')[0],
-    });
-    
-    if (profileError) {
-      console.error("Profile error:", profileError);
-      throw new Error(`Gagal membuat profile admin: ${profileError.message}`);
-    }
-    
-    console.log("Admin profile created successfully");
-    
-    // Sign out new user (kita tidak mau auto-login sebagai user baru)
-    await supabase.auth.signOut();
-    
-    return authData.user;
   }
 
   // Mode demo
