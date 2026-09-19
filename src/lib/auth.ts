@@ -479,90 +479,84 @@ export async function getAdminPassword(
  * ============================================================ */
 
 export async function getAdminWA(): Promise<string> {
-  if (SUPABASE_ENABLED) {
-    try {
-      const { data, error } = await supabase
-        .from("settings")
-        .select("data")
-        .single();
-
-      if (error || !data) {
-        return "6281234567890";
-      }
-
-      return (
-        (data.data as { adminWA?: string })?.adminWA ||
-        "6281234567890"
-      );
-    } catch (error) {
-      console.error("Error getting admin WA:", error);
-
-      return "6281234567890";
-    }
+  if (!SUPABASE_ENABLED) {
+    return loadDemoConfig().adminWA;
   }
 
-  const config = loadDemoConfig();
+  try {
+    const { data, error } = await supabase.rpc(
+      "get_public_admin_wa"
+    );
 
-  return config.adminWA;
+    if (error) {
+      console.error("Error getting public admin WA:", error);
+      return "";
+    }
+
+    return typeof data === "string" ? data.trim() : "";
+  } catch (error) {
+    console.error("Exception getting public admin WA:", error);
+    return "";
+  }
 }
 
 export async function setAdminWA(wa: string) {
+  const normalizedWA = wa.replace(/\D/g, "");
+
+  if (!normalizedWA) {
+    throw new Error("Nomor WhatsApp tidak boleh kosong");
+  }
+
   if (SUPABASE_ENABLED) {
-    try {
-      const {
-        data: currentData,
-        error: fetchError,
-      } = await supabase
-        .from("settings")
-        .select("data, id")
-        .single();
+    const {
+      data: currentData,
+      error: fetchError,
+    } = await supabase
+      .from("settings")
+      .select("id, data")
+      .limit(1)
+      .maybeSingle();
 
-      if (fetchError || !currentData) {
-        const { error: insertError } = await supabase
-          .from("settings")
-          .insert({
-            data: {
-              adminWA: wa,
-            },
-          });
-
-        if (insertError) {
-          throw new Error(
-            `Gagal menyimpan nomor WA: ${insertError.message}`
-          );
-        }
-      } else {
-        const currentSettings =
-          (currentData.data as Record<string, unknown>) || {};
-
-        const updatedData = {
-          ...currentSettings,
-          adminWA: wa,
-        };
-
-        const { error: updateError } = await supabase
-          .from("settings")
-          .update({
-            data: updatedData,
-          })
-          .eq("id", currentData.id);
-
-        if (updateError) {
-          throw new Error(
-            `Gagal menyimpan nomor WA: ${updateError.message}`
-          );
-        }
-      }
-    } catch (error) {
-      console.error(
-        "Error setting admin WA:",
-        error
-      );
-
+    if (fetchError) {
       throw new Error(
-        error instanceof Error
-          ? error.message
-          : "Gagal menyimpan nomor WhatsApp"
+        `Gagal membaca pengaturan: ${fetchError.message}`
+      );
+    }
+
+    if (!currentData) {
+      const { error: insertError } = await supabase
+        .from("settings")
+        .insert({
+          data: {
+            adminWA: normalizedWA,
+          },
+        });
+
+      if (insertError) {
+        throw new Error(
+          `Gagal menyimpan nomor WA: ${insertError.message}`
+        );
+      }
+
+      return;
+    }
+
+    const currentSettings =
+      (currentData.data as Record<string, unknown>) || {};
+
+    const { error: updateError } = await supabase
+      .from("settings")
+      .update({
+        data: {
+          ...currentSettings,
+          adminWA: normalizedWA,
+        },
+      })
+      .eq("id", currentData.id);
+
+    if (updateError) {
+      throw new Error(
+        `Gagal menyimpan nomor WA: ${updateError.message}`
       );
     }
 
@@ -570,9 +564,7 @@ export async function setAdminWA(wa: string) {
   }
 
   const config = loadDemoConfig();
-
-  config.adminWA = wa;
-
+  config.adminWA = normalizedWA;
   saveDemoConfig(config);
 }
 
