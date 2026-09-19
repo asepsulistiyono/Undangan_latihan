@@ -10,22 +10,13 @@ export interface AdminProfile {
 }
 
 /* ============================================================
- * MODE DEMO (tanpa Supabase)
- * Data disimpan di localStorage. Berguna untuk uji coba
- * sebelum Supabase dikonfigurasi.
+ * MODE DEMO
  * ============================================================ */
 
 const LS_USERS = "demo-users-v1";
 const LS_PROFILES = "demo-profiles-v1";
 const LS_SESSION = "demo-session-v1";
 const LS_CONFIG = "demo-config-v1";
-
-/** Dispatch event untuk notify perubahan auth state di mode demo */
-function dispatchAuthEvent() {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent("demo-auth-change"));
-  }
-}
 
 interface DemoUser {
   id: string;
@@ -35,7 +26,13 @@ interface DemoUser {
 }
 
 interface DemoConfig {
-  adminWA: string; // Nomor WhatsApp admin untuk minta akun
+  adminWA: string;
+}
+
+function dispatchAuthEvent() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("demo-auth-change"));
+  }
 }
 
 function loadDemoUsers(): DemoUser[] {
@@ -67,7 +64,9 @@ function saveDemoProfiles(profiles: AdminProfile[]) {
 function loadDemoConfig(): DemoConfig {
   try {
     const raw = localStorage.getItem(LS_CONFIG);
-    return raw ? JSON.parse(raw) : { adminWA: "6281234567890" };
+    return raw
+      ? JSON.parse(raw)
+      : { adminWA: "6281234567890" };
   } catch {
     return { adminWA: "6281234567890" };
   }
@@ -77,17 +76,19 @@ function saveDemoConfig(config: DemoConfig) {
   localStorage.setItem(LS_CONFIG, JSON.stringify(config));
 }
 
-/** Pastikan super admin demo selalu ada di mode demo. */
 function ensureDemoSuperAdmin(): void {
   if (SUPABASE_ENABLED) return;
-  
+
   const users = loadDemoUsers();
   const profiles = loadDemoProfiles();
+
   const demoUsername = "superadmin";
   const demoPassword = "demo123";
-  
-  // Cari atau buat user superadmin
-  let demoUser = users.find((u) => u.username === demoUsername);
+
+  let demoUser = users.find(
+    (user) => user.username === demoUsername
+  );
+
   if (!demoUser) {
     demoUser = {
       id: "demo-super-" + Date.now(),
@@ -95,72 +96,123 @@ function ensureDemoSuperAdmin(): void {
       password: demoPassword,
       name: "Super Admin (Demo)",
     };
+
     users.push(demoUser);
     saveDemoUsers(users);
   } else if (demoUser.password !== demoPassword) {
-    // Update password jika berbeda (untuk reset ke default)
     demoUser.password = demoPassword;
     saveDemoUsers(users);
   }
-  
-  // Pastikan profile super_admin ada
-  if (!profiles.find((p) => p.user_id === demoUser.id)) {
+
+  const profileExists = profiles.some(
+    (profile) => profile.user_id === demoUser?.id
+  );
+
+  if (!profileExists && demoUser) {
     profiles.push({
       user_id: demoUser.id,
       role: "super_admin",
       name: "Super Admin (Demo)",
     });
+
     saveDemoProfiles(profiles);
   }
 }
 
 /* ============================================================
- * AUTH FUNCTIONS — bekerja baik dengan Supabase maupun mode demo
+ * AUTH FUNCTIONS
  * ============================================================ */
 
 export async function signIn(username: string, password: string) {
   if (SUPABASE_ENABLED) {
-    // Username akan dikonversi ke email secara internal
-    // User hanya perlu ingat username, tidak perlu @domain
-    const email = username.includes('@') ? username : username + "@wedding.local";
-    const { data, error } = await supabase.auth.signInWithPassword({ 
-      email,
-      password 
-    });
+    const email = username.includes("@")
+      ? username
+      : `${username}@wedding.local`;
+
+    const { data, error } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
     if (error) throw error;
+
     return data;
   }
 
-  // Mode demo
   ensureDemoSuperAdmin();
+
   const users = loadDemoUsers();
-  const user = users.find((u) => u.username === username && u.password === password);
-  if (!user) throw new Error("Username atau password salah");
-  const session = { user_id: user.id, username: user.username, name: user.name };
-  sessionStorage.setItem(LS_SESSION, JSON.stringify(session));
-  dispatchAuthEvent(); // Notify App.tsx bahwa user sudah login
-  return { user: { id: user.id, username: user.username, name: user.name }, session };
+
+  const user = users.find(
+    (item) =>
+      item.username === username &&
+      item.password === password
+  );
+
+  if (!user) {
+    throw new Error("Username atau password salah");
+  }
+
+  const session = {
+    user_id: user.id,
+    username: user.username,
+    name: user.name,
+  };
+
+  sessionStorage.setItem(
+    LS_SESSION,
+    JSON.stringify(session)
+  );
+
+  dispatchAuthEvent();
+
+  return {
+    user: {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+    },
+    session,
+  };
 }
 
 export async function signOut() {
   if (SUPABASE_ENABLED) {
     const { error } = await supabase.auth.signOut();
+
     if (error) throw error;
+
     return;
   }
+
   sessionStorage.removeItem(LS_SESSION);
-  dispatchAuthEvent(); // Notify App.tsx bahwa user sudah logout
+  dispatchAuthEvent();
 }
 
-export async function getSession(): Promise<{ user_id: string; username: string; name: string | null } | null> {
+export async function getSession(): Promise<{
+  user_id: string;
+  username: string;
+  name: string | null;
+} | null> {
   if (SUPABASE_ENABLED) {
     const { data } = await supabase.auth.getSession();
-    return data.session?.user
-      ? { user_id: data.session.user.id, username: data.session.user.email?.split("@")[0] || "", name: null }
-      : null;
+
+    if (!data.session?.user) {
+      return null;
+    }
+
+    return {
+      user_id: data.session.user.id,
+      username:
+        data.session.user.email?.split("@")[0] || "",
+      name: null,
+    };
   }
+
   try {
     const raw = sessionStorage.getItem(LS_SESSION);
+
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -169,58 +221,79 @@ export async function getSession(): Promise<{ user_id: string; username: string;
 
 export async function changePassword(newPassword: string) {
   if (SUPABASE_ENABLED) {
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
     if (error) throw error;
+
     return;
   }
+
   const session = await getSession();
-  if (!session) throw new Error("Belum login");
+
+  if (!session) {
+    throw new Error("Belum login");
+  }
+
   const users = loadDemoUsers();
-  const idx = users.findIndex((u) => u.id === session.user_id);
-  if (idx === -1) throw new Error("User tidak ditemukan");
-  users[idx].password = newPassword;
+
+  const userIndex = users.findIndex(
+    (user) => user.id === session.user_id
+  );
+
+  if (userIndex === -1) {
+    throw new Error("User tidak ditemukan");
+  }
+
+  users[userIndex].password = newPassword;
   saveDemoUsers(users);
 }
 
-export async function getAdminProfile(userId: string): Promise<AdminProfile | null> {
+export async function getAdminProfile(
+  userId: string
+): Promise<AdminProfile | null> {
   if (SUPABASE_ENABLED) {
     try {
-      console.log("🔍 Getting admin profile for user ID:", userId);
-      
       const { data, error } = await supabase
         .from("admin_profiles")
         .select("*")
         .eq("user_id", userId)
         .maybeSingle();
-      
+
       if (error) {
-        console.error("❌ Error fetching admin profile:", error);
-        console.error("Error details:", {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
+        console.error(
+          "Error fetching admin profile:",
+          error
+        );
+
         return null;
       }
-      
+
       if (!data) {
-        console.warn("⚠️ No admin profile found for user ID:", userId);
-        console.warn("💡 User ID tidak ada di tabel admin_profiles");
-        console.warn("💡 Jalankan SQL untuk insert user sebagai admin");
         return null;
       }
-      
-      console.log("✅ Admin profile found:", data);
+
       return data as AdminProfile;
-    } catch (err) {
-      console.error("❌ Exception in getAdminProfile:", err);
+    } catch (error) {
+      console.error(
+        "Exception in getAdminProfile:",
+        error
+      );
+
       return null;
     }
   }
+
   ensureDemoSuperAdmin();
+
   const profiles = loadDemoProfiles();
-  return profiles.find((p) => p.user_id === userId) || null;
+
+  return (
+    profiles.find(
+      (profile) => profile.user_id === userId
+    ) || null
+  );
 }
 
 export async function listAdmins(): Promise<AdminProfile[]> {
@@ -228,13 +301,23 @@ export async function listAdmins(): Promise<AdminProfile[]> {
     const { data, error } = await supabase
       .from("admin_profiles")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", {
+        ascending: false,
+      });
+
     if (error) throw error;
+
     return (data as AdminProfile[]) || [];
   }
+
   ensureDemoSuperAdmin();
+
   return loadDemoProfiles();
 }
+
+/* ============================================================
+ * CREATE ADMIN
+ * ============================================================ */
 
 export async function createAdmin(
   username: string,
@@ -243,128 +326,157 @@ export async function createAdmin(
   name: string | null
 ) {
   if (SUPABASE_ENABLED) {
-  const { data, error } = await supabase.functions.invoke("create-new-admin", {
-    body: {
-      username,
-      password,
-      role,
-      name,
-    },
-  });
-
-  if (error) {
-    throw new Error(error.message || "Gagal membuat admin");
-  }
-
-  if (data?.error) {
-    throw new Error(data.error);
-  }
-
-  return {
-    id: data.id,
-    email: data.email,
-  };
-}
-    
-    // Cara 2: Gunakan signUp (fallback)
-    const { data: authData, error: authError } = await supabase.auth.signUp({ 
-      email,
-      password,
-      options: {
-        data: {
-          name: name || email.split('@')[0],
-          role: role
+    const { data, error } =
+      await supabase.functions.invoke(
+        "create-new-admin",
+        {
+          body: {
+            username,
+            password,
+            role,
+            name,
+          },
         }
-      }
-    });
-    
-    if (authError) {
-      console.error("Auth error:", authError);
-      throw new Error(`Gagal membuat user: ${authError.message}`);
+      );
+
+    if (error) {
+      throw new Error(
+        error.message || "Gagal membuat admin"
+      );
     }
-    
-    if (!authData.user) {
-      throw new Error("Gagal membuat user: User data tidak ditemukan");
+
+    if (data?.error) {
+      throw new Error(data.error);
     }
-    
-    console.log("User created:", authData.user.id);
-    
-    // Insert ke admin_profiles
-    const { error: profileError } = await supabase.from("admin_profiles").insert({
-      user_id: authData.user.id,
-      role,
-      name: name || email.split('@')[0],
-    });
-    
-    if (profileError) {
-      console.error("Profile error:", profileError);
-      throw new Error(`Gagal membuat profile admin: ${profileError.message}`);
-    }
-    
-    console.log("Admin profile created successfully");
-    
-    // Sign out new user (kita tidak mau auto-login sebagai user baru)
-    await supabase.auth.signOut();
-    
-    return authData.user;
+
+    return {
+      id: data.id,
+      email: data.email,
+    };
   }
 
-  // Mode demo
   const users = loadDemoUsers();
-  if (users.find((u) => u.username === username)) {
+
+  const existingUser = users.find(
+    (user) => user.username === username
+  );
+
+  if (existingUser) {
     throw new Error("Username sudah terdaftar");
   }
+
   const newUser: DemoUser = {
-    id: "demo-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+    id:
+      "demo-" +
+      Date.now() +
+      "-" +
+      Math.random().toString(36).slice(2, 6),
     username,
     password,
     name,
   };
+
   users.push(newUser);
   saveDemoUsers(users);
 
   const profiles = loadDemoProfiles();
-  profiles.push({ user_id: newUser.id, role, name });
+
+  profiles.push({
+    user_id: newUser.id,
+    role,
+    name,
+  });
+
   saveDemoProfiles(profiles);
 
-  return { id: newUser.id, username: newUser.username };
+  return {
+    id: newUser.id,
+    username: newUser.username,
+  };
 }
+
+/* ============================================================
+ * DELETE ADMIN
+ * ============================================================ */
 
 export async function deleteAdmin(userId: string) {
   if (SUPABASE_ENABLED) {
-    const { error } = await supabase.from("admin_profiles").delete().eq("user_id", userId);
+    const { error } = await supabase
+      .from("admin_profiles")
+      .delete()
+      .eq("user_id", userId);
+
     if (error) throw error;
+
     return;
   }
+
   const profiles = loadDemoProfiles();
-  saveDemoProfiles(profiles.filter((p) => p.user_id !== userId));
+
+  saveDemoProfiles(
+    profiles.filter(
+      (profile) => profile.user_id !== userId
+    )
+  );
+
   const users = loadDemoUsers();
-  saveDemoUsers(users.filter((u) => u.id !== userId));
-  
-  // Hapus juga slug mapping
+
+  saveDemoUsers(
+    users.filter((user) => user.id !== userId)
+  );
+
   removeSlugByUserId(userId);
 }
 
-export async function resetAdminPassword(userId: string, newPassword: string) {
+/* ============================================================
+ * RESET PASSWORD
+ * ============================================================ */
+
+export async function resetAdminPassword(
+  userId: string,
+  newPassword: string
+) {
   if (SUPABASE_ENABLED) {
-    // Supabase tidak bisa reset password user lain tanpa service role key
-    throw new Error("Reset password hanya tersedia di mode demo");
+    throw new Error(
+      "Reset password admin lain harus dilakukan melalui server"
+    );
   }
+
   const users = loadDemoUsers();
-  const idx = users.findIndex((u) => u.id === userId);
-  if (idx === -1) throw new Error("User tidak ditemukan");
-  users[idx].password = newPassword;
+
+  const userIndex = users.findIndex(
+    (user) => user.id === userId
+  );
+
+  if (userIndex === -1) {
+    throw new Error("User tidak ditemukan");
+  }
+
+  users[userIndex].password = newPassword;
   saveDemoUsers(users);
 }
 
-export async function getAdminPassword(userId: string): Promise<string | null> {
+export async function getAdminPassword(
+  userId: string
+): Promise<string | null> {
   if (SUPABASE_ENABLED) {
-    throw new Error("Lihat password hanya tersedia di mode demo");
+    throw new Error(
+      "Lihat password hanya tersedia di mode demo"
+    );
   }
+
   const users = loadDemoUsers();
-  const user = users.find((u) => u.id === userId);
+
+  const user = users.find(
+    (item) => item.id === userId
+  );
+
   return user?.password || null;
 }
+
+/* ============================================================
+ * ADMIN WHATSAPP CONFIGURATION
+ * ============================================================ */
 
 export async function getAdminWA(): Promise<string> {
   if (SUPABASE_ENABLED) {
@@ -373,135 +485,200 @@ export async function getAdminWA(): Promise<string> {
         .from("settings")
         .select("data")
         .single();
-      
+
       if (error || !data) {
-        return "6281234567890"; // Default
+        return "6281234567890";
       }
-      
-      return (data.data as any)?.adminWA || "6281234567890";
-    } catch (err) {
-      console.error("Error getting admin WA:", err);
-      return "6281234567890"; // Default
+
+      return (
+        (data.data as { adminWA?: string })?.adminWA ||
+        "6281234567890"
+      );
+    } catch (error) {
+      console.error("Error getting admin WA:", error);
+
+      return "6281234567890";
     }
   }
+
   const config = loadDemoConfig();
+
   return config.adminWA;
 }
 
 export async function setAdminWA(wa: string) {
   if (SUPABASE_ENABLED) {
     try {
-      // Get current settings
-      const { data: currentData, error: fetchError } = await supabase
+      const {
+        data: currentData,
+        error: fetchError,
+      } = await supabase
         .from("settings")
         .select("data, id")
         .single();
-      
+
       if (fetchError || !currentData) {
-        // Insert new settings
         const { error: insertError } = await supabase
           .from("settings")
           .insert({
-            data: { adminWA: wa }
+            data: {
+              adminWA: wa,
+            },
           });
-        
+
         if (insertError) {
-          throw new Error(`Gagal menyimpan nomor WA: ${insertError.message}`);
+          throw new Error(
+            `Gagal menyimpan nomor WA: ${insertError.message}`
+          );
         }
       } else {
-        // Update existing settings
+        const currentSettings =
+          (currentData.data as Record<string, unknown>) || {};
+
         const updatedData = {
-          ...(currentData.data as any),
-          adminWA: wa
+          ...currentSettings,
+          adminWA: wa,
         };
-        
+
         const { error: updateError } = await supabase
           .from("settings")
-          .update({ data: updatedData })
+          .update({
+            data: updatedData,
+          })
           .eq("id", currentData.id);
-        
+
         if (updateError) {
-          throw new Error(`Gagal menyimpan nomor WA: ${updateError.message}`);
+          throw new Error(
+            `Gagal menyimpan nomor WA: ${updateError.message}`
+          );
         }
       }
-      
-      console.log("Admin WA updated successfully:", wa);
-    } catch (err: any) {
-      console.error("Error setting admin WA:", err);
-      throw new Error(err.message || "Gagal menyimpan nomor WhatsApp");
+    } catch (error) {
+      console.error(
+        "Error setting admin WA:",
+        error
+      );
+
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Gagal menyimpan nomor WhatsApp"
+      );
     }
+
     return;
   }
+
   const config = loadDemoConfig();
+
   config.adminWA = wa;
+
   saveDemoConfig(config);
 }
 
-export function onAuthStateChange(callback: (user: any) => void): () => void {
+/* ============================================================
+ * AUTH STATE CHANGE
+ * ============================================================ */
+
+export function onAuthStateChange(
+  callback: (user: any) => void
+): () => void {
   if (SUPABASE_ENABLED) {
     let callbackCalled = false;
-    
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      callbackCalled = true;
-      try {
-        callback(session?.user || null);
-      } catch (err) {
-        console.error("Error in auth state callback:", err);
-        callback(null);
-      }
-    });
-    
-    // Fallback: jika onAuthStateChange tidak memanggil callback dalam 3 detik,
-    // cek session manual
-    const fallbackTimer = setTimeout(async () => {
-      if (!callbackCalled) {
-        console.log("Auth state change not called, checking session manually...");
+
+    const { data } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        callbackCalled = true;
+
         try {
-          const { data: sessionData } = await supabase.auth.getSession();
-          callback(sessionData.session?.user || null);
-        } catch (err) {
-          console.error("Error checking session:", err);
+          callback(session?.user || null);
+        } catch (error) {
+          console.error(
+            "Error in auth state callback:",
+            error
+          );
+
           callback(null);
         }
       }
-    }, 3000);
-    
+    );
+
+    const fallbackTimer = setTimeout(
+      async () => {
+        if (callbackCalled) return;
+
+        try {
+          const { data: sessionData } =
+            await supabase.auth.getSession();
+
+          callback(
+            sessionData.session?.user || null
+          );
+        } catch (error) {
+          console.error(
+            "Error checking session:",
+            error
+          );
+
+          callback(null);
+        }
+      },
+      3000
+    );
+
     return () => {
       clearTimeout(fallbackTimer);
       data.subscription.unsubscribe();
     };
   }
 
-  // Mode demo — cek session saat ini dan subscribe ke event
   const checkSession = () => {
     try {
       const raw = sessionStorage.getItem(LS_SESSION);
       const session = raw ? JSON.parse(raw) : null;
-      callback(session ? { id: session.user_id, username: session.username, name: session.name } : null);
+
+      callback(
+        session
+          ? {
+              id: session.user_id,
+              username: session.username,
+              name: session.name,
+            }
+          : null
+      );
     } catch {
       callback(null);
     }
   };
 
-  // Panggil sekali untuk initial state
   checkSession();
 
-  // Subscribe ke event demo-auth-change
   const handler = () => checkSession();
-  window.addEventListener("demo-auth-change", handler);
+
+  window.addEventListener(
+    "demo-auth-change",
+    handler
+  );
 
   return () => {
-    window.removeEventListener("demo-auth-change", handler);
+    window.removeEventListener(
+      "demo-auth-change",
+      handler
+    );
   };
 }
 
-/** Reset semua data demo (untuk debugging) */
+/* ============================================================
+ * RESET DEMO DATA
+ * ============================================================ */
+
 export function resetDemoData() {
   if (SUPABASE_ENABLED) return;
+
   localStorage.removeItem(LS_USERS);
   localStorage.removeItem(LS_PROFILES);
   sessionStorage.removeItem(LS_SESSION);
   localStorage.removeItem(LS_CONFIG);
-  // Reload halaman untuk apply perubahan
+
   window.location.reload();
 }
