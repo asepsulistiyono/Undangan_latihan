@@ -79,7 +79,18 @@ BEGIN
     ''
   )
   RETURNING id INTO new_user_id;
-  
+  const { data, error } = await supabase.functions.invoke('create-new-admin', {
+  body: {
+    email: 'eka@wedding.local',
+    password: 'password-minimal-8-karakter',
+  },
+});
+
+if (error) {
+  console.error(error);
+} else {
+  console.log(data);
+}
   -- Insert ke admin_profiles
   INSERT INTO admin_profiles (user_id, role, name)
   VALUES (new_user_id, p_role::TEXT, COALESCE(p_name, SPLIT_PART(new_email, '@', 1)));
