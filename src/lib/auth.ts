@@ -242,27 +242,60 @@ export async function createAdmin(
   role: AdminRole,
   name: string | null
 ) {
+  export async function createAdmin(
+  username: string,
+  password: string,
+  role: AdminRole,
+  name: string | null
+) {
   if (SUPABASE_ENABLED) {
-  const { data, error } = await supabase.functions.invoke("create-new-admin", {
-    body: {
-      username,
-      password,
-      role,
-      name,
-    },
-  });
+    const { data, error } = await supabase.functions.invoke("create-new-admin", {
+      body: {
+        username,
+        password,
+        role,
+        name,
+      },
+    });
 
-  if (error) {
-    throw new Error(error.message || "Gagal membuat admin");
+    if (error) {
+      throw new Error(error.message || "Gagal membuat admin");
+    }
+
+    if (data?.error) {
+      throw new Error(data.error);
+    }
+
+    return {
+      id: data.id,
+      email: data.email,
+    };
   }
 
-  if (data?.error) {
-    throw new Error(data.error);
+  // Bagian mode demo tetap dipertahankan
+  const users = loadDemoUsers();
+
+  if (users.find((u) => u.username === username)) {
+    throw new Error("Username sudah terdaftar");
   }
+
+  const newUser: DemoUser = {
+    id: "demo-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6),
+    username,
+    password,
+    name,
+  };
+
+  users.push(newUser);
+  saveDemoUsers(users);
+
+  const profiles = loadDemoProfiles();
+  profiles.push({ user_id: newUser.id, role, name });
+  saveDemoProfiles(profiles);
 
   return {
-    id: data.id,
-    email: data.email,
+    id: newUser.id,
+    username: newUser.username,
   };
 }
     
