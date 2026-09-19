@@ -257,6 +257,6 @@ const waLink = normalizedWA
           </div>
         )}
       </div>
-    </div>
+   
   );
 }
