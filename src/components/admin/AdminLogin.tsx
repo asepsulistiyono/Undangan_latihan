@@ -56,6 +56,8 @@ export default function AdminLogin({ onLogin }: { onLogin: () => void }) {
 
   const normalizedWA = adminWA.replace(/\D/g, "");
 
+const normalizedWA = adminWA.replace(/\D/g, "");
+
 const waLink = normalizedWA
   ? `https://wa.me/${normalizedWA}?text=Halo%20admin%2C%20saya%20ingin%20minta%20dibuatkan%20akun%20untuk%20mengelola%20undangan%20pernikahan.`
   : "#";
@@ -202,7 +204,8 @@ const waLink = normalizedWA
               Chat Admin via WhatsApp
             </a>
           </div>
-        )}
+        );
+}
 
         {!SUPABASE_ENABLED && (
           <div className="mt-4 w-full border border-gold-500/20 bg-pine-800/30 p-4">
