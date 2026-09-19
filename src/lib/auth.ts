@@ -242,93 +242,71 @@ export async function createAdmin(
   role: AdminRole,
   name: string | null
 ) {
-  export async function createAdmin(
-  username: string,
-  password: string,
-  role: AdminRole,
-  name: string | null
-) {
   if (SUPABASE_ENABLED) {
-    const { data, error } = await supabase.functions.invoke("create-new-admin", {
-      body: {
-        username,
-        password,
-        role,
-        name,
-      },
-    });
+  const { data, error } = await supabase.functions.invoke("create-new-admin", {
+    body: {
+      username,
+      password,
+      role,
+      name,
+    },
+  });
 
-    if (error) {
-      throw new Error(error.message || "Gagal membuat admin");
-    }
-
-    if (data?.error) {
-      throw new Error(data.error);
-    }
-
-    return {
-      id: data.id,
-      email: data.email,
-    };
+  if (error) {
+    throw new Error(error.message || "Gagal membuat admin");
   }
 
-  // Bagian mode demo tetap dipertahankan
-  const users = loadDemoUsers();
-
-  if (users.find((u) => u.username === username)) {
-    throw new Error("Username sudah terdaftar");
+  if (data?.error) {
+    throw new Error(data.error);
   }
-
-  const newUser: DemoUser = {
-    id: "demo-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6),
-    username,
-    password,
-    name,
-  };
-
-  users.push(newUser);
-  saveDemoUsers(users);
-
-  const profiles = loadDemoProfiles();
-  profiles.push({ user_id: newUser.id, role, name });
-  saveDemoProfiles(profiles);
 
   return {
-    id: newUser.id,
-    username: newUser.username,
+    id: data.id,
+    email: data.email,
   };
 }
     
-    // Cara 1: Gunakan RPC function (RECOMMENDED - tidak mengubah session)
-    try {
-      console.log("📞 Trying RPC function create_new_admin...");
-      
-      const { data: rpcData, error: rpcError } = await supabase.rpc('create_new_admin', {
-        p_email: email,
-        p_password: password,
-        p_role: role,
-        p_name: name || email.split('@')[0]
-      });
-      
-      if (rpcError) {
-        console.error("❌ RPC error:", rpcError);
-        throw rpcError;
+    // Cara 2: Gunakan signUp (fallback)
+    const { data: authData, error: authError } = await supabase.auth.signUp({ 
+      email,
+      password,
+      options: {
+        data: {
+          name: name || email.split('@')[0],
+          role: role
+        }
       }
-      
-      if (rpcData) {
-        console.log("✅ Admin created via RPC successfully! User ID:", rpcData);
-        return { id: rpcData, email };
-      }
-      
-      throw new Error("RPC function tidak mengembalikan data");
-    } catch (rpcErr: any) {
-      console.error("❌ RPC function failed:", rpcErr.message);
-      console.log("💡 Pastikan sudah menjalankan CREATE_RPC_FUNCTION.sql di SQL Editor");
-      throw new Error(
-        `Gagal membuat admin: ${rpcErr.message || "Unknown error"}. ` +
-        `Pastikan sudah menjalankan script CREATE_RPC_FUNCTION.sql di Supabase SQL Editor.`
-      );
+    });
+    
+    if (authError) {
+      console.error("Auth error:", authError);
+      throw new Error(`Gagal membuat user: ${authError.message}`);
     }
+    
+    if (!authData.user) {
+      throw new Error("Gagal membuat user: User data tidak ditemukan");
+    }
+    
+    console.log("User created:", authData.user.id);
+    
+    // Insert ke admin_profiles
+    const { error: profileError } = await supabase.from("admin_profiles").insert({
+      user_id: authData.user.id,
+      role,
+      name: name || email.split('@')[0],
+    });
+    
+    if (profileError) {
+      console.error("Profile error:", profileError);
+      throw new Error(`Gagal membuat profile admin: ${profileError.message}`);
+    }
+    
+    console.log("Admin profile created successfully");
+    
+    // Sign out new user (kita tidak mau auto-login sebagai user baru)
+    await supabase.auth.signOut();
+    
+    return authData.user;
   }
 
   // Mode demo
