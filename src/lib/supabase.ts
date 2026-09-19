@@ -1,21 +1,29 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-/**
- * Client Supabase.
- * Jika env variable tidak tersedia, kita tetap membuat client "kosong"
- * agar kode tetap bisa di-compile. Layer `useWeddingData` akan mendeteksi
- * kondisi ini dan beralih ke mode lokal (localStorage).
- */
-const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string) || "";
-const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || "";
+const SUPABASE_URL =
+  (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim() || "";
 
-export const SUPABASE_ENABLED = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+const SUPABASE_KEY =
+  (
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined
+  )?.trim() ||
+  (
+    import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+  )?.trim() ||
+  "";
+
+export const SUPABASE_ENABLED = Boolean(
+  SUPABASE_URL && SUPABASE_KEY
+);
 
 export const supabase: SupabaseClient = createClient(
   SUPABASE_URL || "https://placeholder.supabase.co",
-  SUPABASE_ANON_KEY || "placeholder",
+  SUPABASE_KEY || "placeholder",
   {
-    auth: { persistSession: true, autoRefreshToken: true },
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
   }
 );
 
