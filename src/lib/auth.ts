@@ -243,10 +243,28 @@ export async function createAdmin(
   name: string | null
 ) {
   if (SUPABASE_ENABLED) {
-    // Username akan dikonversi ke email secara internal
-    const email = username.includes('@') ? username : username + "@wedding.local";
-    
-    console.log("🔧 Creating admin with email:", email, "role:", role);
+  const { data, error } = await supabase.functions.invoke("create-new-admin", {
+    body: {
+      username,
+      password,
+      role,
+      name,
+    },
+  });
+
+  if (error) {
+    throw new Error(error.message || "Gagal membuat admin");
+  }
+
+  if (data?.error) {
+    throw new Error(data.error);
+  }
+
+  return {
+    id: data.id,
+    email: data.email,
+  };
+}
     
     // Cara 1: Gunakan RPC function (RECOMMENDED - tidak mengubah session)
     try {
